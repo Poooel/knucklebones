@@ -5,8 +5,6 @@ import './App.css'
 function App() {
   const [count, setCount] = React.useState(0)
 
-  console.log(import.meta.env.VITE_WORKER_URL)
-
   return (
     <div className='App'>
       <div>
