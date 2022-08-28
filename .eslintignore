@@ -1,0 +1,3 @@
+vite-env.d.ts
+# Ignore until we have a specific setup for it
+vite.config.ts
