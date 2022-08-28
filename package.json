@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:worker": "wrangler pages dev ./functions",
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
@@ -34,5 +35,9 @@
     "typescript": "^4.6.4",
     "vite": "^3.0.7",
     "wrangler": "^2.0.27"
+  },
+  "volta": {
+    "node": "16.17.0",
+    "yarn": "1.22.19"
   }
 }
