@@ -1,5 +1,10 @@
 import * as React from 'react'
 import { Board, useBoard } from './Board'
+import {
+  configureAbly,
+  useChannel,
+  assertConfiguration
+} from '@ably-labs/react-hooks'
 
 // Not needed
 function getRandomValue(min = 0, max = 1) {
@@ -9,10 +14,24 @@ function getRandomDice() {
   return getRandomValue(1, 6)
 }
 
+configureAbly({
+  authUrl: '/api/auth'
+})
+
 export function App() {
   // Will go away once we communicate with Ably
   const [enemyDice, setEnemyDice] = React.useState(getRandomDice())
   const [dice, setDice] = React.useState(getRandomDice())
+
+  const [channel, ably] = useChannel('knucklebones-test', (message) => {
+    if (ably.auth.clientId !== message.clientId) {
+      console.log('enemy played')
+      console.log({ message })
+    } else {
+      console.log('I played')
+      console.log({ message })
+    }
+  })
 
   const { columns: enemyColumns, addToColumn: addToEnemyColumn } = useBoard({
     onDicePlaced() {
@@ -22,7 +41,17 @@ export function App() {
   })
 
   const { columns, addToColumn } = useBoard({
-    onDicePlaced() {
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+    async onDicePlaced() {
+      channel.publish('play', {
+        room: 'knucklebones-test',
+        play: {
+          x: 3,
+          y: 2,
+          value: 1
+        },
+        clientId: ably.auth.clientId
+      })
       // When player has played
       setDice(getRandomDice())
     }
