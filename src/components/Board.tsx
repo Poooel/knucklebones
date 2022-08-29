@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { clsx } from 'clsx'
 
 interface Children {
   children: React.ReactNode
@@ -10,32 +11,49 @@ interface DiceProps {
 
 interface ColumnProps extends Children {
   onClick?: React.MouseEventHandler<HTMLDivElement>
-}
-
-interface BoardsProps {
   readonly?: boolean
 }
 
-function getRandomValue(min = 0, max = 1) {
-  return Math.round(Math.random() * (max - min) + min)
+interface UseBoardProps {
+  onDicePlaced?(): void
 }
 
+interface BoardProps {
+  columns: Array<Array<number | undefined>>
+  onColumnClick?(colIndex: number): void
+  readonly?: boolean
+}
+
+const MAX_COLUMNS = 3
+const MAX_CELLS_PER_COLUMNS = 3
+
+const COLUMNS_PLACEHOLDER = Array.from({ length: MAX_COLUMNS })
+const CELLS_PER_COLUMN_PLACEHOLDER = Array.from({
+  length: MAX_CELLS_PER_COLUMNS
+})
+
 function Dice({ value }: DiceProps) {
-  return <p className='rounded border bg-white py-4 px-6'>{value}</p>
+  return (
+    <div className='rounded border bg-white w-full h-full flex flex-row justify-center items-center'>
+      <p>{value}</p>
+    </div>
+  )
 }
 
 function Cell({ children }: Children) {
   return (
-    <div className='flex flex-row items-center justify-center border p-2'>
+    <div className='flex flex-row items-center justify-center border p-4 md:p-8'>
       {children}
     </div>
   )
 }
 
-function Column({ children, onClick }: ColumnProps) {
+function Column({ children, onClick, readonly = false }: ColumnProps) {
   return (
     <div
-      className='grid grid-rows-3 hover:bg-gray-100'
+      className={clsx('grid grid-rows-3', {
+        'hover:bg-gray-100': !readonly
+      })}
       role={onClick !== undefined ? 'button' : undefined}
       onClick={onClick}
     >
@@ -44,35 +62,19 @@ function Column({ children, onClick }: ColumnProps) {
   )
 }
 
-const MAX_COLUMNS = 3
-const MAX_CELLS_PER_COLUMNS = 3
-
-export function Board({ readonly = false }: BoardsProps) {
-  // Preset the three columns with 3 empty cells
-  const [columns, setColumns] = React.useState<
-    Array<Array<number | undefined>>
-  >(
-    Array.from({ length: MAX_COLUMNS }).map(() =>
-      Array.from({ length: MAX_CELLS_PER_COLUMNS })
-    )
+export function useBoard({ onDicePlaced }: UseBoardProps) {
+  const [columns, setColumns] = React.useState(
+    Array.from<number[]>({ length: MAX_COLUMNS }).fill([])
   )
 
-  function addToColumn(value: number, index: number) {
+  const isBoardFull = columns.flat().filter((v) => v !== undefined)
+
+  function addToColumn(index: number, value: number) {
     setColumns((previous) => {
       return previous.map((column, colIndex) => {
-        if (index === colIndex) {
-          const nonEmptyCells = column.filter((v) => v !== undefined)
-          // Checking that there are still space in the column for another value
-          if (nonEmptyCells.length === MAX_CELLS_PER_COLUMNS) {
-            return column
-          }
-          // Push new value
-          nonEmptyCells.push(value)
-          // Generates padding of empty values to keep 3 cells in the column
-          const emptyCellsPadding = Array.from<undefined>({
-            length: 3 - nonEmptyCells.length
-          })
-          return nonEmptyCells.concat(emptyCellsPadding)
+        if (colIndex === index && column.length < MAX_CELLS_PER_COLUMNS) {
+          onDicePlaced?.()
+          return column.concat(value)
         }
         return column
       })
@@ -82,48 +84,43 @@ export function Board({ readonly = false }: BoardsProps) {
   function removeFromColumn(index: number) {
     setColumns((previous) => {
       return previous.map((column, colIndex) => {
-        if (index === colIndex) {
-          const nonEmptyCells = column.filter((v) => v !== undefined)
-          // Checking that there are some values in the column
-          if (nonEmptyCells.length === 0) {
-            return column
-          }
-          // Pop the last value
-          nonEmptyCells.pop()
-          // Generates padding of empty values to keep 3 cells in the column
-          const emptyCellsPadding = Array.from<undefined>({
-            length: 3 - nonEmptyCells.length
-          })
-          return nonEmptyCells.concat(emptyCellsPadding)
+        if (colIndex === index && column.length > 1) {
+          return column.slice(0, index + 1)
         }
         return column
       })
     })
   }
 
+  return {
+    columns,
+    isBoardFull,
+    addToColumn,
+    removeFromColumn
+  }
+}
+
+export function Board({
+  columns,
+  onColumnClick,
+  readonly = false
+}: BoardProps) {
   return (
     <div className='grid aspect-square h-2/5 grid-cols-3 border'>
-      {columns.map((column, colIndex) => (
+      {COLUMNS_PLACEHOLDER.map((_, colIndex) => (
         <Column
           key={colIndex}
-          onClick={
-            !readonly
-              ? (e) => {
-                  // Temporary, removing a dice is not a player choice
-                  if (e.shiftKey) {
-                    removeFromColumn(colIndex)
-                  } else {
-                    addToColumn(getRandomValue(1, 6), colIndex)
-                  }
-                }
-              : undefined
-          }
+          readonly={readonly}
+          onClick={!readonly ? () => onColumnClick?.(colIndex) : undefined}
         >
-          {column.map((value, cellIndex) => (
-            <Cell key={cellIndex}>
-              {value !== undefined && <Dice value={value} />}
-            </Cell>
-          ))}
+          {CELLS_PER_COLUMN_PLACEHOLDER.map((_, cellIndex) => {
+            const value = columns[colIndex][cellIndex]
+            return (
+              <Cell key={cellIndex}>
+                {value !== undefined && <Dice value={value} />}
+              </Cell>
+            )
+          })}
         </Column>
       ))}
     </div>
