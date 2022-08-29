@@ -18,6 +18,7 @@
     "unique-names-generator": "^4.7.1"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^3.14.1",
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
