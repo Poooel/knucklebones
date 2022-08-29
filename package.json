@@ -9,7 +9,7 @@
     "dev": "wrangler pages dev -- yarn dev:app",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "lint": "eslint src --ext ts,tsx"
+    "lint": "eslint . --ext ts,tsx"
   },
   "dependencies": {
     "ably": "^1.2.29",
