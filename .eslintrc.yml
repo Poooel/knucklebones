@@ -11,6 +11,8 @@ parserOptions:
   sourceType: module
   project:
     - tsconfig.json
+    - tsconfig.node.json
+    - functions/tsconfig.json
 plugins:
   - react
   - prettier
@@ -18,12 +20,13 @@ rules:
   prettier/prettier: error
   max-len:
     - error
-    -
-      code: 80
+    - code: 80
   space-before-function-paren: off
   "@typescript-eslint/space-before-function-paren":
     - error
-    - never
+    - asyncArrow: always
+      named: never
+      anonymous: always
   "@typescript-eslint/explicit-function-return-type": off
   "@typescript-eslint/method-signature-style":
     - error

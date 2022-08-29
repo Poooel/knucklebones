@@ -9,7 +9,7 @@
     "dev": "wrangler pages dev --proxy 5173 -- yarn dev:app",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "lint": "eslint src --ext ts,tsx"
+    "lint": "eslint . --ext ts,tsx"
   },
   "dependencies": {
     "ably": "^1.2.29",
@@ -18,6 +18,7 @@
     "unique-names-generator": "^4.7.1"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^3.14.1",
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
