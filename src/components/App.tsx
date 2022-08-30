@@ -32,7 +32,7 @@ export function App() {
 
   return (
     <div className='flex h-screen flex-col items-center justify-between p-6'>
-      <Board readonly columns={enemyColumns} />
+      <Board readonly isEnemyBoard columns={enemyColumns} />
       <Board
         columns={columns}
         onColumnClick={(colIndex) => addToColumn(colIndex, dice)}

@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { clsx } from 'clsx'
+import { BoardDice, ColumnDice, getScore } from '../utils/score'
 
 interface Children {
   children: React.ReactNode
@@ -19,9 +20,10 @@ interface UseBoardProps {
 }
 
 interface BoardProps {
-  columns: Array<Array<number | undefined>>
+  columns: BoardDice
   onColumnClick?(colIndex: number): void
   readonly?: boolean
+  isEnemyBoard?: boolean
 }
 
 const MAX_COLUMNS = 3
@@ -64,7 +66,7 @@ function Column({ children, onClick, readonly = false }: ColumnProps) {
 
 export function useBoard({ onDicePlaced }: UseBoardProps) {
   const [columns, setColumns] = React.useState(
-    Array.from<number[]>({ length: MAX_COLUMNS }).fill([])
+    Array.from<ColumnDice>({ length: MAX_COLUMNS }).fill([])
   )
 
   const isBoardFull = columns.flat().filter((v) => v !== undefined)
@@ -101,28 +103,60 @@ export function useBoard({ onDicePlaced }: UseBoardProps) {
 }
 
 export function Board({
+  // nextDice: number, for visualization
   columns,
   onColumnClick,
-  readonly = false
+  readonly = false,
+  isEnemyBoard = false
 }: BoardProps) {
+  const scorePerColumn = getScore(columns)
+  const total = scorePerColumn.reduce((acc, col) => acc + col, 0)
+
   return (
-    <div className='grid aspect-square h-2/5 grid-cols-3 border'>
-      {COLUMNS_PLACEHOLDER.map((_, colIndex) => (
-        <Column
-          key={colIndex}
-          readonly={readonly}
-          onClick={!readonly ? () => onColumnClick?.(colIndex) : undefined}
-        >
-          {CELLS_PER_COLUMN_PLACEHOLDER.map((_, cellIndex) => {
-            const value = columns[colIndex][cellIndex]
-            return (
-              <Cell key={cellIndex}>
-                {value !== undefined && <Dice value={value} />}
-              </Cell>
-            )
-          })}
-        </Column>
-      ))}
+    <div
+      className={clsx('flex gap-2', {
+        'flex-col': !isEnemyBoard,
+        'flex-col-reverse': isEnemyBoard
+      })}
+    >
+      <div className='grid grid-cols-3'>
+        {scorePerColumn.map((score, index) => (
+          <p className='text-center' key={index}>
+            {score}
+          </p>
+        ))}
+      </div>
+      <div className='grid aspect-square h-[30vh] md:h-[40vh] grid-cols-3 border'>
+        {COLUMNS_PLACEHOLDER.map((_, colIndex) => (
+          <Column
+            key={colIndex}
+            readonly={readonly}
+            onClick={!readonly ? () => onColumnClick?.(colIndex) : undefined}
+          >
+            {CELLS_PER_COLUMN_PLACEHOLDER.map((_, cellIndex) => {
+              // Reverses the render order to miror the board for the enemy
+              const actualCellIndex = isEnemyBoard
+                ? MAX_CELLS_PER_COLUMNS - cellIndex - 1
+                : cellIndex
+              const value = columns[colIndex][actualCellIndex]
+              return (
+                <Cell key={cellIndex}>
+                  {value !== undefined && <Dice value={value} />}
+                </Cell>
+              )
+            })}
+          </Column>
+        ))}
+      </div>
+      <div className='flex flex-row justify-between'>
+        <p>Total: {total}</p>
+        {isEnemyBoard ? (
+          // Will need generated name
+          <p>(Enemy)</p>
+        ) : (
+          <p>(You)</p>
+        )}
+      </div>
     </div>
   )
 }
