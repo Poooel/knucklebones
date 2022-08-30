@@ -36,7 +36,7 @@ const CELLS_PER_COLUMN_PLACEHOLDER = Array.from({
 
 function Dice({ value }: DiceProps) {
   return (
-    <div className='rounded border bg-white w-full h-full flex flex-row justify-center items-center'>
+    <div className='flex h-full w-full flex-row items-center justify-center rounded border bg-white'>
       <p>{value}</p>
     </div>
   )
@@ -126,7 +126,7 @@ export function Board({
           </p>
         ))}
       </div>
-      <div className='grid aspect-square h-[30vh] md:h-[40vh] grid-cols-3 border'>
+      <div className='grid aspect-square h-[30vh] grid-cols-3 border md:h-[40vh]'>
         {COLUMNS_PLACEHOLDER.map((_, colIndex) => (
           <Column
             key={colIndex}

@@ -38,7 +38,7 @@ export function App() {
         onColumnClick={(colIndex) => addToColumn(colIndex, dice)}
       />
       <button
-        className='absolute bottom-0 right-0 p-2 m-2'
+        className='absolute bottom-0 right-0 m-2 p-2'
         onClick={() => {
           addToEnemyColumn(getRandomValue(0, 2), enemyDice)
         }}
