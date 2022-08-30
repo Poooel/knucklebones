@@ -8,6 +8,8 @@ interface Children {
 
 interface DiceProps {
   value: number
+  fullSize?: boolean
+  className?: string
 }
 
 interface ColumnProps extends Children {
@@ -21,6 +23,7 @@ interface UseBoardProps {
 
 interface BoardProps {
   columns: BoardDice
+  nextDie?: number
   onColumnClick?(colIndex: number): void
   readonly?: boolean
   isEnemyBoard?: boolean
@@ -34,9 +37,22 @@ const CELLS_PER_COLUMN_PLACEHOLDER = Array.from({
   length: MAX_CELLS_PER_COLUMNS
 })
 
-function Dice({ value }: DiceProps) {
+// TODO: Either we set the size of the board, and we let it decide the size of
+// the dice
+// Or we set the size of the dice, and the size of the board will derive from
+// it (but we need a placeholder when no die is placed)
+
+function Dice({ value, fullSize = true, className }: DiceProps) {
   return (
-    <div className='flex h-full w-full flex-row items-center justify-center rounded border bg-white'>
+    <div
+      className={clsx(
+        'flex aspect-square select-none flex-row items-center justify-center rounded border bg-white',
+        {
+          'h-full w-full': fullSize
+        },
+        className
+      )}
+    >
       <p>{value}</p>
     </div>
   )
@@ -44,7 +60,7 @@ function Dice({ value }: DiceProps) {
 
 function Cell({ children }: Children) {
   return (
-    <div className='flex flex-row items-center justify-center border p-4 md:p-8'>
+    <div className='flex flex-row items-center justify-center border p-4'>
       {children}
     </div>
   )
@@ -103,8 +119,8 @@ export function useBoard({ onDicePlaced }: UseBoardProps) {
 }
 
 export function Board({
-  // nextDice: number, for visualization
   columns,
+  nextDie,
   onColumnClick,
   readonly = false,
   isEnemyBoard = false
@@ -114,41 +130,60 @@ export function Board({
 
   return (
     <div
-      className={clsx('flex gap-2', {
-        'flex-col': !isEnemyBoard,
-        'flex-col-reverse': isEnemyBoard
+      className={clsx('flex gap-4 md:w-full md:gap-8', {
+        'flex-col md:flex-row-reverse': !isEnemyBoard,
+        'flex-col-reverse md:flex-row': isEnemyBoard
       })}
     >
-      <div className='grid grid-cols-3'>
-        {scorePerColumn.map((score, index) => (
-          <p className='text-center' key={index}>
-            {score}
-          </p>
-        ))}
+      <div className='flex-1'></div>
+      <div
+        className={clsx('flex gap-2', {
+          'flex-col': !isEnemyBoard,
+          'flex-col-reverse': isEnemyBoard
+        })}
+      >
+        <div className='grid grid-cols-3'>
+          {scorePerColumn.map((score, index) => (
+            <p className='text-center' key={index}>
+              {score}
+            </p>
+          ))}
+        </div>
+        <div className='grid aspect-square h-[30vh] grid-cols-3 border'>
+          {COLUMNS_PLACEHOLDER.map((_, colIndex) => (
+            <Column
+              key={colIndex}
+              readonly={readonly}
+              onClick={!readonly ? () => onColumnClick?.(colIndex) : undefined}
+            >
+              {CELLS_PER_COLUMN_PLACEHOLDER.map((_, cellIndex) => {
+                // Reverses the render order to miror the board for the enemy
+                const actualCellIndex = isEnemyBoard
+                  ? MAX_CELLS_PER_COLUMNS - cellIndex - 1
+                  : cellIndex
+                const value = columns[colIndex][actualCellIndex]
+                return (
+                  <Cell key={cellIndex}>
+                    {value !== undefined && <Dice value={value} />}
+                  </Cell>
+                )
+              })}
+            </Column>
+          ))}
+        </div>
       </div>
-      <div className='grid aspect-square h-[30vh] grid-cols-3 border md:h-[40vh]'>
-        {COLUMNS_PLACEHOLDER.map((_, colIndex) => (
-          <Column
-            key={colIndex}
-            readonly={readonly}
-            onClick={!readonly ? () => onColumnClick?.(colIndex) : undefined}
-          >
-            {CELLS_PER_COLUMN_PLACEHOLDER.map((_, cellIndex) => {
-              // Reverses the render order to miror the board for the enemy
-              const actualCellIndex = isEnemyBoard
-                ? MAX_CELLS_PER_COLUMNS - cellIndex - 1
-                : cellIndex
-              const value = columns[colIndex][actualCellIndex]
-              return (
-                <Cell key={cellIndex}>
-                  {value !== undefined && <Dice value={value} />}
-                </Cell>
-              )
-            })}
-          </Column>
-        ))}
-      </div>
-      <div className='flex flex-row justify-between'>
+      <div
+        className={clsx(
+          'flex flex-1 items-center justify-between md:items-start md:justify-start md:gap-4',
+          {
+            'flex-row md:flex-col-reverse md:items-end': !isEnemyBoard,
+            'flex-row-reverse md:flex-col md:items-start': isEnemyBoard
+          }
+        )}
+      >
+        {nextDie !== undefined && (
+          <Dice value={nextDie} fullSize={false} className='h-12 md:h-16' />
+        )}
         <p>Total: {total}</p>
         {isEnemyBoard ? (
           // Will need generated name

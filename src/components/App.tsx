@@ -32,10 +32,20 @@ export function App() {
 
   return (
     <div className='flex h-screen flex-col items-center justify-between p-6'>
-      <Board readonly isEnemyBoard columns={enemyColumns} />
+      {/* Disclaimer on landscape mode to avoid implementing difficult and useless design */}
+      <div className='absolute inset-0 hidden h-screen bg-black/25 landscape:block lg:landscape:hidden'>
+        <div className='flex h-full flex-row items-center justify-center'>
+          {/* Could be using `dialog` with `backdrop:` but doesn't seem to work atm */}
+          <div className='rounded bg-white p-4'>
+            <p>This game has been thought for portrait mode only</p>
+          </div>
+        </div>
+      </div>
+      <Board readonly isEnemyBoard columns={enemyColumns} nextDie={enemyDice} />
       <Board
         columns={columns}
         onColumnClick={(colIndex) => addToColumn(colIndex, dice)}
+        nextDie={dice}
       />
       <button
         className='absolute bottom-0 right-0 m-2 p-2'
@@ -43,7 +53,7 @@ export function App() {
           addToEnemyColumn(getRandomValue(0, 2), enemyDice)
         }}
       >
-        Play for enemy
+        Simulate enemy play
       </button>
     </div>
   )
