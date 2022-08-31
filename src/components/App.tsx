@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Board, useBoard } from './Board'
-import { configureAbly, useChannel } from '@ably-labs/react-hooks'
+import { configureAbly, useChannel, usePresence } from '@ably-labs/react-hooks'
 
 // Not needed
 function getRandomValue(min = 0, max = 1) {
@@ -21,7 +21,8 @@ export function App() {
     value: number
   } | null>(null)
 
-  const { columns: enemyColumns, addToColumn: addToEnemyColumn } = useBoard()
+  const { columns: opponentColumns, addToColumn: addToOpponentColumn } =
+    useBoard()
 
   const { columns, addToColumn } = useBoard({
     onDicePlaced(column, value) {
@@ -36,7 +37,7 @@ export function App() {
 
   const [channel, ably] = useChannel('knucklebones-test', (message) => {
     if (ably.auth.clientId !== message.clientId) {
-      addToEnemyColumn(message.data.column, message.data.value)
+      addToOpponentColumn(message.data.column, message.data.value)
       setNextMove(null)
     }
   })
@@ -46,6 +47,22 @@ export function App() {
       channel.publish('play', nextMove)
     }
   }, [channel, nextMove])
+
+  const [name, setName] = React.useState('')
+  const [opponentName, setOpponentName] = React.useState('')
+
+  const [presenceData, _] = usePresence('knucklebones-test', ably.auth.clientId)
+
+  presenceData.forEach((presenceMessage) => {
+    if (
+      presenceMessage.clientId !== ably.auth.clientId &&
+      opponentName === ''
+    ) {
+      setOpponentName(presenceMessage.clientId)
+    } else if (presenceMessage.clientId === ably.auth.clientId && name === '') {
+      setName(presenceMessage.clientId)
+    }
+  })
 
   return (
     <div className='flex h-screen flex-col items-center justify-between p-6'>
@@ -58,12 +75,13 @@ export function App() {
           </div>
         </div>
       </div>
-      <Board isEnemyBoard columns={enemyColumns} />
+      <Board isOpponentBoard columns={opponentColumns} name={opponentName} />
       <Board
         columns={columns}
         onColumnClick={(colIndex) => addToColumn(colIndex, dice)}
         nextDie={dice}
         canPlay={nextMove === null}
+        name={name}
       />
     </div>
   )
