@@ -6,7 +6,7 @@
   "scripts": {
     "dev:app": "vite",
     "dev:worker": "wrangler pages dev ./functions",
-    "dev": "wrangler pages dev -- yarn dev:app",
+    "dev": "wrangler pages dev --proxy 5173 -- yarn dev:app",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "lint": "eslint . --ext ts,tsx"
@@ -24,6 +24,7 @@
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@vitejs/plugin-react": "^2.0.1",
     "autoprefixer": "^10.4.8",
+    "clsx": "^1.2.1",
     "eslint": "^8.0.1",
     "eslint-config-prettier": "^8.5.0",
     "eslint-config-standard-with-typescript": "^22.0.0",
@@ -34,6 +35,7 @@
     "eslint-plugin-react": "^7.31.1",
     "postcss": "^8.4.16",
     "prettier": "^2.7.1",
+    "prettier-plugin-tailwindcss": "^0.1.13",
     "tailwindcss": "^3.1.8",
     "typescript": "^4.6.4",
     "vite": "^3.0.7",

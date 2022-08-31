@@ -28,3 +28,6 @@ rules:
       named: never
       anonymous: always
   "@typescript-eslint/explicit-function-return-type": off
+  "@typescript-eslint/method-signature-style":
+    - error
+    - method
