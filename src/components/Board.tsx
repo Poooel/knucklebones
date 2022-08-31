@@ -18,7 +18,7 @@ interface ColumnProps extends Children {
 }
 
 interface UseBoardProps {
-  onDicePlaced?(): void
+  onDicePlaced?(column: number, value: number): void
 }
 
 interface BoardProps {
@@ -80,7 +80,7 @@ function Column({ children, onClick, readonly = false }: ColumnProps) {
   )
 }
 
-export function useBoard({ onDicePlaced }: UseBoardProps) {
+export function useBoard({ onDicePlaced }: UseBoardProps = {}) {
   const [columns, setColumns] = React.useState(
     Array.from<ColumnDice>({ length: MAX_COLUMNS }).fill([])
   )
@@ -91,7 +91,7 @@ export function useBoard({ onDicePlaced }: UseBoardProps) {
     setColumns((previous) => {
       return previous.map((column, colIndex) => {
         if (colIndex === index && column.length < MAX_CELLS_PER_COLUMNS) {
-          onDicePlaced?.()
+          onDicePlaced?.(index, value)
           return column.concat(value)
         }
         return column
