@@ -48,18 +48,31 @@ export function App() {
     }
   }, [channel, nextMove])
 
-  const [name, setName] = React.useState('')
-  const [opponentName, setOpponentName] = React.useState('')
+  const [name, setName] = React.useState<string | null>(null)
+  const [opponentName, setOpponentName] = React.useState<string | null>(null)
 
-  const [presenceData, _] = usePresence('knucklebones-test', ably.auth.clientId)
+  const [presenceData, _] = usePresence(
+    'knucklebones-test',
+    ably.auth.clientId,
+    (presenceUpdate) => {
+      if (presenceUpdate.action === 'leave') {
+        if (presenceUpdate.clientId !== ably.auth.clientId) {
+          setOpponentName(null)
+        }
+      }
+    }
+  )
 
   presenceData.forEach((presenceMessage) => {
     if (
       presenceMessage.clientId !== ably.auth.clientId &&
-      opponentName === ''
+      opponentName === null
     ) {
       setOpponentName(presenceMessage.clientId)
-    } else if (presenceMessage.clientId === ably.auth.clientId && name === '') {
+    } else if (
+      presenceMessage.clientId === ably.auth.clientId &&
+      name === null
+    ) {
       setName(presenceMessage.clientId)
     }
   })
