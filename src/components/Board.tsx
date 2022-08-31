@@ -27,7 +27,7 @@ interface BoardProps {
   onColumnClick?(colIndex: number): void
   isOpponentBoard?: boolean
   canPlay?: boolean
-  name?: string
+  name: string | null
 }
 
 const MAX_COLUMNS = 3
