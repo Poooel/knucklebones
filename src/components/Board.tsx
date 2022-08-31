@@ -25,8 +25,8 @@ interface BoardProps {
   columns: BoardDice
   nextDie?: number
   onColumnClick?(colIndex: number): void
-  readonly?: boolean
   isEnemyBoard?: boolean
+  canPlay?: boolean
 }
 
 const MAX_COLUMNS = 3
@@ -122,8 +122,8 @@ export function Board({
   columns,
   nextDie,
   onColumnClick,
-  readonly = false,
-  isEnemyBoard = false
+  isEnemyBoard = false,
+  canPlay = false
 }: BoardProps) {
   const scorePerColumn = getScore(columns)
   const total = scorePerColumn.reduce((acc, col) => acc + col, 0)
@@ -153,8 +153,8 @@ export function Board({
           {COLUMNS_PLACEHOLDER.map((_, colIndex) => (
             <Column
               key={colIndex}
-              readonly={readonly}
-              onClick={!readonly ? () => onColumnClick?.(colIndex) : undefined}
+              readonly={!canPlay}
+              onClick={canPlay ? () => onColumnClick?.(colIndex) : undefined}
             >
               {CELLS_PER_COLUMN_PLACEHOLDER.map((_, cellIndex) => {
                 // Reverses the render order to miror the board for the enemy

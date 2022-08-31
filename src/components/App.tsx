@@ -37,13 +37,13 @@ export function App() {
   const [channel, ably] = useChannel('knucklebones-test', (message) => {
     if (ably.auth.clientId !== message.clientId) {
       addToEnemyColumn(message.data.column, message.data.value)
+      setNextMove(null)
     }
   })
 
   React.useEffect(() => {
     if (nextMove !== null) {
       channel.publish('play', nextMove)
-      setNextMove(null)
     }
   }, [channel, nextMove])
 
@@ -58,11 +58,12 @@ export function App() {
           </div>
         </div>
       </div>
-      <Board readonly isEnemyBoard columns={enemyColumns} />
+      <Board isEnemyBoard columns={enemyColumns} />
       <Board
         columns={columns}
         onColumnClick={(colIndex) => addToColumn(colIndex, dice)}
         nextDie={dice}
+        canPlay={nextMove === null}
       />
     </div>
   )
