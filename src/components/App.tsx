@@ -45,7 +45,7 @@ export function App() {
   })
 
   const [channel, ably] = useChannel(
-    'knucklebones-test-11111222223334',
+    'knucklebones:test',
     ({ clientId, data }) => {
       if (!isItMe(clientId)) {
         addToOpponentColumn(data.column, data.value)
@@ -87,7 +87,7 @@ export function App() {
 
   const [name, setName] = React.useState<string | null>(null)
   const [opponentName, setOpponentName] = React.useState<string | null>(null)
-  const [presenceData] = usePresence('knucklebones-test-11111222223334')
+  const [presenceData] = usePresence('knucklebones:test')
 
   React.useEffect(() => {
     setName(null)
