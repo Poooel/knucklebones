@@ -25,8 +25,9 @@ interface BoardProps {
   columns: BoardDice
   nextDie?: number
   onColumnClick?(colIndex: number): void
-  isEnemyBoard?: boolean
+  isOpponentBoard?: boolean
   canPlay?: boolean
+  name: string | null
 }
 
 const MAX_COLUMNS = 3
@@ -122,8 +123,9 @@ export function Board({
   columns,
   nextDie,
   onColumnClick,
-  isEnemyBoard = false,
-  canPlay = false
+  isOpponentBoard = false,
+  canPlay = false,
+  name
 }: BoardProps) {
   const scorePerColumn = getScore(columns)
   const total = scorePerColumn.reduce((acc, col) => acc + col, 0)
@@ -131,15 +133,15 @@ export function Board({
   return (
     <div
       className={clsx('flex gap-4 md:w-full md:gap-8', {
-        'flex-col md:flex-row-reverse': !isEnemyBoard,
-        'flex-col-reverse md:flex-row': isEnemyBoard
+        'flex-col md:flex-row-reverse': !isOpponentBoard,
+        'flex-col-reverse md:flex-row': isOpponentBoard
       })}
     >
       <div className='flex-1'></div>
       <div
         className={clsx('flex gap-2', {
-          'flex-col': !isEnemyBoard,
-          'flex-col-reverse': isEnemyBoard
+          'flex-col': !isOpponentBoard,
+          'flex-col-reverse': isOpponentBoard
         })}
       >
         <div className='grid grid-cols-3'>
@@ -157,8 +159,8 @@ export function Board({
               onClick={canPlay ? () => onColumnClick?.(colIndex) : undefined}
             >
               {CELLS_PER_COLUMN_PLACEHOLDER.map((_, cellIndex) => {
-                // Reverses the render order to miror the board for the enemy
-                const actualCellIndex = isEnemyBoard
+                // Reverses the render order to miror the board for the opponent
+                const actualCellIndex = isOpponentBoard
                   ? MAX_CELLS_PER_COLUMNS - cellIndex - 1
                   : cellIndex
                 const value = columns[colIndex][actualCellIndex]
@@ -176,8 +178,8 @@ export function Board({
         className={clsx(
           'flex flex-1 items-center justify-between md:items-start md:justify-start md:gap-4',
           {
-            'flex-row md:flex-col-reverse md:items-end': !isEnemyBoard,
-            'flex-row-reverse md:flex-col md:items-start': isEnemyBoard
+            'flex-row md:flex-col-reverse md:items-end': !isOpponentBoard,
+            'flex-row-reverse md:flex-col md:items-start': isOpponentBoard
           }
         )}
       >
@@ -185,11 +187,12 @@ export function Board({
           <Dice value={nextDie} fullSize={false} className='h-12 md:h-16' />
         )}
         <p>Total: {total}</p>
-        {isEnemyBoard ? (
-          // Will need generated name
-          <p>(Enemy)</p>
+        {name != null ? (
+          <p>
+            {name} ({isOpponentBoard ? 'opponent' : 'you'})
+          </p>
         ) : (
-          <p>(You)</p>
+          <p>{isOpponentBoard ? 'Opponent' : 'You'}</p>
         )}
       </div>
     </div>

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Board, useBoard } from './Board'
-import { configureAbly, useChannel } from '@ably-labs/react-hooks'
+import { configureAbly, useChannel, usePresence } from '@ably-labs/react-hooks'
 
 // Not needed
 function getRandomValue(min = 0, max = 1) {
@@ -15,13 +15,18 @@ configureAbly({
 })
 
 export function App() {
+  const isItMe = (clientId: string) => {
+    return clientId === ably.auth.clientId
+  }
+
   const [dice, setDice] = React.useState(getRandomDice())
   const [nextMove, setNextMove] = React.useState<{
     column: number
     value: number
   } | null>(null)
 
-  const { columns: enemyColumns, addToColumn: addToEnemyColumn } = useBoard()
+  const { columns: opponentColumns, addToColumn: addToOpponentColumn } =
+    useBoard()
 
   const { columns, addToColumn } = useBoard({
     onDicePlaced(column, value) {
@@ -34,18 +39,38 @@ export function App() {
     }
   })
 
-  const [channel, ably] = useChannel('knucklebones-test', (message) => {
-    if (ably.auth.clientId !== message.clientId) {
-      addToEnemyColumn(message.data.column, message.data.value)
-      setNextMove(null)
+  const [channel, ably] = useChannel(
+    'knucklebones-test',
+    ({ clientId, data }) => {
+      if (!isItMe(clientId)) {
+        addToOpponentColumn(data.column, data.value)
+        setNextMove(null)
+      }
     }
-  })
+  )
 
   React.useEffect(() => {
     if (nextMove !== null) {
       channel.publish('play', nextMove)
     }
   }, [channel, nextMove])
+
+  const [name, setName] = React.useState<string | null>(null)
+  const [opponentName, setOpponentName] = React.useState<string | null>(null)
+  const [presenceData] = usePresence('knucklebones-test')
+
+  React.useEffect(() => {
+    setName(null)
+    setOpponentName(null)
+
+    presenceData.forEach(({ clientId }) => {
+      if (isItMe(clientId)) {
+        setName(clientId)
+      } else {
+        setOpponentName(clientId)
+      }
+    })
+  }, [presenceData])
 
   return (
     <div className='flex h-screen flex-col items-center justify-between p-6'>
@@ -58,12 +83,13 @@ export function App() {
           </div>
         </div>
       </div>
-      <Board isEnemyBoard columns={enemyColumns} />
+      <Board isOpponentBoard columns={opponentColumns} name={opponentName} />
       <Board
         columns={columns}
         onColumnClick={(colIndex) => addToColumn(colIndex, dice)}
         nextDie={dice}
         canPlay={nextMove === null}
+        name={name}
       />
     </div>
   )
