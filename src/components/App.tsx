@@ -15,6 +15,10 @@ configureAbly({
 })
 
 export function App() {
+  const isItMe = (clientId: string) => {
+    return clientId === ably.auth.clientId
+  }
+
   const [dice, setDice] = React.useState(getRandomDice())
   const [nextMove, setNextMove] = React.useState<{
     column: number
@@ -35,12 +39,15 @@ export function App() {
     }
   })
 
-  const [channel, ably] = useChannel('knucklebones-test', (message) => {
-    if (ably.auth.clientId !== message.clientId) {
-      addToOpponentColumn(message.data.column, message.data.value)
-      setNextMove(null)
+  const [channel, ably] = useChannel(
+    'knucklebones-test',
+    ({ clientId, data }) => {
+      if (!isItMe(clientId)) {
+        addToOpponentColumn(data.column, data.value)
+        setNextMove(null)
+      }
     }
-  })
+  )
 
   React.useEffect(() => {
     if (nextMove !== null) {
@@ -50,32 +57,20 @@ export function App() {
 
   const [name, setName] = React.useState<string | null>(null)
   const [opponentName, setOpponentName] = React.useState<string | null>(null)
+  const [presenceData] = usePresence('knucklebones-test')
 
-  const [presenceData, _] = usePresence(
-    'knucklebones-test',
-    ably.auth.clientId,
-    (presenceUpdate) => {
-      if (presenceUpdate.action === 'leave') {
-        if (presenceUpdate.clientId !== ably.auth.clientId) {
-          setOpponentName(null)
-        }
+  React.useEffect(() => {
+    setName(null)
+    setOpponentName(null)
+
+    presenceData.forEach(({ clientId }) => {
+      if (isItMe(clientId)) {
+        setName(clientId)
+      } else {
+        setOpponentName(clientId)
       }
-    }
-  )
-
-  presenceData.forEach((presenceMessage) => {
-    if (
-      presenceMessage.clientId !== ably.auth.clientId &&
-      opponentName === null
-    ) {
-      setOpponentName(presenceMessage.clientId)
-    } else if (
-      presenceMessage.clientId === ably.auth.clientId &&
-      name === null
-    ) {
-      setName(presenceMessage.clientId)
-    }
-  })
+    })
+  }, [presenceData])
 
   return (
     <div className='flex h-screen flex-col items-center justify-between p-6'>
