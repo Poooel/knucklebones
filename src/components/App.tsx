@@ -2,6 +2,11 @@ import * as React from 'react'
 import { Board, useBoard } from './Board'
 import { configureAbly, useChannel, usePresence } from '@ably-labs/react-hooks'
 
+interface Play {
+  column: number
+  value: number
+}
+
 // Not needed
 function getRandomValue(min = 0, max = 1) {
   return Math.round(Math.random() * (max - min) + min)
@@ -10,8 +15,10 @@ function getRandomDice() {
   return getRandomValue(1, 6)
 }
 
+const clientId = localStorage.getItem('clientId')
+
 configureAbly({
-  authUrl: '/api/auth'
+  authUrl: `/api/auth${clientId !== null ? `?clientId=${clientId}` : ''}`
 })
 
 export function App() {
@@ -20,10 +27,7 @@ export function App() {
   }
 
   const [dice, setDice] = React.useState(getRandomDice())
-  const [nextMove, setNextMove] = React.useState<{
-    column: number
-    value: number
-  } | null>(null)
+  const [nextMove, setNextMove] = React.useState<Play | null>(null)
 
   const { columns: opponentColumns, addToColumn: addToOpponentColumn } =
     useBoard()
@@ -35,19 +39,45 @@ export function App() {
         column,
         value
       })
+      setMyTurn(false)
       setDice(getRandomDice())
     }
   })
 
   const [channel, ably] = useChannel(
-    'knucklebones-test',
+    'knucklebones-test-11111222223334',
     ({ clientId, data }) => {
       if (!isItMe(clientId)) {
         addToOpponentColumn(data.column, data.value)
-        setNextMove(null)
+        setMyTurn(true)
       }
     }
   )
+
+  const [myTurn, setMyTurn] = React.useState(true)
+
+  React.useEffect(() => {
+    if (ably.auth.clientId !== undefined) {
+      channel.history((err, result) => {
+        if (err != null) {
+          console.error(err)
+        }
+
+        if (result !== undefined) {
+          result.items.forEach((item) => {
+            if (isItMe(item.clientId)) {
+              addToColumn(item.data.column, item.data.value, false)
+            } else {
+              addToOpponentColumn(item.data.column, item.data.value, false)
+            }
+          })
+
+          const lastPlayerClientId = result?.items[0].clientId
+          setMyTurn(!isItMe(lastPlayerClientId))
+        }
+      })
+    }
+  }, [ably.auth.clientId])
 
   React.useEffect(() => {
     if (nextMove !== null) {
@@ -57,7 +87,7 @@ export function App() {
 
   const [name, setName] = React.useState<string | null>(null)
   const [opponentName, setOpponentName] = React.useState<string | null>(null)
-  const [presenceData] = usePresence('knucklebones-test')
+  const [presenceData] = usePresence('knucklebones-test-11111222223334')
 
   React.useEffect(() => {
     setName(null)
@@ -71,6 +101,12 @@ export function App() {
       }
     })
   }, [presenceData])
+
+  React.useEffect(() => {
+    if (ably.auth.clientId !== undefined) {
+      localStorage.setItem('clientId', ably.auth.clientId)
+    }
+  }, [ably.auth.clientId])
 
   return (
     <div className='flex h-screen flex-col items-center justify-between p-6'>
@@ -88,7 +124,7 @@ export function App() {
         columns={columns}
         onColumnClick={(colIndex) => addToColumn(colIndex, dice)}
         nextDie={dice}
-        canPlay={nextMove === null}
+        canPlay={myTurn}
         name={name}
       />
     </div>

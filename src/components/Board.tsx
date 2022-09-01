@@ -88,11 +88,17 @@ export function useBoard({ onDicePlaced }: UseBoardProps = {}) {
 
   const isBoardFull = columns.flat().filter((v) => v !== undefined)
 
-  function addToColumn(index: number, value: number) {
+  function addToColumn(
+    index: number,
+    value: number,
+    triggerCallback: boolean = true
+  ) {
     setColumns((previous) => {
       return previous.map((column, colIndex) => {
         if (colIndex === index && column.length < MAX_CELLS_PER_COLUMNS) {
-          onDicePlaced?.(index, value)
+          if (triggerCallback) {
+            onDicePlaced?.(index, value)
+          }
           return column.concat(value)
         }
         return column
