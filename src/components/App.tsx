@@ -3,11 +3,11 @@ import { useTurn } from '../hooks/useTurn'
 import { useNames } from '../hooks/useNames'
 import { useGame, useResumeGame } from '../hooks/useGame'
 import { getRandomDice } from '../utils/random'
-import { connectToGame } from '../utils/game'
+import { connectToAbly } from '../utils/connectToAbly'
 import { Board, useBoard } from './Board'
 import { useParams } from 'react-router-dom'
 
-connectToGame()
+connectToAbly()
 
 export interface Params {
   roomKey: string
