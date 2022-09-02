@@ -1,6 +1,6 @@
 import { configureAbly } from '@ably-labs/react-hooks'
 
-export function connectToGame() {
+export function connectToAbly() {
   const clientId = localStorage.getItem('clientId')
   // Will be read from URL, or auto-generated
   const roomId = 'knucklebones:test:alexis10'

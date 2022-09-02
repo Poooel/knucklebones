@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { isItPlay } from '../utils/play'
-import { useAltChannel } from './useAltChannel'
+import { useRoom } from './useRoom'
 
 /**
  * Simple hook to keep turns synchronized locally, and detects whether that's
@@ -11,7 +11,7 @@ export function useTurn(roomId: string) {
 
   // This will first get the last message published to resume the turn, then
   // will update the turn based on new messages
-  const [, , { isItMe }] = useAltChannel(roomId, { rewind: 1 }, (message) => {
+  const [, , { isItMe }] = useRoom(roomId, { rewind: 1 }, (message) => {
     if (isItPlay(message)) {
       setMyTurn(!isItMe(message.clientId))
     }

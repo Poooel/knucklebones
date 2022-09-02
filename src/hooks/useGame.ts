@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { isItPlay, Play } from '../utils/play'
-import { useAltChannel } from './useAltChannel'
+import { useRoom } from './useRoom'
 
 /**
- * Simple hook to keep the game synchronize, by allowing to publish one's plays,
+ * Simple hook to keep the game synchronized, by allowing to publish one's plays,
  * and receive the oppononent's plays.
  * Can later be used to synchronize dices
  */
@@ -11,7 +11,7 @@ export function useGame(
   roomId: string,
   { onOpponentPlay }: { onOpponentPlay(play: Play): void }
 ) {
-  const [channel, , { isItMe }] = useAltChannel(roomId, {}, (message) => {
+  const [channel, , { isItMe }] = useRoom(roomId, {}, (message) => {
     if (!isItMe(message.clientId) && isItPlay(message)) {
       onOpponentPlay(message.data)
     }
@@ -37,7 +37,7 @@ export function useResumeGame(
     onOpponentPlay(play: Play): void
   }
 ) {
-  const [channel, ably, { isItMe }] = useAltChannel(roomId)
+  const [channel, ably, { isItMe }] = useRoom(roomId)
 
   React.useEffect(() => {
     if (ably.auth.clientId !== undefined) {

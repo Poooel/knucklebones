@@ -3,10 +3,10 @@ import { useTurn } from '../hooks/useTurn'
 import { useNames } from '../hooks/useNames'
 import { useGame, useResumeGame } from '../hooks/useGame'
 import { getRandomDice } from '../utils/random'
-import { connectToGame } from '../utils/game'
+import { connectToAbly } from '../utils/connectToAbly'
 import { Board, useBoard } from './Board'
 
-const roomId = connectToGame()
+const roomId = connectToAbly()
 
 export function App() {
   const [dice, setDice] = React.useState(getRandomDice())
