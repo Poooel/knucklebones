@@ -5,10 +5,19 @@ import { useGame, useResumeGame } from '../hooks/useGame'
 import { getRandomDice } from '../utils/random'
 import { connectToAbly } from '../utils/connectToAbly'
 import { Board, useBoard } from './Board'
+import { useParams } from 'react-router-dom'
 
-const roomId = connectToAbly()
+connectToAbly()
+
+export interface Params {
+  roomKey: string
+}
+
+const roomName = 'knucklebones'
 
 export function App() {
+  const { roomKey } = useParams<keyof Params>() as Params
+  const roomId = `${roomName}:${roomKey}`
   const [dice, setDice] = React.useState(getRandomDice())
 
   const { columns: opponentColumns, addToColumn: addToOpponentColumn } =
