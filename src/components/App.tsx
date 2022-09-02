@@ -18,7 +18,6 @@ const roomName = 'knucklebones'
 export function App() {
   const { roomKey } = useParams<keyof Params>() as Params
   const roomId = `${roomName}:${roomKey}`
-
   const [dice, setDice] = React.useState(getRandomDice())
 
   const { columns: opponentColumns, addToColumn: addToOpponentColumn } =

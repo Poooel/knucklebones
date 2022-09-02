@@ -11,7 +11,7 @@ import {
  * - `isItMe` utility to detect messages published by the current user
  * - Optional callback
  */
-export function useAltChannel(
+export function useRoom(
   roomId: string,
   options: { rewind?: number } = {},
   callback: AblyMessageCallback = () => {}

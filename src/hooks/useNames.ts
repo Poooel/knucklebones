@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { usePresence } from '@ably-labs/react-hooks'
-import { useAltChannel } from './useAltChannel'
+import { useRoom } from './useRoom'
 
 /**
  * Inspects who is logged in to the current game, and determines the name of
@@ -11,7 +11,7 @@ export function useNames(roomId: string) {
   const [opponentName, setOpponentName] = React.useState<string | null>(null)
   // Can introduce later a list of spectators to be displayed
 
-  const [, ably, { isItMe }] = useAltChannel(roomId)
+  const [, ably, { isItMe }] = useRoom(roomId)
   const [presenceData] = usePresence(roomId)
 
   React.useEffect(() => {
