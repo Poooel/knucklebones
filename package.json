@@ -13,10 +13,13 @@
   },
   "dependencies": {
     "@ably-labs/react-hooks": "^2.0.9",
+    "@types/uuid": "^8.3.4",
     "ably": "^1.2.29",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "unique-names-generator": "^4.7.1"
+    "react-router-dom": "6",
+    "unique-names-generator": "^4.7.1",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^3.14.1",
