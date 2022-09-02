@@ -37,6 +37,13 @@ function getColumnScore(dice: ColumnDice) {
   )
 }
 
+/**
+ * Helper function to compute the score of a board, per column. The total can
+ * be found by adding the score of each column.
+ * All dice in a column are summed up. If the same dice is found twice, we sum
+ * they up and multiply the result by 2. If the same dice is found 3 times, we
+ * sum they up and multiply th result by 3.
+ */
 export function getScore(dice: BoardDice) {
   return dice.map((column) => {
     return getColumnScore(column)

@@ -93,35 +93,26 @@ export function useBoard({ onDicePlaced }: UseBoardProps = {}) {
     value: number,
     triggerCallback: boolean = true
   ) {
-    setColumns((previous) => {
-      return previous.map((column, colIndex) => {
-        if (colIndex === index && column.length < MAX_CELLS_PER_COLUMNS) {
-          if (triggerCallback) {
-            onDicePlaced?.(index, value)
+    const canPlaceDice = columns[index].length < MAX_CELLS_PER_COLUMNS
+    if (canPlaceDice) {
+      setColumns((previous) => {
+        return previous.map((column, colIndex) => {
+          if (colIndex === index) {
+            return column.concat(value)
           }
-          return column.concat(value)
-        }
-        return column
+          return column
+        })
       })
-    })
-  }
-
-  function removeFromColumn(index: number) {
-    setColumns((previous) => {
-      return previous.map((column, colIndex) => {
-        if (colIndex === index && column.length > 1) {
-          return column.slice(0, index + 1)
-        }
-        return column
-      })
-    })
+      if (triggerCallback) {
+        onDicePlaced?.(index, value)
+      }
+    }
   }
 
   return {
     columns,
     isBoardFull,
-    addToColumn,
-    removeFromColumn
+    addToColumn
   }
 }
 
