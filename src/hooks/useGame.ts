@@ -3,7 +3,7 @@ import { isItPlay, Play } from '../utils/play'
 import { useRoom } from './useRoom'
 
 /**
- * Simple hook to keep the game synchronized, by allowing to publish one's plays,main
+ * Simple hook to keep the game synchronized, by allowing to publish one's plays,
  * and receive the oppononent's plays.
  * Can later be used to synchronize dices
  */
