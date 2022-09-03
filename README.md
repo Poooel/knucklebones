@@ -14,6 +14,8 @@ Install the dependencies with:
 yarn install
 ```
 
+Be sure that you have a `.dev.vars` file at the project root. It must define a value for `ABLY_CLIENT_SIDE_API_KEY`, which will be used as an environment variable when running the workers.
+
 Then, to start the pages and workers, run:
 
 ```sh
