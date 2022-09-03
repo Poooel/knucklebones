@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { clsx } from 'clsx'
-import { BoardDice, ColumnDice, getScore } from '../utils/score'
+import { BoardDice, getScore } from '../utils/score'
 
 interface Children {
   children: React.ReactNode
@@ -15,10 +15,6 @@ interface DiceProps {
 interface ColumnProps extends Children {
   onClick?: React.MouseEventHandler<HTMLDivElement>
   readonly?: boolean
-}
-
-interface UseBoardProps {
-  onDicePlaced?(column: number, value: number): void
 }
 
 interface BoardProps {
@@ -79,41 +75,6 @@ function Column({ children, onClick, readonly = false }: ColumnProps) {
       {children}
     </div>
   )
-}
-
-export function useBoard({ onDicePlaced }: UseBoardProps = {}) {
-  const [columns, setColumns] = React.useState(
-    Array.from<ColumnDice>({ length: MAX_COLUMNS }).fill([])
-  )
-
-  const isBoardFull = columns.flat().filter((v) => v !== undefined)
-
-  function addToColumn(
-    index: number,
-    value: number,
-    triggerCallback: boolean = true
-  ) {
-    const canPlaceDice = columns[index].length < MAX_CELLS_PER_COLUMNS
-    if (canPlaceDice) {
-      setColumns((previous) => {
-        return previous.map((column, colIndex) => {
-          if (colIndex === index) {
-            return column.concat(value)
-          }
-          return column
-        })
-      })
-      if (triggerCallback) {
-        onDicePlaced?.(index, value)
-      }
-    }
-  }
-
-  return {
-    columns,
-    isBoardFull,
-    addToColumn
-  }
 }
 
 export function Board({
