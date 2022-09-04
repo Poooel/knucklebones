@@ -47,7 +47,10 @@ export function useResumeGame(
         }
 
         if (result !== undefined) {
-          result.items.forEach((item) => {
+          // Messages in history are returned from newest to oldest. We need to
+          // reverse the order to follow the same plays order as the game
+          // (needed for the dice removal logic).
+          result.items.reverse().forEach((item) => {
             if (isItPlay(item)) {
               const { clientId, data } = item
               if (isItMe(clientId)) {

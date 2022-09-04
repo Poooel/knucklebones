@@ -38,14 +38,14 @@ export function App() {
     }
   })
 
+  const myTurn = useTurn(roomId)
+  const { myName, opponentName } = useNames(roomId)
   const { sendPlay } = useGame(roomId, {
     onOpponentPlay({ column, value }) {
       addToOpponentColumn(column, value)
       removeDiceFromMyColumn(column, value)
     }
   })
-  const myTurn = useTurn(roomId)
-  const { myName, opponentName } = useNames(roomId)
   useResumeGame(roomId, {
     onMyPlay({ column, value }) {
       addToMyColumn(column, value, false)
