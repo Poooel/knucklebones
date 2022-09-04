@@ -8,11 +8,8 @@ function getDieScore(die: number, count: number) {
 
 function countDiceInColumn(column: ColumnDice) {
   return column.reduce<CountedDice>((map, die = 0) => {
-    const dieCount = map.get(die)
-    if (dieCount !== undefined) {
-      return map.set(die, dieCount + 1)
-    }
-    return map.set(die, 1)
+    const dieCount = map.get(die) ?? 0
+    return map.set(die, dieCount + 1)
   }, new Map())
 }
 
