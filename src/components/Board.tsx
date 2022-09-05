@@ -37,7 +37,7 @@ export function Board({
   return (
     <div
       className={clsx(
-        'flex items-center gap-4 text-slate-900 md:w-full md:items-stretch md:gap-8',
+        'flex items-center gap-2 text-slate-900 md:w-full md:items-stretch md:gap-8',
         {
           'flex-col md:flex-row-reverse': !isOpponentBoard,
           'flex-col-reverse md:flex-row': isOpponentBoard,
@@ -50,7 +50,7 @@ export function Board({
         {/* Placeholder on desktop to keep the board centered */}
       </div>
       <div
-        className={clsx('flex items-center gap-2', {
+        className={clsx('flex items-center gap-1 md:gap-4', {
           'flex-col': !isOpponentBoard,
           'flex-col-reverse': isOpponentBoard
         })}

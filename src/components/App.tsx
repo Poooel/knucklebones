@@ -62,7 +62,7 @@ export function App() {
   })
 
   return (
-    <div className='flex h-screen flex-col items-center justify-between bg-slate-200 p-6'>
+    <div className='flex h-screen flex-col items-center justify-between bg-slate-200 p-2 md:p-8'>
       <Board
         isOpponentBoard
         columns={opponentColumns}
