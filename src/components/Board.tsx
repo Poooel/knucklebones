@@ -1,22 +1,10 @@
 import * as React from 'react'
 import { clsx } from 'clsx'
 import { BoardDice, getScore } from '../utils/score'
-
-interface Children {
-  children: React.ReactNode
-}
-
-interface DiceProps {
-  value: number
-  count?: number
-  fullSize?: boolean
-  className?: string
-}
-
-interface ColumnProps extends Children {
-  onClick?: React.MouseEventHandler<HTMLDivElement>
-  readonly?: boolean
-}
+import { Dice } from './Dice'
+import { Column } from './Column'
+import { Cell } from './Cell'
+import { SidePanel } from './SidePanel'
 
 interface BoardProps {
   columns: BoardDice
@@ -34,52 +22,6 @@ const COLUMNS_PLACEHOLDER = Array.from({ length: MAX_COLUMNS })
 const CELLS_PER_COLUMN_PLACEHOLDER = Array.from({
   length: MAX_CELLS_PER_COLUMNS
 })
-
-// TODO: Either we set the size of the board, and we let it decide the size of
-// the dice
-// Or we set the size of the dice, and the size of the board will derive from
-// it (but we need a placeholder when no die is placed)
-
-function Dice({ value, count = 1, fullSize = true, className }: DiceProps) {
-  return (
-    <div
-      className={clsx(
-        'flex aspect-square select-none flex-row items-center justify-center rounded border bg-white',
-        {
-          'h-full w-full': fullSize,
-          'bg-white': count === 1,
-          'bg-yellow-200': count === 2,
-          'bg-blue-200': count === 3
-        },
-        className
-      )}
-    >
-      <p>{value}</p>
-    </div>
-  )
-}
-
-function Cell({ children }: Children) {
-  return (
-    <div className='flex flex-row items-center justify-center border p-4'>
-      {children}
-    </div>
-  )
-}
-
-function Column({ children, onClick, readonly = false }: ColumnProps) {
-  return (
-    <div
-      className={clsx('grid grid-rows-3', {
-        'hover:bg-gray-100': !readonly
-      })}
-      role={onClick !== undefined ? 'button' : undefined}
-      onClick={onClick}
-    >
-      {children}
-    </div>
-  )
-}
 
 export function Board({
   columns,
@@ -140,27 +82,12 @@ export function Board({
           ))}
         </div>
       </div>
-      <div
-        className={clsx(
-          'flex flex-1 items-center justify-between md:items-start md:justify-start md:gap-4',
-          {
-            'flex-row md:flex-col-reverse md:items-end': !isOpponentBoard,
-            'flex-row-reverse md:flex-col md:items-start': isOpponentBoard
-          }
-        )}
-      >
-        {nextDie !== undefined && (
-          <Dice value={nextDie} fullSize={false} className='h-12 md:h-16' />
-        )}
-        <p>Total: {totalScore}</p>
-        {name != null ? (
-          <p>
-            {name} ({isOpponentBoard ? 'opponent' : 'you'})
-          </p>
-        ) : (
-          <p>{isOpponentBoard ? 'Opponent' : 'You'}</p>
-        )}
-      </div>
+      <SidePanel
+        nextDie={nextDie}
+        isOpponentBoard={isOpponentBoard}
+        name={name}
+        totalScore={totalScore}
+      />
     </div>
   )
 }
