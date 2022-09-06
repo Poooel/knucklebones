@@ -5,14 +5,12 @@ import { Dice, DicePlaceholder } from './Dice'
 interface SidePanelProps {
   nextDie: number | null
   isOpponentBoard: boolean
-  name: string | null
   totalScore: number
 }
 
 export function SidePanel({
   nextDie,
   isOpponentBoard,
-  name,
   totalScore
 }: SidePanelProps) {
   return (

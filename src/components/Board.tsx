@@ -37,17 +37,17 @@ export function Board({
   return (
     <div
       className={clsx(
-        'flex items-center gap-2 text-slate-900 md:w-full md:items-stretch md:gap-8',
+        'flex justify-center gap-2 text-slate-900 md:w-full md:gap-8',
         {
-          'flex-col md:flex-row-reverse': !isOpponentBoard,
-          'flex-col-reverse md:flex-row': isOpponentBoard,
+          'flex-row items-end': !isOpponentBoard,
+          'flex-row-reverse items-start': isOpponentBoard,
           'opacity-75': !canPlay,
           'font-semibold': canPlay
         }
       )}
     >
-      <div className='hidden md:block md:flex-1'>
-        {/* Placeholder on desktop to keep the board centered */}
+      <div className='my-4'>
+        {nextDie !== null ? <Dice value={nextDie} /> : <DicePlaceholder />}
       </div>
       <div
         className={clsx('flex items-center gap-1 md:gap-4', {
@@ -109,12 +109,14 @@ export function Board({
           })}
         </div>
       </div>
-      <SidePanel
+      <div className='my-4'>
+        <p>Total: {totalScore}</p>
+      </div>
+      {/* <SidePanel
         nextDie={nextDie}
         isOpponentBoard={isOpponentBoard}
-        name={name}
         totalScore={totalScore}
-      />
+      /> */}
     </div>
   )
 }
