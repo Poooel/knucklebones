@@ -4,7 +4,6 @@ import { BoardDice, getScore } from '../utils/score'
 import { Dice, DicePlaceholder } from './Dice'
 import { Column } from './Column'
 import { Cell } from './Cell'
-import { SidePanel } from './SidePanel'
 import { Name } from './Name'
 
 interface BoardProps {
@@ -112,11 +111,6 @@ export function Board({
       <div className='my-4'>
         <p>Total: {totalScore}</p>
       </div>
-      {/* <SidePanel
-        nextDie={nextDie}
-        isOpponentBoard={isOpponentBoard}
-        totalScore={totalScore}
-      /> */}
     </div>
   )
 }
