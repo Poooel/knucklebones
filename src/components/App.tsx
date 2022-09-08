@@ -19,7 +19,8 @@ const roomName = 'knucklebones'
 export function App() {
   const { roomKey } = useParams<keyof Params>() as Params
   const roomId = `${roomName}:${roomKey}`
-  const [dice, setDice] = React.useState(getRandomDice())
+  const [myDice, setMyDice] = React.useState<number | null>(getRandomDice())
+  const [opponentDice, setOpponentDice] = React.useState<number | null>(null)
 
   const {
     columns: opponentColumns,
@@ -34,7 +35,8 @@ export function App() {
     onDicePlaced(column, value) {
       sendPlay({ column, value })
       removeDiceFromOpponentColumn(column, value)
-      setDice(getRandomDice())
+      setMyDice(null)
+      setOpponentDice(getRandomDice())
     }
   })
 
@@ -44,6 +46,8 @@ export function App() {
     onOpponentPlay({ column, value }) {
       addToOpponentColumn(column, value)
       removeDiceFromMyColumn(column, value)
+      setOpponentDice(null)
+      setMyDice(getRandomDice())
     }
   })
   useResumeGame(roomId, {
@@ -57,25 +61,54 @@ export function App() {
     }
   })
 
+  // From https://css-tricks.com/the-trick-to-viewport-units-on-mobile/
+  // Not great way to have a dynamic VH for mobile browsers that can expand and
+  // collapse parts of their interface (e.g. the address bar). Should be fixed
+  // once `svh` is more broadly implemented.
+  // https://developer.mozilla.org/en-US/docs/Web/CSS/length#relative_length_units_based_on_viewport
+  React.useEffect(() => {
+    function listener() {
+      const vh = window.innerHeight * 0.01
+      document.documentElement.style.setProperty('--vh', `${vh}px`)
+    }
+    listener() // Runs listener on initial mount
+    window.addEventListener('resize', listener)
+    return () => window.removeEventListener('resize', listener)
+  }, [])
+
   return (
-    <div className='flex h-screen flex-col items-center justify-between p-6'>
-      {/* Disclaimer on landscape mode to avoid implementing difficult and useless design */}
-      <div className='absolute inset-0 hidden h-screen bg-black/25 landscape:block lg:landscape:hidden'>
-        <div className='flex h-full flex-row items-center justify-center'>
-          {/* Could be using `dialog` with `backdrop:` but doesn't seem to work atm */}
-          <div className='rounded bg-white p-4'>
-            <p>This game has been thought for portrait mode only</p>
+    <div
+      className='h-screen bg-slate-200'
+      style={{ height: 'calc(var(--vh, 1vh) * 100)' }}
+    >
+      <div className='flex flex-col items-center justify-between px-2 py-4 md:h-full md:p-8'>
+        <Board
+          isOpponentBoard
+          columns={opponentColumns}
+          name={opponentName}
+          nextDie={opponentDice}
+          canPlay={!myTurn}
+        />
+        <p className='uppercase'>vs</p>
+        <Board
+          columns={myColumns}
+          onColumnClick={(colIndex) =>
+            myDice !== null && addToMyColumn(colIndex, myDice)
+          }
+          nextDie={myDice}
+          canPlay={myTurn}
+          name={myName}
+        />
+        {/* Disclaimer on landscape mode to avoid implementing difficult and useless design */}
+        <div className='fixed inset-0 hidden h-screen bg-black/25 opacity-100 landscape:block lg:landscape:hidden'>
+          <div className='flex h-full flex-row items-center justify-center'>
+            {/* Could be using `dialog` with `backdrop:` but doesn't seem to work atm */}
+            <div className='rounded bg-white p-4'>
+              <p>This game has been thought for portrait mode only</p>
+            </div>
           </div>
         </div>
       </div>
-      <Board isOpponentBoard columns={opponentColumns} name={opponentName} />
-      <Board
-        columns={myColumns}
-        onColumnClick={(colIndex) => addToMyColumn(colIndex, dice)}
-        nextDie={dice}
-        canPlay={myTurn}
-        name={myName}
-      />
     </div>
   )
 }

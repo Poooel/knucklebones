@@ -1,34 +1,26 @@
 import * as React from 'react'
 import { clsx } from 'clsx'
 
-export interface DiceProps {
+interface DiceProps {
   value: number
   count?: number
-  fullSize?: boolean
-  className?: string
 }
 
-// TODO: Either we set the size of the board, and we let it decide the size of
-// the dice
-// Or we set the size of the dice, and the size of the board will derive from
-// it (but we need a placeholder when no die is placed)
-export function Dice({
-  value,
-  count = 1,
-  fullSize = true,
-  className
-}: DiceProps) {
+export function DicePlaceholder() {
+  return <div className='aspect-square h-14 md:h-16'></div>
+}
+
+export function Dice({ value, count = 1 }: DiceProps) {
   return (
     <div
       className={clsx(
-        'flex aspect-square select-none flex-row items-center justify-center rounded border bg-white',
+        'flex aspect-square h-14 select-none flex-row items-center justify-center rounded shadow-md md:h-16',
         {
-          'h-full w-full': fullSize,
-          'bg-white': count === 1,
-          'bg-yellow-200': count === 2,
-          'bg-blue-200': count === 3
-        },
-        className
+          'border border-slate-300 bg-white shadow-slate-200': count === 1,
+          'border border-yellow-300 bg-yellow-200 shadow-yellow-200':
+            count === 2,
+          'border border-blue-300 bg-blue-200 shadow-blue-200': count === 3
+        }
       )}
     >
       <p>{value}</p>

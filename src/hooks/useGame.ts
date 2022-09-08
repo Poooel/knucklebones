@@ -5,7 +5,7 @@ import { useRoom } from './useRoom'
 /**
  * Simple hook to keep the game synchronized, by allowing to publish one's plays,
  * and receive the oppononent's plays.
- * Can later be used to synchronize dices
+ * Can later be used to synchronize dice
  */
 export function useGame(
   roomId: string,
