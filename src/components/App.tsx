@@ -7,6 +7,7 @@ import { useGame, useResumeGame } from '../hooks/useGame'
 import { getRandomDice } from '../utils/random'
 import { connectToAbly } from '../utils/connectToAbly'
 import { Board } from './Board'
+import { Win } from './Win'
 
 connectToAbly()
 
@@ -21,12 +22,19 @@ export function App() {
   const roomId = `${roomName}:${roomKey}`
   const [myDice, setMyDice] = React.useState<number | null>(getRandomDice())
   const [opponentDice, setOpponentDice] = React.useState<number | null>(null)
+  const [stop, setStop] = React.useState(true)
+  const [opponentWin, setOpponentWin] = React.useState(false)
 
   const {
     columns: opponentColumns,
     addToColumn: addToOpponentColumn,
     removeDiceFromColumn: removeDiceFromOpponentColumn
-  } = useBoard()
+  } = useBoard({
+    onBoardFull() {
+      setStop(true)
+      setOpponentWin(true)
+    }
+  })
   const {
     columns: myColumns,
     addToColumn: addToMyColumn,
@@ -37,6 +45,9 @@ export function App() {
       removeDiceFromOpponentColumn(column, value)
       setMyDice(null)
       setOpponentDice(getRandomDice())
+    },
+    onBoardFull() {
+      setStop(true)
     }
   })
 
@@ -87,16 +98,26 @@ export function App() {
           columns={opponentColumns}
           name={opponentName}
           nextDie={opponentDice}
-          canPlay={!myTurn}
+          canPlay={!stop && !myTurn}
         />
-        <p className='uppercase'>vs</p>
+        {stop ? (
+          <Win
+            opponentName={opponentName}
+            opponentWin={opponentWin}
+            score={0}
+            columns={myColumns}
+            opponentColumns={opponentColumns}
+          />
+        ) : (
+          <p className='uppercase'>vs</p>
+        )}
         <Board
           columns={myColumns}
           onColumnClick={(colIndex) =>
             myDice !== null && addToMyColumn(colIndex, myDice)
           }
           nextDie={myDice}
-          canPlay={myTurn}
+          canPlay={!stop && myTurn}
           name={myName}
         />
         {/* Disclaimer on landscape mode to avoid implementing difficult and useless design */}

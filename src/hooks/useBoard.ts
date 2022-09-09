@@ -3,17 +3,22 @@ import { ColumnDice } from '../utils/score'
 
 interface UseBoardProps {
   onDicePlaced?(column: number, value: number): void
+  onBoardFull(): void
 }
 
 const MAX_COLUMNS = 3
 const MAX_CELLS_PER_COLUMNS = 3
 
-export function useBoard({ onDicePlaced }: UseBoardProps = {}) {
+export function useBoard({ onDicePlaced, onBoardFull }: UseBoardProps) {
   const [columns, setColumns] = React.useState(
     Array.from<ColumnDice>({ length: MAX_COLUMNS }).fill([])
   )
 
-  const isBoardFull = columns.flat().filter((v) => v !== undefined)
+  React.useEffect(() => {
+    if (columns.flat().length === MAX_COLUMNS * MAX_CELLS_PER_COLUMNS) {
+      onBoardFull()
+    }
+  }, [columns])
 
   function addToColumn(
     index: number,
@@ -50,7 +55,6 @@ export function useBoard({ onDicePlaced }: UseBoardProps = {}) {
 
   return {
     columns,
-    isBoardFull,
     addToColumn,
     removeDiceFromColumn
   }
