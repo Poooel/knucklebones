@@ -22,7 +22,7 @@ export function App() {
   const roomId = `${roomName}:${roomKey}`
   const [myDice, setMyDice] = React.useState<number | null>(getRandomDice())
   const [opponentDice, setOpponentDice] = React.useState<number | null>(null)
-  const [stop, setStop] = React.useState(true)
+  const [stop, setStop] = React.useState(false)
   const [opponentWin, setOpponentWin] = React.useState(false)
 
   const {
