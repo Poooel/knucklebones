@@ -104,7 +104,6 @@ export function App() {
           <Win
             opponentName={opponentName}
             opponentWin={opponentWin}
-            score={0}
             columns={myColumns}
             opponentColumns={opponentColumns}
           />
