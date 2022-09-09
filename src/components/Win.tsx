@@ -22,7 +22,7 @@ export function Win({
   return (
     <div className='grid justify-items-center gap-2'>
       <p>
-        {opponentWin ? opponentName : 'You'} win with{' '}
+        {opponentWin ? opponentName ?? 'They' : 'You'} win with{' '}
         {opponentWin ? opponentTotalScore : totalScore} points!
       </p>
       <button
