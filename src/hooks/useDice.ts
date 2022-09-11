@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { useRoom } from './useRoom'
+import { isItDice } from '../utils/dice'
 
 export function useDice(roomId: string, initialState: number) {
   const [playerOneDice, setPlayerOneDice] = React.useState<number>(initialState)
@@ -9,10 +10,12 @@ export function useDice(roomId: string, initialState: number) {
     `${roomId}:dice`,
     { rewind: 1 },
     (message) => {
-      if (isItMe(message.clientId)) {
-        setPlayerTwoDice(message.data.dice)
-      } else {
-        setPlayerOneDice(message.data.dice)
+      if (isItDice(message)) {
+        if (isItMe(message.clientId)) {
+          setPlayerTwoDice(message.data.dice)
+        } else {
+          setPlayerOneDice(message.data.dice)
+        }
       }
     }
   )
