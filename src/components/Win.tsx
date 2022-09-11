@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { ColumnDice, getScore } from '../utils/score'
 
 interface WinProps {
@@ -15,7 +15,6 @@ export function Win({
   columns,
   opponentColumns
 }: WinProps) {
-  const navigate = useNavigate()
   const { totalScore } = getScore(columns)
   const { totalScore: opponentTotalScore } = getScore(opponentColumns)
 
@@ -25,15 +24,12 @@ export function Win({
         {opponentWin ? opponentName ?? 'They' : 'You'} win with{' '}
         {opponentWin ? opponentTotalScore : totalScore} points!
       </p>
-      <button
+      <Link
         className='rounded-md border-2 bg-slate-50 py-1 px-2 hover:bg-slate-100'
-        type='button'
-        onClick={() => {
-          navigate('/')
-        }}
+        to={'/'}
       >
         Replay
-      </button>
+      </Link>
     </div>
   )
 }
