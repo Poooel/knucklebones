@@ -1,9 +1,9 @@
 import * as React from 'react'
-import { ColumnDice, getScore } from '../utils/score'
+import { BoardDice, getScore } from '../utils/score'
 
 interface UseScoreProps {
-  playerOneColumns: ColumnDice[]
-  playerTwoColumns: ColumnDice[]
+  playerOneColumns: BoardDice
+  playerTwoColumns: BoardDice
 }
 
 export function useScore({
