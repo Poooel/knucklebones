@@ -28,7 +28,7 @@ export function Win({
       break
     case WinEnum.PlayerTwoWin:
       winMessage = `${playerTwoName ?? 'They'} win${
-        playerTwoName != null ? 's' : 's'
+        playerTwoName !== null ? 's' : ''
       } with ${playerTwoScore} points!`
       break
     case WinEnum.Tie:
