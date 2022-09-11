@@ -7,6 +7,10 @@ import { useGame, useResumeGame } from '../hooks/useGame'
 import { getRandomDice } from '../utils/random'
 import { connectToAbly } from '../utils/connectToAbly'
 import { Board } from './Board'
+import { Win } from './Win'
+import { GameState } from '../utils/gameState'
+import { whichPlayerWins } from '../utils/win'
+import { getScore } from '../utils/score'
 
 connectToAbly()
 
@@ -21,12 +25,23 @@ export function App() {
   const roomId = `${roomName}:${roomKey}`
   const [myDice, setMyDice] = React.useState<number | null>(getRandomDice())
   const [opponentDice, setOpponentDice] = React.useState<number | null>(null)
+  const [gameState, setGameState] = React.useState(GameState.Ongoing)
 
   const {
     columns: opponentColumns,
     addToColumn: addToOpponentColumn,
     removeDiceFromColumn: removeDiceFromOpponentColumn
-  } = useBoard()
+  } = useBoard({
+    onBoardFull() {
+      setGameState(
+        whichPlayerWins(
+          getScore(myColumns).totalScore,
+          getScore(opponentColumns).totalScore
+        )
+      )
+    }
+  })
+
   const {
     columns: myColumns,
     addToColumn: addToMyColumn,
@@ -37,6 +52,14 @@ export function App() {
       removeDiceFromOpponentColumn(column, value)
       setMyDice(null)
       setOpponentDice(getRandomDice())
+    },
+    onBoardFull() {
+      setGameState(
+        whichPlayerWins(
+          getScore(myColumns).totalScore,
+          getScore(opponentColumns).totalScore
+        )
+      )
     }
   })
 
@@ -50,6 +73,7 @@ export function App() {
       setMyDice(getRandomDice())
     }
   })
+
   useResumeGame(roomId, {
     onMyPlay({ column, value }) {
       addToMyColumn(column, value, false)
@@ -87,16 +111,25 @@ export function App() {
           columns={opponentColumns}
           name={opponentName}
           nextDie={opponentDice}
-          canPlay={!myTurn}
+          canPlay={gameState === GameState.Ongoing && !myTurn}
         />
-        <p className='uppercase'>vs</p>
+        {gameState !== GameState.Ongoing ? (
+          <Win
+            playerTwoName={opponentName}
+            gameState={gameState}
+            playerOneScore={getScore(myColumns)}
+            playerTwoScore={getScore(opponentColumns)}
+          />
+        ) : (
+          <p className='uppercase'>vs</p>
+        )}
         <Board
           columns={myColumns}
           onColumnClick={(colIndex) =>
             myDice !== null && addToMyColumn(colIndex, myDice)
           }
           nextDie={myDice}
-          canPlay={myTurn}
+          canPlay={gameState === GameState.Ongoing && myTurn}
           name={myName}
         />
         {/* Disclaimer on landscape mode to avoid implementing difficult and useless design */}
