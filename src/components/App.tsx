@@ -7,7 +7,8 @@ import { useGame, useResumeGame } from '../hooks/useGame'
 import { getRandomDice } from '../utils/random'
 import { connectToAbly } from '../utils/connectToAbly'
 import { Board } from './Board'
-import { Win } from './Win'
+import { Win, WinEnum } from './Win'
+import { useScore } from '../hooks/useScore'
 
 connectToAbly()
 
@@ -17,13 +18,23 @@ export interface Params {
 
 const roomName = 'knucklebones'
 
+const whichPlayerWins = (playerOneScore: number, playerTwoScore: number) => {
+  if (playerOneScore > playerTwoScore) {
+    return WinEnum.PlayerOneWin
+  } else if (playerOneScore < playerTwoScore) {
+    return WinEnum.PlayerTwoWin
+  } else {
+    return WinEnum.Tie
+  }
+}
+
 export function App() {
   const { roomKey } = useParams<keyof Params>() as Params
   const roomId = `${roomName}:${roomKey}`
   const [myDice, setMyDice] = React.useState<number | null>(getRandomDice())
   const [opponentDice, setOpponentDice] = React.useState<number | null>(null)
   const [stop, setStop] = React.useState(false)
-  const [opponentWin, setOpponentWin] = React.useState(false)
+  const [winEnum, setWinEnum] = React.useState(WinEnum.Tie)
 
   const {
     columns: opponentColumns,
@@ -32,9 +43,10 @@ export function App() {
   } = useBoard({
     onBoardFull() {
       setStop(true)
-      setOpponentWin(true)
+      setWinEnum(whichPlayerWins(playerOneScore, playerTwoScore))
     }
   })
+
   const {
     columns: myColumns,
     addToColumn: addToMyColumn,
@@ -48,7 +60,13 @@ export function App() {
     },
     onBoardFull() {
       setStop(true)
+      setWinEnum(whichPlayerWins(playerOneScore, playerTwoScore))
     }
+  })
+
+  const { playerOneScore, playerTwoScore } = useScore({
+    playerOneColumns: myColumns,
+    playerTwoColumns: opponentColumns
   })
 
   const myTurn = useTurn(roomId)
@@ -61,6 +79,7 @@ export function App() {
       setMyDice(getRandomDice())
     }
   })
+
   useResumeGame(roomId, {
     onMyPlay({ column, value }) {
       addToMyColumn(column, value, false)
@@ -102,10 +121,10 @@ export function App() {
         />
         {stop ? (
           <Win
-            opponentName={opponentName}
-            opponentWin={opponentWin}
-            columns={myColumns}
-            opponentColumns={opponentColumns}
+            playerTwoName={opponentName}
+            winEnum={winEnum}
+            playerOneScore={playerOneScore}
+            playerTwoScore={playerTwoScore}
           />
         ) : (
           <p className='uppercase'>vs</p>
