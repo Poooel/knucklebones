@@ -1,44 +1,51 @@
 import * as React from 'react'
 import { Link } from 'react-router-dom'
-
-export enum WinEnum {
-  PlayerOneWin,
-  PlayerTwoWin,
-  Tie
-}
+import { GameState } from '../utils/gameState'
+import { Score } from '../utils/score'
 
 interface WinProps {
+  gameState: GameState
+  playerOneScore: Score
+  playerTwoScore: Score
   playerTwoName: string | null
-  winEnum: WinEnum
-  playerOneScore: number
-  playerTwoScore: number
+}
+
+const getWinMessage = (
+  gameState: GameState,
+  playerOneScore: number,
+  playerTwoScore: number,
+  playerTwoName: string | null
+) => {
+  switch (gameState) {
+    case GameState.PlayerOneWin:
+      return `You win with ${playerOneScore} points!`
+    case GameState.PlayerTwoWin:
+      return `${playerTwoName ?? 'They'} win${
+        playerTwoName !== null ? 's' : ''
+      } with ${playerTwoScore} points!`
+    case GameState.Tie:
+      return `This is a tie! Nobody wins!`
+    default:
+      return 'VS'
+  }
 }
 
 export function Win({
-  playerTwoName,
-  winEnum,
+  gameState,
   playerOneScore,
-  playerTwoScore
+  playerTwoScore,
+  playerTwoName
 }: WinProps) {
-  let winMessage
-
-  switch (winEnum) {
-    case WinEnum.PlayerOneWin:
-      winMessage = `You win with ${playerOneScore} points!`
-      break
-    case WinEnum.PlayerTwoWin:
-      winMessage = `${playerTwoName ?? 'They'} win${
-        playerTwoName !== null ? 's' : ''
-      } with ${playerTwoScore} points!`
-      break
-    case WinEnum.Tie:
-      winMessage = `This is a tie! Nobody wins!`
-      break
-  }
-
   return (
     <div className='grid justify-items-center gap-2'>
-      <p>{winMessage}</p>
+      <p>
+        {getWinMessage(
+          gameState,
+          playerOneScore.totalScore,
+          playerTwoScore.totalScore,
+          playerTwoName
+        )}
+      </p>
       <Link
         className='rounded-md border-2 bg-slate-50 py-1 px-2 hover:bg-slate-100'
         to={'/'}

@@ -7,8 +7,10 @@ import { useGame, useResumeGame } from '../hooks/useGame'
 import { getRandomDice } from '../utils/random'
 import { connectToAbly } from '../utils/connectToAbly'
 import { Board } from './Board'
-import { Win, WinEnum } from './Win'
-import { useScore } from '../hooks/useScore'
+import { Win } from './Win'
+import { GameState } from '../utils/gameState'
+import { whichPlayerWins } from '../utils/win'
+import { getScore } from '../utils/score'
 
 connectToAbly()
 
@@ -18,23 +20,12 @@ export interface Params {
 
 const roomName = 'knucklebones'
 
-const whichPlayerWins = (playerOneScore: number, playerTwoScore: number) => {
-  if (playerOneScore > playerTwoScore) {
-    return WinEnum.PlayerOneWin
-  } else if (playerOneScore < playerTwoScore) {
-    return WinEnum.PlayerTwoWin
-  } else {
-    return WinEnum.Tie
-  }
-}
-
 export function App() {
   const { roomKey } = useParams<keyof Params>() as Params
   const roomId = `${roomName}:${roomKey}`
   const [myDice, setMyDice] = React.useState<number | null>(getRandomDice())
   const [opponentDice, setOpponentDice] = React.useState<number | null>(null)
-  const [stop, setStop] = React.useState(false)
-  const [winEnum, setWinEnum] = React.useState(WinEnum.Tie)
+  const [gameState, setGameState] = React.useState(GameState.Ongoing)
 
   const {
     columns: opponentColumns,
@@ -42,8 +33,12 @@ export function App() {
     removeDiceFromColumn: removeDiceFromOpponentColumn
   } = useBoard({
     onBoardFull() {
-      setStop(true)
-      setWinEnum(whichPlayerWins(playerOneScore, playerTwoScore))
+      setGameState(
+        whichPlayerWins(
+          getScore(myColumns).totalScore,
+          getScore(opponentColumns).totalScore
+        )
+      )
     }
   })
 
@@ -59,14 +54,13 @@ export function App() {
       setOpponentDice(getRandomDice())
     },
     onBoardFull() {
-      setStop(true)
-      setWinEnum(whichPlayerWins(playerOneScore, playerTwoScore))
+      setGameState(
+        whichPlayerWins(
+          getScore(myColumns).totalScore,
+          getScore(opponentColumns).totalScore
+        )
+      )
     }
-  })
-
-  const { playerOneScore, playerTwoScore } = useScore({
-    playerOneColumns: myColumns,
-    playerTwoColumns: opponentColumns
   })
 
   const myTurn = useTurn(roomId)
@@ -117,14 +111,14 @@ export function App() {
           columns={opponentColumns}
           name={opponentName}
           nextDie={opponentDice}
-          canPlay={!stop && !myTurn}
+          canPlay={gameState === GameState.Ongoing && !myTurn}
         />
-        {stop ? (
+        {gameState !== GameState.Ongoing ? (
           <Win
             playerTwoName={opponentName}
-            winEnum={winEnum}
-            playerOneScore={playerOneScore}
-            playerTwoScore={playerTwoScore}
+            gameState={gameState}
+            playerOneScore={getScore(myColumns)}
+            playerTwoScore={getScore(opponentColumns)}
           />
         ) : (
           <p className='uppercase'>vs</p>
@@ -135,7 +129,7 @@ export function App() {
             myDice !== null && addToMyColumn(colIndex, myDice)
           }
           nextDie={myDice}
-          canPlay={!stop && myTurn}
+          canPlay={gameState === GameState.Ongoing && myTurn}
           name={myName}
         />
         {/* Disclaimer on landscape mode to avoid implementing difficult and useless design */}

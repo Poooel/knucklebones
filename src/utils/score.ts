@@ -19,6 +19,16 @@ function getColumnScore(countedDice: CountedDice) {
   }, 0)
 }
 
+export interface ScorePerColumn {
+  countedDice: CountedDice
+  total: number
+}
+
+export interface Score {
+  scorePerColumn: ScorePerColumn[]
+  totalScore: number
+}
+
 /**
  * Helper function to compute the score of a board, per column. The total can
  * be found by adding the score of each column.
@@ -26,7 +36,7 @@ function getColumnScore(countedDice: CountedDice) {
  * they up and multiply the result by 2. If the same dice is found 3 times, we
  * sum they up and multiply th result by 3.
  */
-export function getScore(dice: BoardDice) {
+export function getScore(dice: BoardDice): Score {
   const scorePerColumn = dice.map((column) => {
     const countedDice = countDiceInColumn(column)
     return {
