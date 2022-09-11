@@ -11,6 +11,7 @@ import { Win } from './Win'
 import { GameState } from '../utils/gameState'
 import { whichPlayerWins } from '../utils/win'
 import { getScore } from '../utils/score'
+import { useDice } from '../hooks/useDice'
 
 connectToAbly()
 
@@ -23,9 +24,11 @@ const roomName = 'knucklebones'
 export function App() {
   const { roomKey } = useParams<keyof Params>() as Params
   const roomId = `${roomName}:${roomKey}`
-  const [myDice, setMyDice] = React.useState<number | null>(getRandomDice())
-  const [opponentDice, setOpponentDice] = React.useState<number | null>(null)
   const [gameState, setGameState] = React.useState(GameState.Ongoing)
+  const { playerOneDice, playerTwoDice, sendDice } = useDice(
+    roomId,
+    getRandomDice()
+  )
 
   const {
     columns: opponentColumns,
@@ -50,8 +53,7 @@ export function App() {
     onDicePlaced(column, value) {
       sendPlay({ column, value })
       removeDiceFromOpponentColumn(column, value)
-      setMyDice(null)
-      setOpponentDice(getRandomDice())
+      sendDice(getRandomDice())
     },
     onBoardFull() {
       setGameState(
@@ -69,8 +71,6 @@ export function App() {
     onOpponentPlay({ column, value }) {
       addToOpponentColumn(column, value)
       removeDiceFromMyColumn(column, value)
-      setOpponentDice(null)
-      setMyDice(getRandomDice())
     }
   })
 
@@ -110,7 +110,7 @@ export function App() {
           isOpponentBoard
           columns={opponentColumns}
           name={opponentName}
-          nextDie={opponentDice}
+          nextDie={playerTwoDice}
           canPlay={gameState === GameState.Ongoing && !myTurn}
         />
         {gameState !== GameState.Ongoing ? (
@@ -126,9 +126,11 @@ export function App() {
         <Board
           columns={myColumns}
           onColumnClick={(colIndex) =>
-            myDice !== null && addToMyColumn(colIndex, myDice)
+            gameState === GameState.Ongoing &&
+            myTurn &&
+            addToMyColumn(colIndex, playerOneDice)
           }
-          nextDie={myDice}
+          nextDie={playerOneDice}
           canPlay={gameState === GameState.Ongoing && myTurn}
           name={myName}
         />

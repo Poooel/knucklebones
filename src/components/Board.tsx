@@ -8,7 +8,7 @@ import { Name } from './Name'
 
 interface BoardProps {
   columns: BoardDice
-  nextDie: number | null
+  nextDie: number
   name: string | null
   isOpponentBoard?: boolean
   canPlay?: boolean
@@ -46,7 +46,7 @@ export function Board({
       )}
     >
       <div className='my-4'>
-        {nextDie !== null ? <Dice value={nextDie} /> : <DicePlaceholder />}
+        {canPlay ? <Dice value={nextDie} /> : <DicePlaceholder />}
       </div>
       <div
         className={clsx('flex items-center gap-1 md:gap-4', {
