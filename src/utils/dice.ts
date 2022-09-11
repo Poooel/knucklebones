@@ -9,7 +9,7 @@ interface DiceMessage extends Types.Message {
 }
 
 /**
- * Type guard for messages to assert that they are plays.
+ * Type guard for messages to assert that they are dice.
  */
 export function isItDice(message: Types.Message): message is DiceMessage {
   const { dice } = message.data
