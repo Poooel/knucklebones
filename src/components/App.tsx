@@ -85,27 +85,9 @@ export function App() {
     }
   })
 
-  // From https://css-tricks.com/the-trick-to-viewport-units-on-mobile/
-  // Not great way to have a dynamic VH for mobile browsers that can expand and
-  // collapse parts of their interface (e.g. the address bar). Should be fixed
-  // once `svh` is more broadly implemented.
-  // https://developer.mozilla.org/en-US/docs/Web/CSS/length#relative_length_units_based_on_viewport
-  React.useEffect(() => {
-    function listener() {
-      const vh = window.innerHeight * 0.01
-      document.documentElement.style.setProperty('--vh', `${vh}px`)
-    }
-    listener() // Runs listener on initial mount
-    window.addEventListener('resize', listener)
-    return () => window.removeEventListener('resize', listener)
-  }, [])
-
   return (
-    <div
-      className='h-screen bg-slate-200'
-      style={{ height: 'calc(var(--vh, 1vh) * 100)' }}
-    >
-      <div className='flex flex-col items-center justify-between px-2 py-4 md:h-full md:p-8'>
+    <div className='md:grid md:place-content-center'>
+      <div className='flex flex-col items-center justify-between px-2 py-4 md:p-8'>
         <Board
           isOpponentBoard
           columns={opponentColumns}
@@ -134,15 +116,6 @@ export function App() {
           canPlay={gameState === GameState.Ongoing && myTurn}
           name={myName}
         />
-        {/* Disclaimer on landscape mode to avoid implementing difficult and useless design */}
-        <div className='fixed inset-0 hidden h-screen bg-black/25 opacity-100 landscape:block lg:landscape:hidden'>
-          <div className='flex h-full flex-row items-center justify-center'>
-            {/* Could be using `dialog` with `backdrop:` but doesn't seem to work atm */}
-            <div className='rounded bg-white p-4'>
-              <p>This game has been thought for portrait mode only</p>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   )
