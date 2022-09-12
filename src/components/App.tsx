@@ -86,8 +86,8 @@ export function App() {
   })
 
   return (
-    <div className='md:grid md:place-content-center'>
-      <div className='flex flex-col items-center justify-between px-2 py-4 md:p-8'>
+    <div className='lg:grid lg:h-screen lg:place-content-center'>
+      <div className='flex flex-col items-center justify-between gap-4 px-2 py-4 md:p-8'>
         <Board
           isOpponentBoard
           columns={opponentColumns}
