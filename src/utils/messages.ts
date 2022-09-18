@@ -48,5 +48,5 @@ export function isItTurnSelection(
   message: Types.Message
 ): message is TurnSelectionMessage {
   const { shouldSenderStart } = message.data
-  return Boolean(shouldSenderStart)
+  return typeof shouldSenderStart === 'boolean'
 }

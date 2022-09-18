@@ -53,7 +53,7 @@ export function useTurn() {
           const message: TurnSelection = {
             shouldSenderStart: Math.random() > 0.5
           }
-          channel.publish('selection', message)
+          channel.publish('select', message)
         }
       })
     }
