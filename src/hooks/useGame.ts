@@ -7,13 +7,16 @@ import { useRoom } from './useRoom'
  * and receive the oppononent's plays.
  * Can later be used to synchronize dice
  */
-export function useGame(
-  roomId: string,
-  { onOpponentPlay }: { onOpponentPlay(play: Play): void }
-) {
-  const [channel, , { isItMe }] = useRoom(roomId, {}, (message) => {
-    if (!isItMe(message.clientId) && isItPlay(message)) {
-      onOpponentPlay(message.data)
+export function useGame({
+  onPlayerTwoPlay
+}: {
+  onPlayerTwoPlay(play: Play): void
+}) {
+  const [channel, , { isItPlayerOne }] = useRoom({
+    onMessageReceived(message) {
+      if (!isItPlayerOne(message.clientId) && isItPlay(message)) {
+        onPlayerTwoPlay(message.data)
+      }
     }
   })
 
@@ -27,17 +30,14 @@ export function useGame(
 /**
  * Allows to read the previous plays from the current game and resume it.
  */
-export function useResumeGame(
-  roomId: string,
-  {
-    onMyPlay,
-    onOpponentPlay
-  }: {
-    onMyPlay(play: Play): void
-    onOpponentPlay(play: Play): void
-  }
-) {
-  const [channel, ably, { isItMe }] = useRoom(roomId)
+export function useResumeGame({
+  onPlayerOnePlay,
+  onPlayerTwoPlay
+}: {
+  onPlayerOnePlay(play: Play): void
+  onPlayerTwoPlay(play: Play): void
+}) {
+  const [channel, ably, { isItPlayerOne }] = useRoom()
 
   React.useEffect(() => {
     if (ably.auth.clientId !== undefined) {
@@ -53,10 +53,10 @@ export function useResumeGame(
           result.items.reverse().forEach((item) => {
             if (isItPlay(item)) {
               const { clientId, data } = item
-              if (isItMe(clientId)) {
-                onMyPlay(data)
+              if (isItPlayerOne(clientId)) {
+                onPlayerOnePlay(data)
               } else {
-                onOpponentPlay(data)
+                onPlayerTwoPlay(data)
               }
             }
           })
