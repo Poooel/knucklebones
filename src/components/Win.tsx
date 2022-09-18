@@ -37,7 +37,7 @@ export function Win({
   playerTwoName
 }: WinProps) {
   return (
-    <div className='grid justify-items-center gap-2'>
+    <div className='grid justify-items-center gap-2 font-semibold text-slate-900'>
       <p>
         {getWinMessage(
           gameState,
@@ -47,7 +47,7 @@ export function Win({
         )}
       </p>
       <Link
-        className='rounded-md border-2 bg-slate-50 py-1 px-2 hover:bg-slate-100'
+        className='rounded-md border-2 bg-slate-50 py-1 px-2 transition-colors duration-100 hover:bg-slate-100'
         to={'/'}
       >
         Replay

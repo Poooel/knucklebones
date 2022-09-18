@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { clsx } from 'clsx'
+import { Transition } from '@headlessui/react'
 
 interface DiceProps {
   value: number
@@ -107,7 +108,7 @@ const DiceMap: { [key: number]: () => JSX.Element } = {
   6: DiceSix
 }
 
-export function Dice({ value, count = 1 }: DiceProps) {
+export function SimpleDice({ value, count = 1 }: DiceProps) {
   const DiceValue = DiceMap[value]
   return (
     <div
@@ -124,5 +125,45 @@ export function Dice({ value, count = 1 }: DiceProps) {
     >
       <DiceValue />
     </div>
+  )
+}
+
+export function Dice({ value, count = 1 }: Partial<DiceProps>) {
+  // Temporarily store the dice value to keep the dice shown during the
+  // transition after it has been unset. While the animation is done, the cached
+  // value is reset. When the value is set, it will update the cached value.
+  const [cachedValue, setCachedValue] = React.useState<number | undefined>(
+    value
+  )
+
+  React.useEffect(() => {
+    if (value !== undefined) {
+      setCachedValue(value)
+    }
+  }, [value])
+
+  return (
+    <>
+      <Transition
+        show={Boolean(value)}
+        className='transition duration-100 ease-in-out'
+        enterFrom='opacity-0 scale-75'
+        enterTo='opacity-100 scale-100'
+        leaveFrom='opacity-100 scale-100'
+        leaveTo='opacity-0 scale-75'
+        afterLeave={() => {
+          setCachedValue(undefined)
+        }}
+      >
+        {cachedValue !== undefined && (
+          <SimpleDice value={cachedValue} count={count} />
+        )}
+      </Transition>
+      {/*
+        Cannot show `DicePlaceholder` within `Transition` when `shown` is
+        false, since the `Transition` block isn't rendered.
+      */}
+      {cachedValue === undefined && <DicePlaceholder />}
+    </>
   )
 }

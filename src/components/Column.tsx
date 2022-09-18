@@ -13,7 +13,7 @@ export function Column({
 }: React.PropsWithChildren<ColumnProps>) {
   return (
     <div
-      className={clsx('grid grid-rows-3', {
+      className={clsx('grid grid-rows-3 transition-colors duration-75', {
         'hover:bg-gray-100': !readonly
       })}
       role={onClick !== undefined && !readonly ? 'button' : undefined}
