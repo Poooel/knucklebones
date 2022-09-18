@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { isItPlay } from '../utils/play'
+import { isItPlay, isItTurnSelection, TurnSelection } from '../utils/messages'
 import { Player } from '../utils/players'
 import { useRoom } from './useRoom'
 
@@ -8,7 +8,7 @@ import { useRoom } from './useRoom'
  * the player's turn.
  */
 export function useTurn() {
-  const [turn, setTurn] = React.useState<Player>(Player.PlayerOne)
+  const [turn, setTurn] = React.useState<Player>(Player.Spectator)
 
   // This will first get the last message published to resume the turn, then
   // will update the turn based on new messages
@@ -22,6 +22,42 @@ export function useTurn() {
       }
     }
   })
+
+  // Read the last (and only) message from the sub room to know if a player
+  // already sent a message to select who should play first.
+  const [channel, ably] = useRoom({
+    rewind: 1,
+    subRoomId: 'turn',
+    onMessageReceived(message) {
+      if (isItTurnSelection(message)) {
+        if (isItPlayerOne(message.clientId)) {
+          setTurn(
+            message.data.shouldSenderStart ? Player.PlayerOne : Player.PlayerTwo
+          )
+        } else {
+          setTurn(
+            message.data.shouldSenderStart ? Player.PlayerTwo : Player.PlayerOne
+          )
+        }
+      }
+    }
+  })
+
+  // If no message was previously sent to select turn, the current player sends
+  // one.
+  React.useEffect(() => {
+    if (ably.auth.clientId !== undefined) {
+      channel.history((err, result) => {
+        if (err != null) console.error(err)
+        if (result?.items.length === 0) {
+          const message: TurnSelection = {
+            shouldSenderStart: Math.random() > 0.5
+          }
+          channel.publish('selection', message)
+        }
+      })
+    }
+  }, [ably.auth.clientId])
 
   // We should export a loading state, since this can have some delay, causing
   // a player to add a dice even when it wasn't their turn

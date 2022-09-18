@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useRoom } from './useRoom'
-import { isItDice } from '../utils/dice'
+import { isItDice } from '../utils/messages'
 
 export function useDice(initialState: number) {
   const [playerOneDice, setPlayerOneDice] = React.useState<number>(initialState)
