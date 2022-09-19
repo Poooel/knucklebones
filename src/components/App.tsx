@@ -1,17 +1,18 @@
 import * as React from 'react'
+import { Transition } from '@headlessui/react'
 import { useBoard } from '../hooks/useBoard'
 import { useTurn } from '../hooks/useTurn'
 import { useNames } from '../hooks/useNames'
 import { useGame, useResumeGame } from '../hooks/useGame'
 import { getRandomDice } from '../utils/random'
 import { connectToAbly } from '../utils/connectToAbly'
-import { Board } from './Board'
-import { Win } from './Win'
 import { GameState } from '../utils/gameState'
 import { whichPlayerWins } from '../utils/win'
 import { getScore } from '../utils/score'
 import { useDice } from '../hooks/useDice'
 import { Player } from '../utils/players'
+import { Board } from './Board'
+import { Win } from './Win'
 
 connectToAbly()
 
@@ -83,16 +84,23 @@ export function App() {
             gameState === GameState.Ongoing && playerTurn === Player.PlayerTwo
           }
         />
-        {gameState !== GameState.Ongoing ? (
+
+        <Transition
+          show={gameState !== GameState.Ongoing}
+          className='transition duration-100 ease-in-out'
+          enterFrom='opacity-0 scale-75'
+          enterTo='opacity-100 scale-100'
+          leaveFrom='opacity-100 scale-100'
+          leaveTo='opacity-0 scale-75'
+        >
           <Win
             playerTwoName={playerTwoName}
             gameState={gameState}
             playerOneScore={getScore(playerOneColumn)}
             playerTwoScore={getScore(playerTwoColumns)}
           />
-        ) : (
-          <p className='uppercase'>vs</p>
-        )}
+        </Transition>
+        {gameState === GameState.Ongoing && <p className='uppercase'>vs</p>}
         <Board
           playerBoard={Player.PlayerOne}
           columns={playerOneColumn}

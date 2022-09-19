@@ -2,7 +2,7 @@ import * as React from 'react'
 import { clsx } from 'clsx'
 import { Player } from '../utils/players'
 import { BoardDice, getScore } from '../utils/score'
-import { Dice, DicePlaceholder } from './Dice'
+import { Dice } from './Dice'
 import { Column } from './Column'
 import { Cell } from './Cell'
 import { Name } from './Name'
@@ -39,7 +39,7 @@ export function Board({
   return (
     <div
       className={clsx(
-        'flex w-full flex-row justify-center gap-2 text-slate-900 md:gap-8',
+        'flex w-full flex-row justify-center gap-2 text-slate-900 transition duration-100 md:gap-8',
         {
           'items-end': isPlayerOneBoard,
           'items-start': isPlayerTwoBoard,
@@ -49,7 +49,7 @@ export function Board({
       )}
     >
       <div className='my-4 grid flex-1 place-content-end'>
-        {canPlay ? <Dice value={nextDie} /> : <DicePlaceholder />}
+        <Dice value={canPlay ? nextDie : undefined} />
       </div>
       <div
         className={clsx('flex items-center gap-1 md:gap-4', {
@@ -92,17 +92,10 @@ export function Board({
                   const value = column[actualCellIndex]
                   return (
                     <Cell key={cellIndex}>
-                      {value !== undefined ? (
-                        <Dice
-                          value={value}
-                          count={scorePerColumn[colIndex].countedDice.get(
-                            value
-                          )}
-                        />
-                      ) : (
-                        // Allows to properly reserve the space without placing a dice
-                        <DicePlaceholder />
-                      )}
+                      <Dice
+                        value={value}
+                        count={scorePerColumn[colIndex].countedDice.get(value)}
+                      />
                     </Cell>
                   )
                 })}
