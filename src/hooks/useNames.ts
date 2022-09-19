@@ -1,28 +1,29 @@
 import * as React from 'react'
 import { usePresence } from '@ably-labs/react-hooks'
-import { useRoom } from './useRoom'
+import { useRoom, useRoomId } from './useRoom'
 
 /**
  * Inspects who is logged in to the current game, and determines the name of
  * the current user (and stores it) and the opponent.
  */
-export function useNames(roomId: string) {
-  const [myName, setMyName] = React.useState<string | null>(null)
-  const [opponentName, setOpponentName] = React.useState<string | null>(null)
+export function useNames() {
+  const [playerOneName, setPlayerOneName] = React.useState<string | null>(null)
+  const [playerTwoName, setplayerTwoName] = React.useState<string | null>(null)
+  const roomId = useRoomId()
   // Can introduce later a list of spectators to be displayed
 
-  const [, ably, { isItMe }] = useRoom(roomId)
+  const [, ably, { isItPlayerOne }] = useRoom()
   const [presenceData] = usePresence(roomId)
 
   React.useEffect(() => {
-    setMyName(null)
-    setOpponentName(null)
+    setPlayerOneName(null)
+    setplayerTwoName(null)
 
     presenceData.forEach(({ clientId }) => {
-      if (isItMe(clientId)) {
-        setMyName(clientId)
+      if (isItPlayerOne(clientId)) {
+        setPlayerOneName(clientId)
       } else {
-        setOpponentName(clientId)
+        setplayerTwoName(clientId)
       }
     })
   }, [presenceData])
@@ -34,7 +35,7 @@ export function useNames(roomId: string) {
   }, [ably.auth.clientId])
 
   return {
-    myName,
-    opponentName
+    playerOneName,
+    playerTwoName
   }
 }

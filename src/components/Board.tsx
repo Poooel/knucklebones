@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { clsx } from 'clsx'
+import { Player } from '../utils/players'
 import { BoardDice, getScore } from '../utils/score'
 import { Dice, DicePlaceholder } from './Dice'
 import { Column } from './Column'
@@ -10,7 +11,7 @@ interface BoardProps {
   columns: BoardDice
   nextDie: number
   name: string | null
-  isOpponentBoard?: boolean
+  playerBoard: Player
   canPlay?: boolean
   onColumnClick?(colIndex: number): void
 }
@@ -27,19 +28,21 @@ export function Board({
   columns,
   nextDie,
   onColumnClick,
-  isOpponentBoard = false,
+  playerBoard,
   canPlay = false,
   name
 }: BoardProps) {
   const { scorePerColumn, totalScore } = getScore(columns)
+  const isPlayerOneBoard = playerBoard === Player.PlayerOne
+  const isPlayerTwoBoard = playerBoard === Player.PlayerTwo
 
   return (
     <div
       className={clsx(
         'flex w-full flex-row justify-center gap-2 text-slate-900 md:gap-8',
         {
-          'items-end': !isOpponentBoard,
-          'items-start': isOpponentBoard,
+          'items-end': isPlayerOneBoard,
+          'items-start': isPlayerTwoBoard,
           'opacity-75': !canPlay,
           'font-semibold': canPlay
         }
@@ -50,11 +53,11 @@ export function Board({
       </div>
       <div
         className={clsx('flex items-center gap-1 md:gap-4', {
-          'flex-col': !isOpponentBoard,
-          'flex-col-reverse': isOpponentBoard
+          'flex-col': isPlayerOneBoard,
+          'flex-col-reverse': isPlayerTwoBoard
         })}
       >
-        <Name name={name} isOpponent={isOpponentBoard} />
+        <Name name={name} playerBoard={playerBoard} />
         <div className='grid w-full grid-cols-3'>
           {scorePerColumn.map(({ total }, index) => (
             <p className='text-center' key={index}>
@@ -70,7 +73,7 @@ export function Board({
           {COLUMNS_PLACEHOLDER.map((_, colIndex) => {
             const column = columns[colIndex]
             const canPlayInColumn =
-              !isOpponentBoard &&
+              isPlayerOneBoard &&
               canPlay &&
               column.length < MAX_CELLS_PER_COLUMNS
             return (
@@ -83,7 +86,7 @@ export function Board({
               >
                 {CELLS_PER_COLUMN_PLACEHOLDER.map((_, cellIndex) => {
                   // Reverses the render order to mirror the board for the opponent
-                  const actualCellIndex = isOpponentBoard
+                  const actualCellIndex = isPlayerTwoBoard
                     ? MAX_CELLS_PER_COLUMNS - cellIndex - 1
                     : cellIndex
                   const value = column[actualCellIndex]

@@ -1,9 +1,26 @@
-import * as React from 'react'
+import { useParams } from 'react-router-dom'
 import {
   useChannel,
   AblyMessageCallback,
   ChannelAndClient
 } from '@ably-labs/react-hooks'
+
+interface Params {
+  roomKey: string
+}
+
+interface Options {
+  rewind?: number
+  subRoomId?: string
+  onMessageReceived?: AblyMessageCallback
+}
+
+const roomName = 'knucklebones'
+
+export function useRoomId() {
+  const { roomKey } = useParams<keyof Params>() as Params
+  return `${roomName}:${roomKey}`
+}
 
 /**
  * Thin wrapper around Ably's `useChannel` for improved usage:
@@ -11,25 +28,27 @@ import {
  * - `isItMe` utility to detect messages published by the current user
  * - Optional callback
  */
-export function useRoom(
-  roomId: string,
-  options: { rewind?: number } = {},
-  callback: AblyMessageCallback = () => {}
-): [
+export function useRoom({
+  rewind,
+  subRoomId,
+  onMessageReceived = () => {}
+}: Options = {}): [
   ChannelAndClient[0],
   ChannelAndClient[1],
-  { isItMe(clientId: string): boolean }
+  { isItPlayerOne(messageClientId: string): boolean }
 ] {
-  const rewindString =
-    options.rewind !== undefined ? `[?rewind=${options.rewind}]` : ''
-  const [channel, ably] = useChannel(rewindString + roomId, callback)
+  const rewindString = rewind !== undefined ? `[?rewind=${rewind}]` : ''
+  const subRoomString = subRoomId !== undefined ? `:${subRoomId}` : ''
 
-  const isItMe = React.useCallback(
-    (clientId: string) => {
-      return clientId === ably.auth.clientId
-    },
-    [ably.auth.clientId]
+  const roomId = useRoomId()
+  const [channel, ably] = useChannel(
+    rewindString + roomId + subRoomString,
+    onMessageReceived
   )
 
-  return [channel, ably, { isItMe }]
+  function isItPlayerOne(messageClientId: string) {
+    return messageClientId === ably.auth.clientId
+  }
+
+  return [channel, ably, { isItPlayerOne }]
 }
