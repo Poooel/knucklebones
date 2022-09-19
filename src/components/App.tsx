@@ -52,7 +52,6 @@ export function App() {
   })
 
   const playerTurn = useTurn()
-  console.log({ playerTurn })
   const { playerOneName, playerTwoName } = useNames()
   const { sendPlay } = useGame({
     onPlayerTwoPlay({ column, value }) {

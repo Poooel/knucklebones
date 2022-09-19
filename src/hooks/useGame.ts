@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { isItPlay, Play } from '../utils/play'
+import { isItPlay, Play } from '../utils/messages'
 import { useRoom } from './useRoom'
 
 /**
