@@ -10,8 +10,10 @@ interface DotProps {
   className?: string
 }
 
+const className = 'aspect-square h-12 md:h-16'
+
 export function DicePlaceholder() {
-  return <div className='aspect-square h-14 md:h-16'></div>
+  return <div className={className}></div>
 }
 
 function DiceContainer({ children }: React.PropsWithChildren) {
@@ -110,7 +112,8 @@ export function Dice({ value, count = 1 }: DiceProps) {
   return (
     <div
       className={clsx(
-        'flex aspect-square h-14 select-none flex-row items-center justify-center rounded shadow-md md:h-16',
+        className,
+        'flex select-none flex-row items-center justify-center rounded shadow-md',
         {
           'border border-slate-300 bg-white shadow-slate-200': count === 1,
           'border border-yellow-300 bg-yellow-200 shadow-yellow-200':

@@ -9,8 +9,10 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
   const { searchParams } = new URL(request.url)
   const clientId = searchParams.get('clientId')
 
-  if(env.ABLY_CLIENT_SIDE_API_KEY === undefined) {
-    throw new Error('`ABLY_CLIENT_SIDE_API_KEY` is not defined. Make sure it is available via the `.dev.vars` file locally, or it is defined in the CloudFlare environment variables.')
+  if (env.ABLY_CLIENT_SIDE_API_KEY === undefined) {
+    throw new Error(
+      '`ABLY_CLIENT_SIDE_API_KEY` is not defined. Make sure it is available via the `.dev.vars` file locally, or it is defined in the CloudFlare environment variables.'
+    )
   }
   const client = new Ably.Rest.Promise(env.ABLY_CLIENT_SIDE_API_KEY)
 

@@ -36,16 +36,16 @@ export function Board({
   return (
     <div
       className={clsx(
-        'flex justify-center gap-2 text-slate-900 md:w-full md:gap-8',
+        'flex w-full flex-row justify-center gap-2 text-slate-900 md:gap-8',
         {
-          'flex-row items-end': !isOpponentBoard,
-          'flex-row-reverse items-start': isOpponentBoard,
+          'items-end': !isOpponentBoard,
+          'items-start': isOpponentBoard,
           'opacity-75': !canPlay,
           'font-semibold': canPlay
         }
       )}
     >
-      <div className='my-4'>
+      <div className='my-4 grid flex-1 place-content-end'>
         {canPlay ? <Dice value={nextDie} /> : <DicePlaceholder />}
       </div>
       <div
@@ -108,7 +108,7 @@ export function Board({
           })}
         </div>
       </div>
-      <div className='my-4'>
+      <div className='my-4 grid flex-1 place-content-start'>
         <p>Total: {totalScore}</p>
       </div>
     </div>
