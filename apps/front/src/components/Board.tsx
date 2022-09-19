@@ -5,6 +5,7 @@ import { Dice } from './Dice'
 import { Column } from './Column'
 import { Cell } from './Cell'
 import { Name } from './Name'
+import { ColumnScore } from './ColumnScore'
 
 interface BoardProps extends IPlayer {
   isPlayerOne: boolean
@@ -70,9 +71,12 @@ export function Board({
         >
           <div className='grid w-full grid-cols-3'>
             {scorePerColumn.map((score, index) => (
-              <p className='text-center' key={index}>
-                {score}
-              </p>
+              <ColumnScore
+                score={score}
+                dice={columns[index]}
+                isPlayerOne={isPlayerOne}
+                key={index}
+              />
             ))}
           </div>
           <div className='grid aspect-square grid-cols-3 divide-x-2 divide-slate-300 rounded-lg bg-transparent shadow-lg shadow-slate-300 dark:divide-slate-800 dark:shadow-slate-800'>

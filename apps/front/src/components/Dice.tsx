@@ -2,36 +2,62 @@ import * as React from 'react'
 import { clsx } from 'clsx'
 import { Transition } from '@headlessui/react'
 
-interface DiceProps {
-  value: number
-  count?: number
-}
-
-interface DotProps {
+type DiceVariant = 'base' | 'mini'
+interface ClassName {
   className?: string
 }
 
-const className =
-  'aspect-square h-12 portrait:md:h-16 landscape:md:h-12 landscape:lg:h-16'
+interface DiceProps extends ClassName {
+  value: number
+  count?: number
+  variant?: DiceVariant
+}
 
-export function DicePlaceholder() {
-  return <div className={className}></div>
+const baseClassName =
+  'aspect-square h-12 portrait:md:h-16 landscape:md:h-12 landscape:lg:h-16'
+const miniClassName = 'aspect-square h-6'
+
+const VariantContext = React.createContext<DiceVariant>('base')
+
+function DicePlaceholder({ className }: ClassName) {
+  const variant = React.useContext(VariantContext)
+  return (
+    <div
+      className={clsx(className, {
+        [baseClassName]: variant === 'base',
+        [miniClassName]: variant === 'mini'
+      })}
+    ></div>
+  )
 }
 
 function DiceContainer({ children }: React.PropsWithChildren) {
+  const variant = React.useContext(VariantContext)
   return (
-    <div className='grid h-full w-full grid-cols-3 grid-rows-3 place-items-center p-1 xl:p-2'>
+    <div
+      className={clsx(
+        'grid h-full w-full grid-cols-3 grid-rows-3 place-items-center p-1',
+        {
+          'lg:p-2': variant === 'base'
+        }
+      )}
+    >
       {children}
     </div>
   )
 }
 
-function Dot({ className }: DotProps) {
+function Dot({ className }: ClassName) {
+  const variant = React.useContext(VariantContext)
   return (
     <div
       className={clsx(
-        'aspect-square h-2 rounded-full bg-slate-900 dark:bg-slate-200 xl:h-3',
-        className
+        'aspect-square rounded-full bg-slate-900 dark:bg-slate-200',
+        className,
+        {
+          'h-2 lg:h-3': variant === 'base',
+          'h-1': variant === 'mini'
+        }
       )}
     ></div>
   )
@@ -100,7 +126,7 @@ function DiceSix() {
   )
 }
 
-const DiceMap: { [key: number]: () => JSX.Element } = {
+const DiceMap: { [key: number]: React.ComponentType } = {
   1: DiceOne,
   2: DiceTwo,
   3: DiceThree,
@@ -109,20 +135,26 @@ const DiceMap: { [key: number]: () => JSX.Element } = {
   6: DiceSix
 }
 
-export function SimpleDice({ value, count = 1 }: DiceProps) {
+function SimpleDice({ value, className, count = 1 }: DiceProps) {
   const DiceValue = DiceMap[value]
+  const variant = React.useContext(VariantContext)
   return (
     <div
       className={clsx(
+        'flex select-none flex-row items-center justify-center rounded border',
         className,
-        'flex select-none flex-row items-center justify-center rounded shadow',
         {
-          'border border-stone-400 bg-stone-300 shadow-stone-400 dark:border-stone-600 dark:bg-stone-500 dark:shadow-stone-600':
+          'border-stone-400 bg-stone-300 shadow-stone-400 dark:border-stone-600 dark:bg-stone-500 dark:shadow-stone-600':
             count === 1,
-          'border border-amber-400 bg-amber-300 shadow-amber-400 dark:border-amber-700 dark:bg-amber-600 dark:shadow-amber-700':
+          'border-amber-400 bg-amber-300 shadow-amber-400 dark:border-amber-700 dark:bg-amber-600 dark:shadow-amber-700':
             count === 2,
-          'border border-indigo-400 bg-indigo-300 shadow-indigo-400 dark:border-indigo-700 dark:bg-indigo-600 dark:shadow-indigo-700':
+          'border-indigo-400 bg-indigo-300 shadow-indigo-400 dark:border-indigo-700 dark:bg-indigo-600 dark:shadow-indigo-700':
             count === 3
+        },
+        {
+          [baseClassName]: variant === 'base',
+          shadow: variant === 'base',
+          [miniClassName]: variant === 'mini'
         }
       )}
     >
@@ -131,7 +163,12 @@ export function SimpleDice({ value, count = 1 }: DiceProps) {
   )
 }
 
-export function Dice({ value, count = 1 }: Partial<DiceProps>) {
+export function Dice({
+  value,
+  className,
+  count = 1,
+  variant = 'base'
+}: Partial<DiceProps>) {
   // Temporarily store the dice value to keep the dice shown during the
   // transition after it has been unset. While the animation is done, the cached
   // value is reset. When the value is set, it will update the cached value.
@@ -146,7 +183,8 @@ export function Dice({ value, count = 1 }: Partial<DiceProps>) {
   }, [value])
 
   return (
-    <>
+    // Sharing the variant in a context so it's easier to drill it down
+    <VariantContext.Provider value={variant}>
       <Transition
         show={Boolean(value)}
         className='transition duration-100 ease-in-out'
@@ -159,14 +197,14 @@ export function Dice({ value, count = 1 }: Partial<DiceProps>) {
         }}
       >
         {cachedValue !== undefined && (
-          <SimpleDice value={cachedValue} count={count} />
+          <SimpleDice value={cachedValue} count={count} className={className} />
         )}
       </Transition>
       {/*
         Cannot show `DicePlaceholder` within `Transition` when `shown` is
         false, since the `Transition` block isn't rendered.
       */}
-      {cachedValue === undefined && <DicePlaceholder />}
-    </>
+      {cachedValue === undefined && <DicePlaceholder className={className} />}
+    </VariantContext.Provider>
   )
 }
