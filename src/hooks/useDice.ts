@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { useRoom } from './useRoom'
-import { isItDice } from '../utils/messages'
+import { isItDice, isItInitialDice } from '../utils/messages'
+import { Player } from '../utils/players'
 
 export function useDice(initialState: number) {
   const [playerOneDice, setPlayerOneDice] = React.useState<number>(initialState)
@@ -16,6 +17,20 @@ export function useDice(initialState: number) {
         } else {
           setPlayerOneDice(message.data.dice)
         }
+      } else if (isItInitialDice(message)) {
+        if (isItPlayerOne(message.clientId)) {
+          if (message.data.target === Player.PlayerOne) {
+            setPlayerOneDice(message.data.initialDice)
+          } else if (message.data.target === Player.PlayerTwo) {
+            setPlayerTwoDice(message.data.initialDice)
+          }
+        } else {
+          if (message.data.target === Player.PlayerOne) {
+            setPlayerTwoDice(message.data.initialDice)
+          } else if (message.data.target === Player.PlayerTwo) {
+            setPlayerOneDice(message.data.initialDice)
+          }
+        }
       }
     }
   })
@@ -24,5 +39,9 @@ export function useDice(initialState: number) {
     channel.publish('dice', { dice })
   }
 
-  return { playerOneDice, playerTwoDice, sendDice }
+  const sendInitialDice = (dice: number, target: Player) => {
+    channel.publish('dice', { initialDice: dice, target })
+  }
+
+  return { playerOneDice, playerTwoDice, sendDice, sendInitialDice }
 }

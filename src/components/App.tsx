@@ -13,6 +13,7 @@ import { useDice } from '../hooks/useDice'
 import { Player } from '../utils/players'
 import { Board } from './Board'
 import { Win } from './Win'
+import { GameLogs } from './GameLogs'
 
 connectToAbly()
 
@@ -22,7 +23,9 @@ export interface Params {
 
 export function App() {
   const [gameState, setGameState] = React.useState(GameState.Ongoing)
-  const { playerOneDice, playerTwoDice, sendDice } = useDice(getRandomDice())
+  const { playerOneDice, playerTwoDice, sendDice, sendInitialDice } = useDice(
+    getRandomDice()
+  )
 
   function onBoardFull() {
     setGameState(
@@ -52,7 +55,7 @@ export function App() {
     }
   })
 
-  const playerTurn = useTurn()
+  const playerTurn = useTurn(sendInitialDice)
   const { playerOneName, playerTwoName } = useNames()
   const { sendPlay } = useGame({
     onPlayerTwoPlay({ column, value }) {
@@ -116,6 +119,7 @@ export function App() {
           name={playerOneName}
         />
       </div>
+      <GameLogs playerOneName={playerOneName} playerTwoName={playerTwoName} />
     </div>
   )
 }

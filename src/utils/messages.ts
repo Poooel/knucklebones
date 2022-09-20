@@ -1,4 +1,5 @@
 import { Types } from 'ably'
+import { Player } from './players'
 
 export interface Play {
   column: number
@@ -7,6 +8,11 @@ export interface Play {
 
 export interface Dice {
   dice: number
+}
+
+export interface InitialDice {
+  initialDice: number
+  target: Player
 }
 
 export interface TurnSelection {
@@ -19,6 +25,10 @@ interface PlayMessage extends Types.Message {
 
 interface DiceMessage extends Types.Message {
   data: Dice
+}
+
+interface InitialDiceMessage extends Types.Message {
+  data: InitialDice
 }
 
 interface TurnSelectionMessage extends Types.Message {
@@ -39,6 +49,13 @@ export function isItPlay(message: Types.Message): message is PlayMessage {
 export function isItDice(message: Types.Message): message is DiceMessage {
   const { dice } = message.data
   return Number.isInteger(dice)
+}
+
+export function isItInitialDice(
+  message: Types.Message
+): message is InitialDiceMessage {
+  const { initialDice, target } = message.data
+  return Number.isInteger(initialDice) && target in Player
 }
 
 /**

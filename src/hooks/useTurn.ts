@@ -1,13 +1,16 @@
 import * as React from 'react'
 import { isItPlay, isItTurnSelection, TurnSelection } from '../utils/messages'
 import { Player } from '../utils/players'
+import { getRandomDice } from '../utils/random'
 import { useRoom } from './useRoom'
 
 /**
  * Simple hook to keep turns synchronized locally, and detects whether that's
  * the player's turn.
  */
-export function useTurn() {
+export function useTurn(
+  sendInitialDice: (dice: number, target: Player) => void
+) {
   const [turn, setTurn] = React.useState<Player>(Player.Spectator)
 
   // This will first get the last message published to resume the turn, then
@@ -50,10 +53,15 @@ export function useTurn() {
       channel.history((err, result) => {
         if (err != null) console.error(err)
         if (result?.items.length === 0) {
+          const shouldSenderStart = Math.random() > 0.5
           const message: TurnSelection = {
-            shouldSenderStart: Math.random() > 0.5
+            shouldSenderStart
           }
           channel.publish('select', message)
+          sendInitialDice(
+            getRandomDice(),
+            shouldSenderStart ? Player.PlayerOne : Player.PlayerTwo
+          )
         }
       })
     }
