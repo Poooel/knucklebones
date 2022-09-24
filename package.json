@@ -6,7 +6,7 @@
   "scripts": {
     "dev:app": "vite",
     "dev:worker": "wrangler pages dev ./functions",
-    "dev": "wrangler pages dev --proxy 5173 -- yarn dev:app",
+    "dev": "wrangler pages dev --proxy 5173 --kv GAME_STATE_STORE -- yarn dev:app",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "lint": "eslint . --ext ts,tsx"
@@ -16,6 +16,7 @@
     "@headlessui/react": "^1.7.2",
     "@types/uuid": "^8.3.4",
     "ably": "^1.2.29",
+    "crypto-js": "^4.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "6",

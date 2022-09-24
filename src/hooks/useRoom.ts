@@ -13,6 +13,7 @@ interface Options {
   rewind?: number
   subRoomId?: string
   onMessageReceived?: AblyMessageCallback
+  override?: string
 }
 
 const roomName = 'knucklebones'
@@ -31,7 +32,8 @@ export function useRoomId() {
 export function useRoom({
   rewind,
   subRoomId,
-  onMessageReceived = () => {}
+  onMessageReceived = () => {},
+  override
 }: Options = {}): [
   ChannelAndClient[0],
   ChannelAndClient[1],
@@ -45,6 +47,10 @@ export function useRoom({
     rewindString + roomId + subRoomString,
     onMessageReceived
   )
+
+  if (override !== undefined) {
+    useChannel(override, onMessageReceived)
+  }
 
   function isItPlayerOne(messageClientId: string) {
     return messageClientId === ably.auth.clientId
