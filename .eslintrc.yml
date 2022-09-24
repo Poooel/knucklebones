@@ -31,3 +31,4 @@ rules:
   "@typescript-eslint/method-signature-style":
     - error
     - method
+  "@typescript-eslint/no-non-null-assertion": off

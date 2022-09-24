@@ -6,9 +6,11 @@ import { Env } from '../types/env'
 
 export async function sendStateThroughAbly(
   gameState: GameState,
-  ablyJWT: string,
+  env: Env,
   roomId: string
 ) {
+  const ablyJWT = await getAblyJWT(env)
+
   await fetch(`https://rest.ably.io/channels/${roomId}/messages`, {
     method: 'POST',
     headers: {
@@ -23,7 +25,7 @@ export async function sendStateThroughAbly(
   })
 }
 
-export async function getAblyJWT(env: Env) {
+async function getAblyJWT(env: Env) {
   let ablyJWT = await env.ABLY_JWT_STORE.get('ablyJWT')
 
   if (ablyJWT === null) {
