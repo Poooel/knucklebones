@@ -1,6 +1,6 @@
 import { Env } from '../../types/env'
 import { jsonResponse } from '../../utils/jsonResponse'
-import { Play } from '../../types/play'
+import { Play } from '../../../shared-types/play'
 import { getAblyJWT, sendStateThroughAbly } from '../../utils/ably'
 import { getGameState, mutateGameState } from '../../utils/gameState'
 

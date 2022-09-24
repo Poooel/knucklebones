@@ -1,21 +1,20 @@
 import { Env } from '../types/env'
-import { GameOutcome } from '../types/gameOutcome'
-import { GameState } from '../types/gameState'
-import { Play } from '../types/play'
+import { GameState } from '../../shared-types/gameState'
+import { Play } from '../../shared-types/play'
+import { Player } from '../../shared-types/player'
 
-const initialPlayerState = {
-  id: '',
-  dice: -1,
-  columns: [[], [], []],
-  score: 0,
-  scorePerColumn: []
+const emptyGameState: GameState = {
+  logs: [],
+  gameOutcome: 'not-started'
 }
 
-const emptyGameState = {
-  playerOne: initialPlayerState,
-  playerTwo: initialPlayerState,
-  logs: [],
-  gameOutcome: GameOutcome.Ongoing
+export function initialPlayerState(playerId: string): Player {
+  return {
+    id: playerId,
+    columns: [[], [], []],
+    score: 0,
+    scorePerColumn: []
+  }
 }
 
 export async function getGameState(roomId: string, env: Env) {
@@ -31,6 +30,8 @@ export function mutateGameState(play: Play, gameState: GameState): GameState {
   // enlever en face
   // check pour la win/loose/tie
   // generer un nouveau de
-  gameState.playerOne.columns[play.column].push(play.value)
+  // game logs
+  //
+  // dans le auth, initialiser les joueurs
   return gameState
 }
