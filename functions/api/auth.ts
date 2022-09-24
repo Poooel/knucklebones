@@ -1,7 +1,7 @@
 import { jsonResponse } from '../utils/jsonResponse'
 import { randomName } from '../utils/randomName'
 import Ably from 'ably/build/ably-webworker.min'
-import { Env } from '../utils/env'
+import { Env } from '../types/env'
 
 export const onRequestGet: PagesFunction<Env> = async (context) => {
   const { env, request } = context

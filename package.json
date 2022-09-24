@@ -6,7 +6,7 @@
   "scripts": {
     "dev:app": "vite",
     "dev:worker": "wrangler pages dev ./functions",
-    "dev": "wrangler pages dev --proxy 5173 --kv GAME_STATE_STORE -- yarn dev:app",
+    "dev": "wrangler pages dev --proxy 5173 --kv GAME_STATE_STORE --kv ABLY_JWT_STORE -- yarn dev:app",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "lint": "eslint . --ext ts,tsx"

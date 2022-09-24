@@ -1,6 +1,9 @@
+import { GameOutcome } from './gameOutcome'
+import { Player } from './player'
+
 export interface GameState {
-  columns: number[][]
-  roomId: string
-  playerOneId: string
-  playerTwoId: string
+  playerOne: Player
+  playerTwo: Player
+  logs: string[]
+  gameOutcome: GameOutcome
 }

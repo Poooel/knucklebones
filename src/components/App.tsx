@@ -13,7 +13,6 @@ import { useDice } from '../hooks/useDice'
 import { Player } from '../utils/players'
 import { Board } from './Board'
 import { Win } from './Win'
-import { useRoom } from '../hooks/useRoom'
 
 connectToAbly()
 
@@ -24,13 +23,6 @@ export interface Params {
 export function App() {
   const [gameState, setGameState] = React.useState(GameState.Ongoing)
   const { playerOneDice, playerTwoDice, sendDice } = useDice(getRandomDice())
-
-  useRoom({
-    override: 'knucklebones:easy-to-find',
-    onMessageReceived(message) {
-      console.log(message)
-    }
-  })
 
   function onBoardFull() {
     setGameState(
