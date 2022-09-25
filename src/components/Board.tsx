@@ -7,7 +7,7 @@ import { Column } from './Column'
 import { Cell } from './Cell'
 import { Name } from './Name'
 
-interface BoardProps extends Player {
+interface BoardProps extends Partial<Player> {
   isPlayerOne: boolean
   canPlay: boolean
   onColumnClick?(colIndex: number): void
@@ -22,12 +22,12 @@ const CELLS_PER_COLUMN_PLACEHOLDER = Array.from({
 })
 
 export function Board({
-  score,
-  scorePerColumn,
-  columns,
+  id,
   dice,
   isPlayerOne,
-  id,
+  score = 0,
+  scorePerColumn = [0, 0, 0],
+  columns = [[], [], []],
   canPlay = false,
   onColumnClick
 }: BoardProps) {

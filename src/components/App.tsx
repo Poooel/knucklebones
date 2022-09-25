@@ -6,19 +6,15 @@ import { GameOutcome } from './GameOutcome'
 export function App() {
   const { gameState, playerOne, playerTwo, isLoading, sendPlay } = useGame()
 
-  if (
-    gameState === null ||
-    playerOne === undefined ||
-    playerTwo === undefined
-  ) {
+  if (gameState === null || playerOne === undefined) {
     return <p>Loading</p>
   }
 
   const { gameOutcome, nextPlayer } = gameState
 
   const canPlay = !isLoading && gameOutcome === 'ongoing'
-  const canPlayerOnePlay = canPlay && nextPlayer === playerOne.id
-  const canPlayerTwoPlay = canPlay && nextPlayer === playerTwo.id
+  const canPlayerOnePlay = canPlay && nextPlayer === playerOne?.id
+  const canPlayerTwoPlay = canPlay && nextPlayer === playerTwo?.id
 
   return (
     <div className='grid grid-cols-1 lg:grid lg:h-screen lg:place-content-center'>
