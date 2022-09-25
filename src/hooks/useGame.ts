@@ -1,67 +1,51 @@
 import * as React from 'react'
-import { isItPlay, Play } from '../utils/messages'
+import { useChannel } from '@ably-labs/react-hooks'
+import { GameState } from '../../shared-types/gameState'
+import { Player } from '../../shared-types/player'
+import { isItGameStateMessage } from '../utils/messages'
+import { sendPlay as internalSendPlay } from '../utils/sendPlay'
 import { useRoom } from './useRoom'
 
-/**
- * Simple hook to keep the game synchronized, by allowing to publish one's plays,
- * and receive the oppononent's plays.
- * Can later be used to synchronize dice
- */
-export function useGame({
-  onPlayerTwoPlay
-}: {
-  onPlayerTwoPlay(play: Play): void
-}) {
-  const [channel, , { isItPlayerOne }] = useRoom({
-    onMessageReceived(message) {
-      if (!isItPlayerOne(message.clientId) && isItPlay(message)) {
-        onPlayerTwoPlay(message.data)
-      }
+function attributePlayers(
+  playerId: string,
+  gameState: GameState
+): [Player | undefined, Player | undefined] {
+  if (gameState.playerOne?.id === playerId) {
+    return [gameState.playerOne, gameState.playerTwo]
+  }
+  return [gameState.playerTwo, gameState.playerOne]
+}
+
+export function useGame() {
+  const [gameState, setGameState] = React.useState<GameState | null>(null)
+  const [isLoading, setIsLoading] = React.useState(true)
+  const { roomKey, roomId } = useRoom()
+
+  const [, client] = useChannel(`[?rewind=1]${roomId}`, (message) => {
+    if (isItGameStateMessage(message)) {
+      setGameState(message.data)
+      setIsLoading(false)
     }
   })
 
-  function sendPlay(play: Play) {
-    channel.publish('play', play)
-  }
+  const [playerOne, playerTwo] =
+    gameState !== null && client.auth.clientId !== undefined
+      ? attributePlayers(client.auth.clientId, gameState)
+      : []
 
-  return { sendPlay }
-}
-
-/**
- * Allows to read the previous plays from the current game and resume it.
- */
-export function useResumeGame({
-  onPlayerOnePlay,
-  onPlayerTwoPlay
-}: {
-  onPlayerOnePlay(play: Play): void
-  onPlayerTwoPlay(play: Play): void
-}) {
-  const [channel, ably, { isItPlayerOne }] = useRoom()
-
-  React.useEffect(() => {
-    if (ably.auth.clientId !== undefined) {
-      channel.history((err, result) => {
-        if (err != null) {
-          console.error(err)
-        }
-
-        if (result !== undefined) {
-          // Messages in history are returned from newest to oldest. We need to
-          // reverse the order to follow the same plays order as the game
-          // (needed for the dice removal logic).
-          result.items.reverse().forEach((item) => {
-            if (isItPlay(item)) {
-              const { clientId, data } = item
-              if (isItPlayerOne(clientId)) {
-                onPlayerOnePlay(data)
-              } else {
-                onPlayerTwoPlay(data)
-              }
-            }
-          })
-        }
+  async function sendPlay(column: number) {
+    const dice = playerOne?.dice
+    if (dice !== undefined && !isLoading) {
+      setIsLoading(true)
+      await internalSendPlay(roomKey, {
+        column,
+        value: dice,
+        playerId: client.auth.clientId
+      }).finally(() => {
+        setIsLoading(false)
       })
     }
-  }, [ably.auth.clientId])
+  }
+
+  return { gameState, isLoading, playerOne, playerTwo, sendPlay }
 }

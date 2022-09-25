@@ -1,5 +1,6 @@
 import { Env } from '../types/env'
 import { GameState } from '../../shared-types/gameState'
+import { countDiceInColumn } from '../../shared-utils/count'
 import { Play } from '../../shared-types/play'
 import { Player } from '../../shared-types/player'
 import { GameOutcome } from '../../shared-types/gameOutcome'
@@ -119,13 +120,6 @@ function updateScore(player: Player) {
 
   player.scorePerColumn = scorePerColumn
   player.score = score
-}
-
-function countDiceInColumn(column: number[]): Map<number, number> {
-  return column.reduce<Map<number, number>>((map, dice = 0) => {
-    const dieCount = map.get(dice) ?? 0
-    return map.set(dice, dieCount + 1)
-  }, new Map())
 }
 
 function getColumnScore(countedDice: Map<number, number>) {

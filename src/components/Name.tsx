@@ -1,19 +1,18 @@
 import * as React from 'react'
-import { Player } from '../utils/players'
 
 interface NameProps {
-  name: string | null
-  playerBoard: Player
+  name?: string
+  isPlayerOne: boolean
 }
 
-export function Name({ name, playerBoard }: NameProps) {
+export function Name({ name, isPlayerOne }: NameProps) {
   // Will have to be accommodated for spectators
-  if (name === null) {
-    return <p>{playerBoard === Player.PlayerOne ? 'You' : 'Opponent'}</p>
+  if (name === undefined) {
+    return <p>{isPlayerOne ? 'You' : 'Opponent'}</p>
   }
   return (
     <p>
-      {name} ({playerBoard === Player.PlayerOne ? 'you' : 'opponent'})
+      {name} ({isPlayerOne ? 'you' : 'opponent'})
     </p>
   )
 }
