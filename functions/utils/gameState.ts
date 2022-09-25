@@ -18,7 +18,7 @@ export function initialPlayerState(playerId: string): Player {
     id: playerId,
     columns: [[], [], []],
     score: 0,
-    scorePerColumn: []
+    scorePerColumn: [0, 0, 0]
   }
 }
 

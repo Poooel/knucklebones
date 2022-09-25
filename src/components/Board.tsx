@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { clsx } from 'clsx'
 import { Player } from '../../shared/types/player'
+import { countDiceInColumn } from '../../shared/utils/count'
 import { Dice } from './Dice'
 import { Column } from './Column'
 import { Cell } from './Cell'
@@ -53,11 +54,11 @@ export function Board({
       >
         <Name name={id} isPlayerOne={isPlayerOne} />
         <div className='grid w-full grid-cols-3'>
-          {/* {scorePerColumn.map(({ total }, index) => (
+          {scorePerColumn.map((score, index) => (
             <p className='text-center' key={index}>
-              {total}
+              {score}
             </p>
-          ))} */}
+          ))}
         </div>
         <div
           className={clsx(
@@ -66,6 +67,7 @@ export function Board({
         >
           {COLUMNS_PLACEHOLDER.map((_, colIndex) => {
             const column = columns[colIndex]
+            const countedDice = countDiceInColumn(column)
             const canPlayInColumn =
               isPlayerOne && canPlay && column.length < MAX_CELLS_PER_COLUMNS
             return (
@@ -84,10 +86,7 @@ export function Board({
                   const value = column[actualCellIndex]
                   return (
                     <Cell key={cellIndex}>
-                      <Dice
-                        value={value}
-                        // count={scorePerColumn[colIndex].countedDice.get(value)}
-                      />
+                      <Dice value={value} count={countedDice.get(value)} />
                     </Cell>
                   )
                 })}
