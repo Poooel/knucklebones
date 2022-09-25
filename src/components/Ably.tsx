@@ -5,7 +5,6 @@ export function Ably({ children }: React.PropsWithChildren) {
   const isConnected = useAbly()
 
   if (!isConnected) {
-    console.log('ably loading')
     return <p>Loading</p>
   }
 

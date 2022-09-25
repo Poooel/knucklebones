@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { clsx } from 'clsx'
-import { Player } from '../../shared-types/player'
+import { Player } from '../../shared/types/player'
 import { Dice } from './Dice'
 import { Column } from './Column'
 import { Cell } from './Cell'

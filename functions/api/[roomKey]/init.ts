@@ -1,8 +1,6 @@
-import Ably from 'ably/build/ably-webworker.min'
-import { GameState } from '../../../shared-types/gameState'
+import { GameState } from '../../../shared/types/gameState'
 import { Env } from '../../types/env'
 import { jsonResponse } from '../../utils/jsonResponse'
-import { randomName } from '../../utils/randomName'
 import { getClientId, getRoomId } from '../../utils/params'
 import {
   addLog,
@@ -15,24 +13,17 @@ import { getRandomDice, getRandomValue } from '../../utils/random'
 export const onRequestGet: PagesFunction<Env> = async (context) => {
   const { env, request, params } = context
 
-  const clientId = getClientId(request) ?? randomName()
+  const clientId = getClientId(request)
   const roomId = getRoomId(params)
+
+  if (clientId === null) {
+    throw new Error('No client ID provided')
+  }
 
   const gameState = await initializePlayers(env, roomId, clientId)
   await saveAndPropagateState(env, roomId, gameState)
 
-  if (env.ABLY_CLIENT_SIDE_API_KEY === undefined) {
-    throw new Error(
-      '`ABLY_CLIENT_SIDE_API_KEY` is not defined. Make sure it is available via the `.dev.vars` file locally, or it is defined in the CloudFlare environment variables.'
-    )
-  }
-  const client = new Ably.Rest.Promise(env.ABLY_CLIENT_SIDE_API_KEY)
-
-  const tokenRequestData = await client.auth.createTokenRequest({
-    clientId
-  })
-
-  return jsonResponse(tokenRequestData, { status: 200 })
+  return jsonResponse(gameState, { status: 200 })
 }
 
 async function initializePlayers(

@@ -1,5 +1,5 @@
 import { Types } from 'ably'
-import { GameState } from '../../shared-types/gameState'
+import { GameState } from '../../shared/types/gameState'
 
 interface GameStateMessage extends Types.Message {
   data: GameState

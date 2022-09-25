@@ -1,7 +1,8 @@
 import * as React from 'react'
 import { useChannel } from '@ably-labs/react-hooks'
-import { GameState } from '../../shared-types/gameState'
-import { Player } from '../../shared-types/player'
+import { GameState } from '../../shared/types/gameState'
+import { Player } from '../../shared/types/player'
+import { initializeGame } from '../utils/initializeGame'
 import { isItGameStateMessage } from '../utils/messages'
 import { sendPlay as internalSendPlay } from '../utils/sendPlay'
 import { useRoom } from './useRoom'
@@ -27,6 +28,10 @@ export function useGame() {
       setIsLoading(false)
     }
   })
+
+  React.useEffect(() => {
+    void initializeGame(roomKey, client.auth.clientId)
+  }, [roomKey, client.auth.clientId])
 
   const [playerOne, playerTwo] =
     gameState !== null && client.auth.clientId !== undefined

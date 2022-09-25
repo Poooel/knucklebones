@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Link } from 'react-router-dom'
-import { GameState } from '../../shared-types/gameState'
-import { Player } from '../../shared-types/player'
+import { GameState } from '../../shared/types/gameState'
+import { Player } from '../../shared/types/player'
 
 interface GameOutcomeProps extends GameState {
   clientId: string

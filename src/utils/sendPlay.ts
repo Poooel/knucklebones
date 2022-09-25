@@ -1,4 +1,4 @@
-import { Play } from '../../shared-types/play'
+import { Play } from '../../shared/types/play'
 
 export async function sendPlay(roomKey: string, play: Play) {
   return await fetch(`/api/${roomKey}/play`, {

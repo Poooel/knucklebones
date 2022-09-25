@@ -1,6 +1,6 @@
 import { Env } from '../../types/env'
 import { jsonResponse } from '../../utils/jsonResponse'
-import { Play } from '../../../shared-types/play'
+import { Play } from '../../../shared/types/play'
 import {
   getGameState,
   mutateGameState,
