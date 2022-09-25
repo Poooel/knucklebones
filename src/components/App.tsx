@@ -2,12 +2,13 @@ import * as React from 'react'
 import { useGame } from '../hooks/useGame'
 import { Board } from './Board'
 import { GameOutcome } from './GameOutcome'
+import { Loading } from './Loading'
 
 export function App() {
   const { gameState, playerOne, playerTwo, isLoading, sendPlay } = useGame()
 
   if (gameState === null || playerOne === undefined) {
-    return <p>Loading</p>
+    return <Loading />
   }
 
   const { gameOutcome, nextPlayer } = gameState

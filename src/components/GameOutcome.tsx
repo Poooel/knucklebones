@@ -29,14 +29,22 @@ export function GameOutcome({ clientId, ...gameState }: GameOutcomeProps) {
   const { gameOutcome } = gameState
 
   if (gameOutcome === 'not-started') {
-    return <p>Waiting for an opponent to join...</p>
+    return (
+      <p className='animate-pulse text-slate-900'>
+        Waiting for an opponent to join...
+      </p>
+    )
   }
   if (gameOutcome === 'ongoing') {
     // Should add player names here
-    return <p>VS</p>
+    return <p className='text-slate-900'>VS</p>
   }
   if (gameOutcome === 'tie') {
-    return <p>This is a tie! Nobody wins!</p>
+    return (
+      <p className='font-semibold text-slate-900'>
+        This is a tie! Nobody wins!
+      </p>
+    )
   }
 
   return (
