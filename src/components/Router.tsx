@@ -11,8 +11,8 @@ export function Router() {
   return (
     <Routes>
       <Route path='/' element={<Room />} />
-      <Route path='/room' element={<Room />} />
       <Route path='/room/:roomKey' element={<App />} />
+      {/* Handle 404 */}
     </Routes>
   )
 }
