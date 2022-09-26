@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { App } from './App'
 
 function Room() {
-  return <Navigate to={`/room/${uuidv4()}`} />
+  return <Navigate to={`/room/${uuidv4()}`} replace />
 }
 
 export function Router() {
