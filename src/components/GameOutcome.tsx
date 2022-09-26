@@ -30,25 +30,25 @@ export function GameOutcome({ clientId, ...gameState }: GameOutcomeProps) {
 
   if (gameOutcome === 'not-started') {
     return (
-      <p className='animate-pulse text-slate-900'>
+      <p className='animate-pulse text-slate-900 dark:text-slate-200'>
         Waiting for an opponent to join...
       </p>
     )
   }
   if (gameOutcome === 'ongoing') {
     // Should add player names here
-    return <p className='text-slate-900'>VS</p>
+    return <p className='text-slate-900 dark:text-slate-200'>VS</p>
   }
   if (gameOutcome === 'tie') {
     return (
-      <p className='font-semibold text-slate-900'>
+      <p className='font-semibold text-slate-900 dark:text-slate-200'>
         This is a tie! Nobody wins!
       </p>
     )
   }
 
   return (
-    <div className='grid justify-items-center gap-2 font-semibold text-slate-900'>
+    <div className='grid justify-items-center gap-2 font-semibold text-slate-900 dark:text-slate-200'>
       <p>{getWinMessage(clientId, gameState)}</p>
       <Link
         className='rounded-md border-2 bg-slate-50 py-1 px-2 transition-colors duration-100 hover:bg-slate-100'

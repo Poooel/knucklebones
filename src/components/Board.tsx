@@ -34,7 +34,7 @@ export function Board({
   return (
     <div
       className={clsx(
-        'flex w-full flex-row justify-center gap-2 text-slate-900 transition duration-100 md:gap-8',
+        'flex w-full flex-row justify-center gap-2 text-slate-900 dark:text-slate-200 transition duration-100 md:gap-8',
         {
           'items-end': isPlayerOne,
           'items-start': !isPlayerOne,
@@ -62,7 +62,7 @@ export function Board({
         </div>
         <div
           className={clsx(
-            'grid aspect-square grid-cols-3 divide-x-2 divide-slate-300 rounded-lg border bg-slate-50 shadow-lg shadow-slate-300'
+            'grid aspect-square grid-cols-3 divide-x-2 divide-slate-300 dark:divide-slate-600 rounded-lg border dark:border-slate-600 bg-slate-50 dark:bg-slate-500 shadow-lg shadow-slate-300 dark:shadow-slate-700'
           )}
         >
           {COLUMNS_PLACEHOLDER.map((_, colIndex) => {

@@ -18,16 +18,18 @@ export function App() {
   const canPlayerTwoPlay = canPlay && nextPlayer === playerTwo?.id
 
   return (
-    <div className='grid grid-cols-1 lg:grid lg:h-screen lg:place-content-center'>
-      <div className='flex flex-col items-center justify-between gap-4 px-2 py-4 md:p-8'>
-        <Board {...playerTwo} isPlayerOne={false} canPlay={canPlayerTwoPlay} />
-        <GameOutcome {...gameState} clientId={playerOne.id} />
-        <Board
-          {...playerOne}
-          isPlayerOne
-          onColumnClick={canPlayerOnePlay ? sendPlay : undefined}
-          canPlay={canPlayerOnePlay}
-        />
+    <div className='h-full bg-slate-200 dark:bg-slate-900'>
+      <div className='grid grid-cols-1 lg:grid lg:h-screen lg:place-content-center'>
+        <div className='flex flex-col items-center justify-between gap-4 px-2 py-4 md:p-8'>
+          <Board {...playerTwo} isPlayerOne={false} canPlay={canPlayerTwoPlay} />
+          <GameOutcome {...gameState} clientId={playerOne.id} />
+          <Board
+            {...playerOne}
+            isPlayerOne
+            onColumnClick={canPlayerOnePlay ? sendPlay : undefined}
+            canPlay={canPlayerOnePlay}
+          />
+        </div>
       </div>
     </div>
   )

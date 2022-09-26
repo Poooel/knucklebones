@@ -29,7 +29,7 @@ function Dot({ className }: DotProps) {
   return (
     <div
       className={clsx(
-        'aspect-square h-2 rounded-full bg-slate-900 md:h-3',
+        'aspect-square h-2 rounded-full bg-slate-900 dark:bg-slate-200 md:h-3',
         className
       )}
     ></div>
@@ -116,10 +116,10 @@ export function SimpleDice({ value, count = 1 }: DiceProps) {
         className,
         'flex select-none flex-row items-center justify-center rounded shadow-md',
         {
-          'border border-slate-300 bg-white shadow-slate-200': count === 1,
-          'border border-yellow-300 bg-yellow-200 shadow-yellow-200':
+          'border border-stone-300 dark:border-stone-900 bg-stone-200 dark:bg-stone-800 shadow-stone-200 dark:shadow-stone-800': count === 1,
+          'border border-yellow-300 dark:border-yellow-900 bg-yellow-200 dark:bg-yellow-800 shadow-yellow-200 dark:shadow-yellow-800':
             count === 2,
-          'border border-blue-300 bg-blue-200 shadow-blue-200': count === 3
+          'border border-blue-300 dark:border-blue-900 bg-blue-200 dark:bg-blue-800 shadow-blue-200 dark:shadow-blue-800': count === 3
         }
       )}
     >
