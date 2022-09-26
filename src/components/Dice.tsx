@@ -116,10 +116,12 @@ export function SimpleDice({ value, count = 1 }: DiceProps) {
         className,
         'flex select-none flex-row items-center justify-center rounded shadow-md',
         {
-          'border border-stone-300 dark:border-stone-900 bg-stone-200 dark:bg-stone-800 shadow-stone-200 dark:shadow-stone-800': count === 1,
-          'border border-yellow-300 dark:border-yellow-900 bg-yellow-200 dark:bg-yellow-800 shadow-yellow-200 dark:shadow-yellow-800':
+          'border border-stone-300 bg-stone-200 shadow-stone-200 dark:border-stone-900 dark:bg-stone-800 dark:shadow-stone-800':
+            count === 1,
+          'border border-yellow-300 bg-yellow-200 shadow-yellow-200 dark:border-yellow-900 dark:bg-yellow-800 dark:shadow-yellow-800':
             count === 2,
-          'border border-blue-300 dark:border-blue-900 bg-blue-200 dark:bg-blue-800 shadow-blue-200 dark:shadow-blue-800': count === 3
+          'border border-blue-300 bg-blue-200 shadow-blue-200 dark:border-blue-900 dark:bg-blue-800 dark:shadow-blue-800':
+            count === 3
         }
       )}
     >
