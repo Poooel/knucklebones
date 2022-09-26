@@ -3,6 +3,7 @@ env:
   es2021: true
 extends:
   - plugin:react/recommended
+  - plugin:react-hooks/recommended
   - standard-with-typescript
   - prettier
 overrides: []
@@ -15,6 +16,7 @@ parserOptions:
     - functions/tsconfig.json
 plugins:
   - react
+  - react-hooks
   - prettier
 rules:
   prettier/prettier: error
@@ -31,3 +33,4 @@ rules:
   "@typescript-eslint/method-signature-style":
     - error
     - method
+  "@typescript-eslint/no-non-null-assertion": off

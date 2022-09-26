@@ -1,18 +1,15 @@
 import * as React from 'react'
 import { clsx } from 'clsx'
-import { Player } from '../utils/players'
-import { BoardDice, getScore } from '../utils/score'
+import { Player } from '../../shared/types/player'
+import { countDiceInColumn } from '../../shared/utils/count'
 import { Dice } from './Dice'
 import { Column } from './Column'
 import { Cell } from './Cell'
 import { Name } from './Name'
 
-interface BoardProps {
-  columns: BoardDice
-  nextDie: number
-  name: string | null
-  playerBoard: Player
-  canPlay?: boolean
+interface BoardProps extends Partial<Player> {
+  isPlayerOne: boolean
+  canPlay: boolean
   onColumnClick?(colIndex: number): void
 }
 
@@ -25,43 +22,41 @@ const CELLS_PER_COLUMN_PLACEHOLDER = Array.from({
 })
 
 export function Board({
-  columns,
-  nextDie,
-  onColumnClick,
-  playerBoard,
+  id,
+  dice,
+  isPlayerOne,
+  score = 0,
+  scorePerColumn = [0, 0, 0],
+  columns = [[], [], []],
   canPlay = false,
-  name
+  onColumnClick
 }: BoardProps) {
-  const { scorePerColumn, totalScore } = getScore(columns)
-  const isPlayerOneBoard = playerBoard === Player.PlayerOne
-  const isPlayerTwoBoard = playerBoard === Player.PlayerTwo
-
   return (
     <div
       className={clsx(
         'flex w-full flex-row justify-center gap-2 text-slate-900 transition duration-100 md:gap-8',
         {
-          'items-end': isPlayerOneBoard,
-          'items-start': isPlayerTwoBoard,
+          'items-end': isPlayerOne,
+          'items-start': !isPlayerOne,
           'opacity-75': !canPlay,
           'font-semibold': canPlay
         }
       )}
     >
       <div className='my-4 grid flex-1 place-content-end'>
-        <Dice value={canPlay ? nextDie : undefined} />
+        <Dice value={canPlay ? dice : undefined} />
       </div>
       <div
         className={clsx('flex items-center gap-1 md:gap-4', {
-          'flex-col': isPlayerOneBoard,
-          'flex-col-reverse': isPlayerTwoBoard
+          'flex-col': isPlayerOne,
+          'flex-col-reverse': !isPlayerOne
         })}
       >
-        <Name name={name} playerBoard={playerBoard} />
+        <Name name={id} isPlayerOne={isPlayerOne} />
         <div className='grid w-full grid-cols-3'>
-          {scorePerColumn.map(({ total }, index) => (
+          {scorePerColumn.map((score, index) => (
             <p className='text-center' key={index}>
-              {total}
+              {score}
             </p>
           ))}
         </div>
@@ -72,10 +67,9 @@ export function Board({
         >
           {COLUMNS_PLACEHOLDER.map((_, colIndex) => {
             const column = columns[colIndex]
+            const countedDice = countDiceInColumn(column)
             const canPlayInColumn =
-              isPlayerOneBoard &&
-              canPlay &&
-              column.length < MAX_CELLS_PER_COLUMNS
+              isPlayerOne && canPlay && column.length < MAX_CELLS_PER_COLUMNS
             return (
               <Column
                 key={colIndex}
@@ -86,16 +80,13 @@ export function Board({
               >
                 {CELLS_PER_COLUMN_PLACEHOLDER.map((_, cellIndex) => {
                   // Reverses the render order to mirror the board for the opponent
-                  const actualCellIndex = isPlayerTwoBoard
+                  const actualCellIndex = !isPlayerOne
                     ? MAX_CELLS_PER_COLUMNS - cellIndex - 1
                     : cellIndex
                   const value = column[actualCellIndex]
                   return (
                     <Cell key={cellIndex}>
-                      <Dice
-                        value={value}
-                        count={scorePerColumn[colIndex].countedDice.get(value)}
-                      />
+                      <Dice value={value} count={countedDice.get(value)} />
                     </Cell>
                   )
                 })}
@@ -105,7 +96,7 @@ export function Board({
         </div>
       </div>
       <div className='my-4 grid flex-1 place-content-start'>
-        <p>Total: {totalScore}</p>
+        <p>Total: {score}</p>
       </div>
     </div>
   )

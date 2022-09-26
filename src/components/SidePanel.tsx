@@ -1,17 +1,16 @@
 import * as React from 'react'
 import { clsx } from 'clsx'
-import { Player } from '../utils/players'
 import { Dice, DicePlaceholder } from './Dice'
 
 interface SidePanelProps {
-  nextDie: number | null
-  playerBoard: Player
+  nextDice: number | null
+  isPlayerOne: boolean
   totalScore: number
 }
 
 export function SidePanel({
-  nextDie,
-  playerBoard,
+  nextDice,
+  isPlayerOne,
   totalScore
 }: SidePanelProps) {
   return (
@@ -19,14 +18,12 @@ export function SidePanel({
       className={clsx(
         'flex w-full items-center justify-between gap-2 md:flex-1 md:items-start md:justify-start md:gap-4',
         {
-          'flex-row md:flex-col-reverse md:items-end':
-            playerBoard === Player.PlayerTwo,
-          'flex-row-reverse md:flex-col md:items-start':
-            playerBoard === Player.PlayerOne
+          'flex-row md:flex-col-reverse md:items-end': !isPlayerOne,
+          'flex-row-reverse md:flex-col md:items-start': isPlayerOne
         }
       )}
     >
-      {nextDie !== null ? <Dice value={nextDie} /> : <DicePlaceholder />}
+      {nextDice !== null ? <Dice value={nextDice} /> : <DicePlaceholder />}
       <p>Total: {totalScore}</p>
     </div>
   )
