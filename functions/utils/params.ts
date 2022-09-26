@@ -9,3 +9,8 @@ export function getRoomId(params: Params<any>): string {
 
   return `knucklebones:${roomKey}`
 }
+
+export function getClientId(request: Request) {
+  const { searchParams } = new URL(request.url)
+  return searchParams.get('clientId')
+}

@@ -22,7 +22,7 @@
   },
   "include": [
     "src",
-    "shared-types"
+    "shared"
   ],
   "exclude": [
     "functions"

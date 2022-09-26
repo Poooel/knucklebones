@@ -1,13 +1,16 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import './index.css'
 import { BrowserRouter } from 'react-router-dom'
+import { Ably } from './components/Ably'
 import { Router } from './components/Router'
+import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <BrowserRouter>
-      <Router />
-    </BrowserRouter>
+    <Ably>
+      <BrowserRouter>
+        <Router />
+      </BrowserRouter>
+    </Ably>
   </React.StrictMode>
 )
