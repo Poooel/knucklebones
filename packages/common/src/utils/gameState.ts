@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid'
 import { GameState } from '../types/gameState'
 import { countDiceInColumn } from '../utils/count'
 import { Play } from '../types/play'
@@ -69,6 +70,7 @@ export function initializePlayers(
 
 export function addLog(gameState: GameState, log: string) {
   gameState.logs.push({
+    id: uuidv4(),
     timestamp: now(),
     content: log
   })
