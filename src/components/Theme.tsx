@@ -8,6 +8,21 @@ import {
 
 type Themes = 'dark' | 'light' | 'default'
 
+interface ThemeIconButtonProps {
+  theme: Themes
+  className: string
+}
+
+function ThemeIcon({ theme, className }: ThemeIconButtonProps) {
+  if (theme === 'dark') {
+    return <MoonIcon className={className} />
+  }
+  if (theme === 'light') {
+    return <SunIcon className={className} />
+  }
+  return <ComputerDesktopIcon className={className} />
+}
+
 export function Theme({ children }: React.PropsWithChildren) {
   const [theme, setTheme] = React.useState<Themes>('default')
   const [isDarkMode, setIsDarkMode] = React.useState(false)
@@ -75,13 +90,9 @@ export function Theme({ children }: React.PropsWithChildren) {
       {children}
       <button
         onClick={changeTheme}
-        className='fixed top-0 right-0 rounded-full p-4 text-slate-900 hover:bg-black/10 dark:text-slate-50'
+        className='fixed top-0 right-0 rounded-full p-4 text-slate-900 transition-colors duration-100 hover:bg-black/10 dark:text-slate-50 dark:hover:bg-white/10'
       >
-        {theme === 'dark' && <MoonIcon className='aspect-square h-6' />}
-        {theme === 'light' && <SunIcon className='aspect-square h-6' />}
-        {theme === 'default' && (
-          <ComputerDesktopIcon className='aspect-square h-6' />
-        )}
+        <ThemeIcon theme={theme} className='aspect-square h-6' />
       </button>
     </div>
   )

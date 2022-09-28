@@ -48,10 +48,10 @@ export function GameOutcome({ clientId, ...gameState }: GameOutcomeProps) {
   }
 
   return (
-    <div className='grid justify-items-center gap-2 font-semibold text-slate-900 dark:text-slate-200'>
+    <div className='grid justify-items-center gap-2 font-semibold text-slate-900 dark:text-slate-50'>
       <p>{getWinMessage(clientId, gameState)}</p>
       <Link
-        className='rounded-md border-2 bg-slate-50 py-1 px-2 transition-colors duration-100 hover:bg-slate-100'
+        className='rounded-md border-2 border-slate-200 bg-transparent py-1 px-2 transition-colors duration-100 hover:bg-black/10 dark:border-slate-700 dark:hover:bg-white/10'
         to={'/'}
       >
         Replay
