@@ -114,13 +114,13 @@ export function SimpleDice({ value, count = 1 }: DiceProps) {
     <div
       className={clsx(
         className,
-        'flex select-none flex-row items-center justify-center rounded shadow-md',
+        'flex select-none flex-row items-center justify-center rounded shadow',
         {
-          'border border-stone-300 bg-stone-200 shadow-stone-200 dark:border-stone-900 dark:bg-stone-800 dark:shadow-stone-800':
+          'border border-stone-400 bg-stone-300 shadow-stone-400 dark:border-stone-600 dark:bg-stone-500 dark:shadow-stone-600':
             count === 1,
-          'border border-yellow-300 bg-yellow-200 shadow-yellow-200 dark:border-yellow-900 dark:bg-yellow-800 dark:shadow-yellow-800':
+          'border border-amber-400 bg-amber-300 shadow-amber-400 dark:border-amber-700 dark:bg-amber-600 dark:shadow-amber-700':
             count === 2,
-          'border border-blue-300 bg-blue-200 shadow-blue-200 dark:border-blue-900 dark:bg-blue-800 dark:shadow-blue-800':
+          'border border-indigo-400 bg-indigo-300 shadow-indigo-400 dark:border-indigo-700 dark:bg-indigo-600 dark:shadow-indigo-700':
             count === 3
         }
       )}

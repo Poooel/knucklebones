@@ -14,7 +14,7 @@ export function Column({
   return (
     <div
       className={clsx('grid grid-rows-3 transition-colors duration-75', {
-        'hover:bg-slate-100 dark:hover:bg-slate-600': !readonly
+        'hover:bg-slate-300 dark:hover:bg-slate-800': !readonly
       })}
       role={onClick !== undefined && !readonly ? 'button' : undefined}
       onClick={onClick}

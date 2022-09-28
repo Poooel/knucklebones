@@ -62,7 +62,7 @@ export function Board({
         </div>
         <div
           className={clsx(
-            'grid aspect-square grid-cols-3 divide-x-2 divide-slate-300 rounded-lg border bg-slate-50 shadow-lg shadow-slate-300 dark:divide-slate-600 dark:border-slate-600 dark:bg-slate-500 dark:shadow-slate-700'
+            'grid aspect-square grid-cols-3 divide-x-2 divide-slate-300 rounded-lg bg-slate-200 shadow-lg shadow-slate-300 dark:divide-slate-800 dark:bg-slate-700 dark:shadow-slate-800'
           )}
         >
           {COLUMNS_PLACEHOLDER.map((_, colIndex) => {
