@@ -60,11 +60,7 @@ export function Board({
             </p>
           ))}
         </div>
-        <div
-          className={clsx(
-            'grid aspect-square grid-cols-3 divide-x-2 divide-slate-300 rounded-lg bg-slate-200 shadow-lg shadow-slate-300 dark:divide-slate-800 dark:bg-slate-700 dark:shadow-slate-800'
-          )}
-        >
+        <div className='grid aspect-square grid-cols-3 divide-x-2 divide-slate-300 shadow-lg shadow-slate-300 dark:divide-slate-800 dark:shadow-slate-800'>
           {COLUMNS_PLACEHOLDER.map((_, colIndex) => {
             const column = columns[colIndex]
             const countedDice = countDiceInColumn(column)
