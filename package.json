@@ -14,6 +14,7 @@
   "dependencies": {
     "@ably-labs/react-hooks": "^2.0.9",
     "@headlessui/react": "^1.7.2",
+    "@heroicons/react": "^2.0.11",
     "ably": "^1.2.29",
     "clsx": "^1.2.1",
     "crypto-js": "^4.1.1",

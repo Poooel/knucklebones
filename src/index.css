@@ -1,9 +1,3 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@layer base {
-  html, body {
-    @apply bg-slate-200 h-full;
-  }
-}

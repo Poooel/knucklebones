@@ -34,7 +34,7 @@ export function Board({
   return (
     <div
       className={clsx(
-        'flex w-full flex-row justify-center gap-2 text-slate-900 transition duration-100 md:gap-8',
+        'flex w-full flex-row justify-center gap-2 text-slate-900 transition duration-100 dark:text-slate-200 md:gap-8',
         {
           'items-end': isPlayerOne,
           'items-start': !isPlayerOne,
@@ -60,11 +60,7 @@ export function Board({
             </p>
           ))}
         </div>
-        <div
-          className={clsx(
-            'grid aspect-square grid-cols-3 divide-x-2 divide-slate-300 rounded-lg border bg-slate-50 shadow-lg shadow-slate-300'
-          )}
-        >
+        <div className='grid aspect-square grid-cols-3 divide-x-2 divide-slate-300 rounded-lg bg-transparent shadow-lg shadow-slate-300 dark:divide-slate-800 dark:shadow-slate-800'>
           {COLUMNS_PLACEHOLDER.map((_, colIndex) => {
             const column = columns[colIndex]
             const countedDice = countDiceInColumn(column)
