@@ -66,7 +66,7 @@ export function mutateGameState(play: Play, gameState: GameState): GameState {
     gameState.nextPlayer = playerTwo.id
     addLog(
       gameState,
-      `${playerTwo.id} is going to play next with a ${playerOne.dice!}`
+      `${playerTwo.id} is going to play next with a ${playerTwo.dice}`
     )
   }
 
