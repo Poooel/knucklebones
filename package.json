@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@ably-labs/react-hooks": "^2.0.9",
+    "@cloudflare/pages-plugin-sentry": "^1.0.0",
     "@headlessui/react": "^1.7.2",
     "@heroicons/react": "^2.0.11",
     "ably": "^1.2.29",
@@ -21,12 +22,12 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "6",
-    "toucan-js": "^2.7.0",
     "unique-names-generator": "^4.7.1",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^3.14.1",
+    "@sentry/types": "^7.14.0",
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",
     "@types/uuid": "^8.3.4",
