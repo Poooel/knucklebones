@@ -268,6 +268,13 @@
   dependencies:
     mime "^3.0.0"
 
+"@cloudflare/pages-plugin-sentry@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@cloudflare/pages-plugin-sentry/-/pages-plugin-sentry-1.0.0.tgz#a5f261b731e34ed7ffed188f6afa05fa4c98d821"
+  integrity sha512-VJtouvg86kldQYEgtNyahFKIrqe6qUO6n/5tVYUVubS2krKUCCiX2d8sZZ6Alcn3oMVG3eq8BRwETZMWu73GPw==
+  dependencies:
+    toucan-js "^2.6.0"
+
 "@cloudflare/workers-types@^3.14.1":
   version "3.14.1"
   resolved "https://registry.npmjs.org/@cloudflare/workers-types/-/workers-types-3.14.1.tgz"
@@ -586,6 +593,11 @@
   version "6.19.6"
   resolved "https://registry.yarnpkg.com/@sentry/types/-/types-6.19.6.tgz#70513f9dca05d23d7ab9c2a6cb08d4db6763ca67"
   integrity sha512-QH34LMJidEUPZK78l+Frt3AaVFJhEmIi05Zf8WHd9/iTt+OqvCHBgq49DDr1FWFqyYWm/QgW/3bIoikFpfsXyQ==
+
+"@sentry/types@^7.14.0":
+  version "7.14.0"
+  resolved "https://registry.yarnpkg.com/@sentry/types/-/types-7.14.0.tgz#8069e58a0104190e328647963036c7597e2e5fa8"
+  integrity sha512-9iFZS9Hr5hAoL+M9oUH2dY9burOaQh+CHGH66fortuTp++YDWKdbPEeKcz8hRJaUyBBn53rdxiBmAyHsrlE6KA==
 
 "@sentry/utils@6.19.6":
   version "6.19.6"
@@ -3190,7 +3202,7 @@ to-utf8@0.0.1:
   resolved "https://registry.npmjs.org/to-utf8/-/to-utf8-0.0.1.tgz"
   integrity sha512-zks18/TWT1iHO3v0vFp5qLKOG27m67ycq/Y7a7cTiRuUNlc4gf3HGnkRgMv0NyhnfTamtkYBJl+YeD1/j07gBQ==
 
-toucan-js@^2.7.0:
+toucan-js@^2.6.0:
   version "2.7.0"
   resolved "https://registry.yarnpkg.com/toucan-js/-/toucan-js-2.7.0.tgz#3d7e39294ed4fff1c9aaddd71ce0fdcd537040a0"
   integrity sha512-vbvRbFfMLN2Jf9lOkwL1KwIwuCcS/ko0MVACZTYTnbdVlVjsIviwCU0inH0CRcMXCvFAS+uL8z/gSV3y7FpZUQ==
