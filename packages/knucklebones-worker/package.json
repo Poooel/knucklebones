@@ -1,0 +1,21 @@
+{
+  "name": "knucklebones-worker",
+  "version": "0.1.0",
+  "private": true,
+  "module": "./dist/index.mjs",
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "wrangler dev" 
+  },
+  "dependencies": {
+    "@cloudflare/pages-plugin-sentry": "^1.0.0",
+    "ably": "^1.2.29",
+    "crypto-js": "^4.1.1",
+    "unique-names-generator": "^4.7.1",
+    "uuid": "^8.3.2"
+  },
+  "volta": {
+    "node": "16.17.0",
+    "yarn": "1.22.19"
+  }
+}

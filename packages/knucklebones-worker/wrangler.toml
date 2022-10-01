@@ -1,0 +1,13 @@
+name = "worker"
+main = "./dist/index.mjs"
+compatibility_date = "2022-09-08"
+
+[build]
+command = "yarn && yarn build"
+
+[durable_objects]
+bindings = [{name = "COUNTER", class_name = "CounterTs"}]
+
+[[migrations]]
+tag = "v1" # Should be unique for each entry
+new_classes = ["CounterTs"]

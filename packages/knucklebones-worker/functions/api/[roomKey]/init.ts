@@ -1,4 +1,4 @@
-import { GameState } from '../../../shared/types/gameState'
+import { GameState } from 'knucklebones-common/src/types/gameState'
 import { Env } from '../../types/env'
 import { jsonResponse } from '../../utils/jsonResponse'
 import { getClientId, getRoomId } from '../../utils/params'

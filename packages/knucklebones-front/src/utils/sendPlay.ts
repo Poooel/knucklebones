@@ -1,7 +1,7 @@
-import { Play } from '../../shared/types/play'
+import { Play } from 'knucklebones-common/src/types/play'
 
 export async function sendPlay(roomKey: string, play: Play) {
-  return await fetch(`/api/${roomKey}/play`, {
+  return await fetch(`${import.meta.env.VITE_WORKER_URL}/api/${roomKey}/play`, {
     method: 'post',
     headers: {
       'Content-Type': 'application/json'
