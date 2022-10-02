@@ -1,8 +1,10 @@
 import Base64 from 'crypto-js/enc-base64'
 import hmacSHA256 from 'crypto-js/hmac-sha256'
 import utf8 from 'crypto-js/enc-utf8'
-import { GameState } from 'knucklebones-common/src/types/gameState'
-import { Env } from '../types/env'
+import { GameState } from './types/gameState'
+import { Env } from './env'
+
+type WordArray = ReturnType<typeof utf8.parse>
 
 export async function sendStateThroughAbly(
   gameState: GameState,
@@ -62,7 +64,7 @@ function createAblyJWT(ablyKey: string) {
   return ablyJWT
 }
 
-function b64(token: string): string {
+function b64(token: WordArray): string {
   let encode = Base64.stringify(token)
   encode = encode.replace(/\=+$/, '')
   encode = encode.replace(/\+/g, '-')

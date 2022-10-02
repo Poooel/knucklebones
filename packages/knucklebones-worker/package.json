@@ -5,17 +5,23 @@
   "module": "./dist/index.mjs",
   "scripts": {
     "build": "rollup -c",
-    "dev": "wrangler dev" 
+    "dev": "wrangler dev"
   },
   "dependencies": {
-    "@cloudflare/pages-plugin-sentry": "^1.0.0",
-    "ably": "^1.2.29",
     "crypto-js": "^4.1.1",
+    "itty-durable": "^1.2.0",
+    "itty-router": "^2.6.5",
+    "itty-router-extras": "^0.4.2",
+    "ably": "^1.2.29",
     "unique-names-generator": "^4.7.1",
-    "uuid": "^8.3.2"
+    "knucklebones-common": "*"
   },
   "volta": {
     "node": "16.17.0",
     "yarn": "1.22.19"
+  },
+  "devDependencies": {
+    "@types/crypto-js": "^4.1.1",
+    "@types/itty-router-extras": "^0.4.0"
   }
 }

@@ -1,13 +1,14 @@
-name = "worker"
+name = "knucklebones-worker"
 main = "./dist/index.mjs"
 compatibility_date = "2022-09-08"
+node_compat = true
 
 [build]
 command = "yarn && yarn build"
 
 [durable_objects]
-bindings = [{name = "COUNTER", class_name = "CounterTs"}]
+bindings = [{name = "GAME_STATE_DURABLE", class_name = "GameStateDurable"}]
 
 [[migrations]]
-tag = "v1" # Should be unique for each entry
-new_classes = ["CounterTs"]
+tag = "v1"
+new_classes = ["GameStateDurable"]

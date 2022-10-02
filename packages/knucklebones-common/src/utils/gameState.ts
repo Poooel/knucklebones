@@ -1,14 +1,11 @@
-import { Env } from '../types/env'
-import { GameState } from 'knucklebones-common/src/types/gameState'
-import { countDiceInColumn } from 'knucklebones-common/src/utils/count'
-import { Play } from 'knucklebones-common/src/types/play'
-import { Player } from 'knucklebones-common/src/types/player'
-import { GameOutcome } from 'knucklebones-common/src/types/gameOutcome'
-import { getRandomDice } from './random'
-import { sendStateThroughAbly } from './ably'
-import { now } from './timestamp'
+import { GameState } from '../types/gameState'
+import { countDiceInColumn } from '../utils/count'
+import { Play } from '../types/play'
+import { Player } from '../types/player'
+import { GameOutcome } from '../types/gameOutcome'
+import { getRandomDice, getRandomValue } from './random'
 
-const emptyGameState: GameState = {
+export const emptyGameState: GameState = {
   logs: [],
   gameOutcome: 'not-started'
 }
@@ -22,24 +19,42 @@ export function initialPlayerState(playerId: string): Player {
   }
 }
 
-export async function getGameState(roomId: string, env: Env) {
-  return (
-    (await env.GAME_STATE_STORE.get<GameState>(roomId, {
-      type: 'json'
-    })) ?? emptyGameState
-  )
+function now(): number {
+  return Math.floor(Date.now() / 1000)
 }
 
-export async function saveAndPropagateState(
-  env: Env,
-  roomId: string,
-  gameState: GameState
-) {
-  await env.GAME_STATE_STORE.put(roomId, JSON.stringify(gameState), {
-    expirationTtl: 86400
-  })
+export function initializePlayers(
+  gameState: GameState,
+  clientId: string
+): GameState {
+  if (gameState.gameOutcome !== 'not-started') {
+    return gameState
+  }
 
-  await sendStateThroughAbly(gameState, env, roomId)
+  if (gameState.playerOne === undefined) {
+    gameState.playerOne = initialPlayerState(clientId)
+    addLog(gameState, `${clientId} has connected to the game`)
+  } else if (
+    gameState.playerTwo === undefined &&
+    clientId !== gameState.playerOne.id
+  ) {
+    gameState.playerTwo = initialPlayerState(clientId)
+    addLog(gameState, `${clientId} has connected to the game`)
+
+    // Starts game after second player joined
+    const isPlayerOneStarting = getRandomValue() > 0.5
+    if (isPlayerOneStarting) {
+      gameState.nextPlayer = gameState.playerOne.id
+      gameState.playerOne.dice = getRandomDice()
+    } else {
+      gameState.nextPlayer = gameState.playerTwo.id
+      gameState.playerTwo.dice = getRandomDice()
+    }
+    gameState.gameOutcome = 'ongoing'
+    addLog(gameState, `${gameState.nextPlayer} is going to play first`)
+  }
+
+  return gameState
 }
 
 export function addLog(gameState: GameState, log: string) {
