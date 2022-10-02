@@ -11,9 +11,9 @@ parserOptions:
   ecmaVersion: latest
   sourceType: module
   project:
-    - packages/knucklebones-front/tsconfig.json
-    - packages/knucklebones-worker/tsconfig.json
-    - packages/knucklebones-common/tsconfig.json
+    - apps/front/tsconfig.json
+    - apps/worker/tsconfig.json
+    - packages/common/tsconfig.json
 plugins:
   - react
   - react-hooks
