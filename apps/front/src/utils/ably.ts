@@ -6,7 +6,7 @@ export function connectToAbly(): Types.RealtimePromise {
 
   return configureAbly({
     authUrl: `${import.meta.env.VITE_WORKER_URL}/api/auth${
-      clientId !== null ? `?clientId=${clientId}` : ''
+      clientId !== null ? `/${clientId}` : ''
     }`
   })
 }

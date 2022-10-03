@@ -2330,6 +2330,11 @@ isexe@^2.0.0:
   resolved "https://registry.yarnpkg.com/isexe/-/isexe-2.0.0.tgz#e8fbf374dc556ff8947a10dcb0572d633f2cfa10"
   integrity sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==
 
+itty-cors@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/itty-cors/-/itty-cors-0.1.0.tgz#09970a59fd912cc612955ca0b2b4f41b3e16bd1d"
+  integrity sha512-xprGRPQe9GXBw9pW7YhlwM8o/FX2vOxuanUfJ1JuIYKPMjvkyrggfIU6wtN0S+aEbeBozTYLKIHBXFRiwqrxrA==
+
 itty-durable@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/itty-durable/-/itty-durable-1.2.0.tgz#bb9ef5a369de225112e657a7501f25331a757f26"

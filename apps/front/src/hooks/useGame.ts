@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { useChannel } from '@ably-labs/react-hooks'
-import { GameState } from '@knucklebones/common'
-import { Player } from '@knucklebones/common'
+import { GameState, Player } from '@knucklebones/common'
+
 import { initializeGame } from '../utils/initializeGame'
 import { isItGameStateMessage } from '../utils/messages'
 import { sendPlay as internalSendPlay } from '../utils/sendPlay'
