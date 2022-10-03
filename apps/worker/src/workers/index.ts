@@ -8,32 +8,21 @@ import {
 } from 'itty-router-extras'
 import { withDurables } from 'itty-durable'
 import { createCors } from 'itty-cors'
-import { initializePlayers, mutateGameState, Play } from '@knucklebones/common'
-import { sendStateThroughAbly } from './ably'
-import { randomName } from './randomName'
-import { Env } from './env'
-import { GameStateDurableProps } from './gameStateDurable'
+import { initializePlayers, mutateGameState } from '@knucklebones/common'
+import { sendStateThroughAbly } from '../utils/ably'
+import { randomName } from '../utils/randomName'
+import { Env } from '../types/env'
+import { RequestWithProps } from '../types/itty'
 
-export { GameStateDurable } from './gameStateDurable'
+export { GameStateStore } from '../durable-objects/gameStateStore'
 
-interface RequestWithProps extends Request, GameStateDurableProps {
-  clientId?: string
-  roomKey?: string
-  content?: Play
-}
-
-const router = ThrowableRouter({ base: '/api' })
+const router = ThrowableRouter()
 // @ts-expect-error
 const { preflight, corsify } = createCors({})
 
 router
   .all('*', withDurables({ parse: true }))
   .options('*', preflight)
-
-  .get('/', async (req: RequestWithProps) => {
-    const gameStateDurable = req.GAME_STATE_DURABLE.get('test')
-    return await gameStateDurable.getState()
-  })
 
   .get(
     '/auth/:clientId?',
@@ -53,10 +42,10 @@ router
     withParams,
     async (req: RequestWithProps, env: Env) => {
       const roomId = `knucklebones:${req.roomKey!}`
-      const gameStateDurable = req.GAME_STATE_DURABLE.get(roomId)
-      const gameState = await gameStateDurable.getState()
+      const gameStateStore = req.GAME_STATE_STORE.get(roomId)
+      const gameState = await gameStateStore.getState()
       const initializedGameState = initializePlayers(gameState, req.clientId!)
-      await gameStateDurable.save(initializedGameState)
+      await gameStateStore.save(initializedGameState)
       await sendStateThroughAbly(initializedGameState, env, roomId)
       return json(initializedGameState)
     }
@@ -68,10 +57,10 @@ router
     withContent,
     async (req: RequestWithProps, env: Env) => {
       const roomId = `knucklebones:${req.roomKey!}`
-      const gameStateDurable = req.GAME_STATE_DURABLE.get(roomId)
-      const gameState = await gameStateDurable.getState()
+      const gameStateStore = req.GAME_STATE_STORE.get(roomId)
+      const gameState = await gameStateStore.getState()
       const mutatedGameState = mutateGameState(req.content!, gameState)
-      await gameStateDurable.save(mutatedGameState)
+      await gameStateStore.save(mutatedGameState)
       await sendStateThroughAbly(mutatedGameState, env, roomId)
       return json(mutatedGameState)
     }

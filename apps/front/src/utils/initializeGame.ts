@@ -1,6 +1,6 @@
 export async function initializeGame(roomKey: string, clientId: string) {
   return await fetch(
-    `${import.meta.env.VITE_WORKER_URL}/api/${roomKey}/${clientId}/init`
+    `${import.meta.env.VITE_WORKER_URL}/${roomKey}/${clientId}/init`
   ).then((resp) => {
     if (!resp.ok) {
       throw new Error(

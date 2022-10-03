@@ -1,11 +1,9 @@
 import { createDurable } from 'itty-durable'
 import { GameState, emptyGameState } from '@knucklebones/common'
-import { Env } from './env'
+import { Env } from '../types/env'
+import { IttyDurableObjectNamespace } from '../types/itty'
 
-export class GameStateDurable extends createDurable({
-  autoReturn: true,
-  autoPersist: true
-}) {
+export class GameStateStore extends createDurable() {
   gameState: GameState
 
   constructor(state: DurableObjectState, env: Env) {
@@ -22,6 +20,6 @@ export class GameStateDurable extends createDurable({
   }
 }
 
-export interface GameStateDurableProps {
-  GAME_STATE_DURABLE: IttyDurableObjectNamespace<GameStateDurable>
+export interface GameStateStoreProps {
+  GAME_STATE_STORE: IttyDurableObjectNamespace<GameStateStore>
 }

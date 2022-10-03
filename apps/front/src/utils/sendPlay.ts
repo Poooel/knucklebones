@@ -1,7 +1,7 @@
 import { Play } from '@knucklebones/common'
 
 export async function sendPlay(roomKey: string, play: Play) {
-  return await fetch(`${import.meta.env.VITE_WORKER_URL}/api/${roomKey}/play`, {
+  return await fetch(`${import.meta.env.VITE_WORKER_URL}/${roomKey}/play`, {
     method: 'post',
     headers: {
       'Content-Type': 'application/json'

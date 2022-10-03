@@ -5,7 +5,7 @@ export function connectToAbly(): Types.RealtimePromise {
   const clientId = localStorage.getItem('clientId')
 
   return configureAbly({
-    authUrl: `${import.meta.env.VITE_WORKER_URL}/api/auth${
+    authUrl: `${import.meta.env.VITE_WORKER_URL}/auth${
       clientId !== null ? `/${clientId}` : ''
     }`
   })
