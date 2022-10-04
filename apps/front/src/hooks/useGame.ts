@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useChannel } from '@ably-labs/react-hooks'
-import { GameState, Player } from '@knucklebones/common'
+import { GameState, mutateGameState, Player } from '@knucklebones/common'
 
 import { initializeGame } from '../utils/initializeGame'
 import { isItGameStateMessage } from '../utils/messages'
@@ -20,12 +20,14 @@ function attributePlayers(
 export function useGame() {
   const [gameState, setGameState] = React.useState<GameState | null>(null)
   const [isLoading, setIsLoading] = React.useState(true)
+  const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
   const { roomKey, roomId } = useRoom()
 
   const [, client] = useChannel(`[?rewind=1]${roomId}`, (message) => {
     if (isItGameStateMessage(message)) {
       setGameState(message.data)
       setIsLoading(false)
+      setErrorMessage(null)
     }
   })
 
@@ -42,15 +44,38 @@ export function useGame() {
     const dice = playerOne?.dice
     if (dice !== undefined && !isLoading) {
       setIsLoading(true)
-      await internalSendPlay(roomKey, {
+
+      const play = {
         column,
         value: dice,
         playerId: client.auth.clientId
-      }).finally(() => {
+      }
+
+      const previousGameState = gameState
+
+      const mutatedGameState = mutateGameState(play, gameState!)
+
+      setGameState(mutatedGameState)
+
+      await internalSendPlay(roomKey, play).catch((error) => {
+        setErrorMessage(error.message)
+        setGameState(previousGameState)
         setIsLoading(false)
       })
     }
   }
 
-  return { gameState, isLoading, playerOne, playerTwo, sendPlay }
+  function clearErrorMessage() {
+    setErrorMessage(null)
+  }
+
+  return {
+    gameState,
+    isLoading,
+    playerOne,
+    playerTwo,
+    sendPlay,
+    errorMessage,
+    clearErrorMessage
+  }
 }

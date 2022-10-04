@@ -65,27 +65,33 @@ export function addLog(gameState: GameState, log: string) {
 }
 
 export function mutateGameState(play: Play, gameState: GameState): GameState {
-  const [playerOne, playerTwo] = getPlayers(play, gameState)
+  const copiedGameState = structuredClone(gameState)
 
-  placeDice(playerOne, play, gameState)
+  const [playerOne, playerTwo] = getPlayers(play, copiedGameState)
+
+  placeDice(playerOne, play, copiedGameState)
 
   removeFromPlayerTwoColumns(play, playerTwo)
 
-  updateScores(gameState)
+  updateScores(copiedGameState)
 
   if (isBoardFull(playerOne)) {
-    gameState.gameOutcome = computeGameOutcome(playerOne, playerTwo, gameState)
+    copiedGameState.gameOutcome = computeGameOutcome(
+      playerOne,
+      playerTwo,
+      copiedGameState
+    )
   } else {
     playerOne.dice = undefined
     playerTwo.dice = getRandomDice()
-    gameState.nextPlayer = playerTwo.id
+    copiedGameState.nextPlayer = playerTwo.id
     addLog(
-      gameState,
+      copiedGameState,
       `${playerTwo.id} is going to play next with a ${playerTwo.dice}`
     )
   }
 
-  return gameState
+  return copiedGameState
 }
 
 function getPlayers(play: Play, gameState: GameState): [Player, Player] {
