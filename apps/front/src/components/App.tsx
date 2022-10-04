@@ -3,9 +3,18 @@ import { useGame } from '../hooks/useGame'
 import { Board } from './Board'
 import { GameOutcome } from './GameOutcome'
 import { Loading } from './Loading'
+import { WarningToast } from './WarningToast'
 
 export function App() {
-  const { gameState, playerOne, playerTwo, isLoading, sendPlay } = useGame()
+  const {
+    gameState,
+    playerOne,
+    playerTwo,
+    isLoading,
+    sendPlay,
+    errorMessage,
+    clearErrorMessage
+  } = useGame()
 
   if (gameState === null || playerOne === undefined) {
     return <Loading />
@@ -27,6 +36,7 @@ export function App() {
         onColumnClick={canPlayerOnePlay ? sendPlay : undefined}
         canPlay={canPlayerOnePlay}
       />
+      <WarningToast message={errorMessage} onDismiss={clearErrorMessage} />
     </div>
   )
 }

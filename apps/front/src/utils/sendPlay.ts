@@ -7,13 +7,19 @@ export async function sendPlay(roomKey: string, play: Play) {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(play)
-  }).then((resp) => {
-    if (!resp.ok) {
-      throw new Error(
-        `[${resp.status}:${
-          resp.statusText
-        }] Sending play to room ${roomKey} has failed ${JSON.stringify(play)}.`
-      )
-    }
   })
+    .then((resp) => {
+      if (!resp.ok) {
+        throw new Error(
+          `[${resp.status}:${
+            resp.statusText
+          }] Sending play to room ${roomKey} has failed ${JSON.stringify(
+            play
+          )}.`
+        )
+      }
+    })
+    .catch(() => {
+      throw new Error('Error while sending play.')
+    })
 }
