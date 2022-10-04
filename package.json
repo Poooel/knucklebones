@@ -3,37 +3,27 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
-    "dev:app": "vite",
-    "dev:worker": "wrangler pages dev ./functions",
-    "dev": "wrangler pages dev --proxy 5173 --kv GAME_STATE_STORE --kv ABLY_JWT_STORE -- yarn dev:app",
-    "build": "tsc && vite build",
-    "preview": "vite preview",
-    "lint": "eslint . --ext ts,tsx"
-  },
-  "dependencies": {
-    "@ably-labs/react-hooks": "^2.0.9",
-    "@cloudflare/pages-plugin-sentry": "^1.0.0",
-    "@headlessui/react": "^1.7.2",
-    "@heroicons/react": "^2.0.11",
-    "ably": "^1.2.29",
-    "clsx": "^1.2.1",
-    "crypto-js": "^4.1.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-router-dom": "6",
-    "unique-names-generator": "^4.7.1",
-    "uuid": "^8.3.2"
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "eslint packages,apps --ext ts,tsx"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^3.14.1",
     "@sentry/types": "^7.14.0",
+    "@types/crypto-js": "^4.1.1",
+    "@types/itty-router-extras": "^0.4.0",
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",
     "@types/uuid": "^8.3.4",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@vitejs/plugin-react": "^2.0.1",
     "autoprefixer": "^10.4.8",
+    "esbuild": "^0.15.10",
     "eslint": "^8.0.1",
     "eslint-config-prettier": "^8.5.0",
     "eslint-config-standard-with-typescript": "^22.0.0",
@@ -47,6 +37,8 @@
     "prettier": "^2.7.1",
     "prettier-plugin-tailwindcss": "^0.1.13",
     "tailwindcss": "^3.1.8",
+    "tslib": "^2.2.0",
+    "turbo": "^1.5.5",
     "typescript": "^4.6.4",
     "vite": "^3.0.7",
     "wrangler": "^2.0.27"

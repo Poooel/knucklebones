@@ -11,9 +11,9 @@ parserOptions:
   ecmaVersion: latest
   sourceType: module
   project:
-    - tsconfig.json
-    - tsconfig.node.json
-    - functions/tsconfig.json
+    - apps/front/tsconfig.json
+    - apps/worker/tsconfig.json
+    - packages/common/tsconfig.json
 plugins:
   - react
   - react-hooks
@@ -34,3 +34,4 @@ rules:
     - error
     - method
   "@typescript-eslint/no-non-null-assertion": off
+  "@typescript-eslint/restrict-template-expressions": off

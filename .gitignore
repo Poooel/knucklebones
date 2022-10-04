@@ -20,3 +20,4 @@ dist-ssr
 
 # Local environment variables for CloudFlare workers
 .dev.vars
+.turbo
