@@ -8,4 +8,5 @@ export interface GameState {
   logs: Log[]
   gameOutcome: GameOutcome
   nextPlayer?: string
+  rematchVote: string[]
 }

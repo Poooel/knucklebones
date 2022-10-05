@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { clsx } from 'clsx'
-import { Player } from '@knucklebones/common'
-import { countDiceInColumn } from '@knucklebones/common'
+import { Player, countDiceInColumn } from '@knucklebones/common'
 import { Dice } from './Dice'
 import { Column } from './Column'
 import { Cell } from './Cell'

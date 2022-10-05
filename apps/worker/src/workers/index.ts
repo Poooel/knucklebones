@@ -4,12 +4,21 @@ import {
   missing,
   withParams,
   withContent,
-  json
+  json,
+  error,
+  status
 } from 'itty-router-extras'
 import { withDurables } from 'itty-durable'
 import { createCors } from 'itty-cors'
-import { initializePlayers, mutateGameState } from '@knucklebones/common'
-import { sendStateThroughAbly } from '../utils/ably'
+import {
+  emptyGameState,
+  initializePlayers,
+  mutateGameState
+} from '@knucklebones/common'
+import {
+  sendRematchStateThroughAbly,
+  sendStateThroughAbly
+} from '../utils/ably'
 import { randomName } from '../utils/randomName'
 import { Env } from '../types/env'
 import { RequestWithProps } from '../types/itty'
@@ -63,6 +72,42 @@ router
       await gameStateStore.save(mutatedGameState)
       await sendStateThroughAbly(mutatedGameState, env, roomId)
       return json(mutatedGameState)
+    }
+  )
+
+  .post(
+    '/:roomKey/:clientId/rematch/',
+    withParams,
+    async (req: RequestWithProps, env: Env) => {
+      const roomId = `knucklebones:${req.roomKey!}`
+      const gameStateStore = req.GAME_STATE_STORE.get(roomId)
+      let gameState = await gameStateStore.getState()
+
+      if (
+        gameState.gameOutcome === 'ongoing' ||
+        gameState.gameOutcome === 'not-started'
+      ) {
+        return error(400, "The game is still ongoing. Can't rematch.")
+      }
+
+      if (!gameState.rematchVote.includes(req.clientId!)) {
+        gameState.rematchVote.push(req.clientId!)
+      }
+
+      const { playerOne, playerTwo } = gameState
+
+      if (
+        gameState.rematchVote.includes(playerOne!.id) &&
+        gameState.rematchVote.includes(playerTwo!.id)
+      ) {
+        gameState = emptyGameState
+        initializePlayers(gameState, playerOne!.id)
+        initializePlayers(gameState, playerTwo!.id)
+      }
+
+      await gameStateStore.save(gameState)
+      await sendStateThroughAbly(gameState, env, roomId)
+      return json(gameState)
     }
   )
 

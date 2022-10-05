@@ -7,7 +7,8 @@ import { getRandomDice, getRandomValue } from './random'
 
 export const emptyGameState: GameState = {
   logs: [],
-  gameOutcome: 'not-started'
+  gameOutcome: 'not-started',
+  rematchVote: []
 }
 
 export function initialPlayerState(playerId: string): Player {

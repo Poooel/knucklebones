@@ -13,7 +13,8 @@ export function App() {
     isLoading,
     sendPlay,
     errorMessage,
-    clearErrorMessage
+    clearErrorMessage,
+    sendRematch
   } = useGame()
 
   if (gameState === null || playerOne === undefined) {
@@ -29,7 +30,13 @@ export function App() {
   return (
     <div className='flex flex-col items-center justify-between gap-12 px-2 py-4 md:p-8'>
       <Board {...playerTwo} isPlayerOne={false} canPlay={canPlayerTwoPlay} />
-      <GameOutcome {...gameState} clientId={playerOne.id} />
+      <GameOutcome
+        {...gameState}
+        clientId={playerOne.id}
+        onRematch={() => {
+          void sendRematch()
+        }}
+      />
       <Board
         {...playerOne}
         isPlayerOne
