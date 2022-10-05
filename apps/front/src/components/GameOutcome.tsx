@@ -68,7 +68,7 @@ export function GameOutcome({
           Replay
         </Link>
         <button
-          className='rounded-md border-2 border-slate-200 bg-transparent py-1 px-2 transition-colors duration-100 enabled:hover:bg-black/10 disabled:opacity-75 dark:border-slate-700 enabled:dark:hover:bg-white/10'
+          className='rounded-md border-2 border-slate-200 bg-transparent py-1 px-2 transition-colors duration-100 enabled:hover:bg-black/10 disabled:opacity-50 dark:border-slate-700 enabled:dark:hover:bg-white/10'
           onClick={onRematch}
           disabled={!hasVotedRematch}
         >
