@@ -6,6 +6,7 @@ import { initializeGame } from '../utils/initializeGame'
 import { isItGameStateMessage } from '../utils/messages'
 import { sendPlay as internalSendPlay } from '../utils/sendPlay'
 import { useRoom } from './useRoom'
+import { rematch } from '../utils/rematch'
 
 function attributePlayers(
   playerId: string,
@@ -69,6 +70,10 @@ export function useGame() {
     setErrorMessage(null)
   }
 
+  async function sendRematch() {
+    await rematch(roomKey, client.auth.clientId)
+  }
+
   return {
     gameState,
     isLoading,
@@ -76,6 +81,7 @@ export function useGame() {
     playerTwo,
     sendPlay,
     errorMessage,
-    clearErrorMessage
+    clearErrorMessage,
+    sendRematch
   }
 }
