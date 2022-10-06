@@ -1,13 +1,9 @@
 import * as React from 'react'
 import { useChannel } from '@ably-labs/react-hooks'
 import { GameState, mutateGameState, Player } from '@knucklebones/common'
-
-import { initializeGame } from '../utils/initializeGame'
 import { isItGameStateMessage } from '../utils/messages'
-import { sendPlay as internalSendPlay } from '../utils/sendPlay'
 import { useRoom } from './useRoom'
-import { rematch } from '../utils/rematch'
-import { updateDisplayName as internalUpdateDisplayName } from '../utils/updateDisplayName'
+import { displayName, init, play, rematch } from '../utils/api'
 
 function attributePlayers(
   playerId: string,
@@ -34,7 +30,7 @@ export function useGame() {
   })
 
   React.useEffect(() => {
-    void initializeGame(roomKey, client.auth.clientId)
+    void init(roomKey, client.auth.clientId)
   }, [roomKey, client.auth.clientId])
 
   const [playerOne, playerTwo] =
@@ -47,7 +43,7 @@ export function useGame() {
     if (dice !== undefined && !isLoading) {
       setIsLoading(true)
 
-      const play = {
+      const body = {
         column,
         value: dice
       }
@@ -55,20 +51,18 @@ export function useGame() {
       const previousGameState = gameState
 
       const mutatedGameState = mutateGameState(
-        play,
+        body,
         client.auth.clientId,
         gameState!
       )
 
       setGameState(mutatedGameState)
 
-      await internalSendPlay(roomKey, client.auth.clientId, play).catch(
-        (error) => {
-          setErrorMessage(error.message)
-          setGameState(previousGameState)
-          setIsLoading(false)
-        }
-      )
+      await play(roomKey, client.auth.clientId, body).catch((error) => {
+        setErrorMessage(error.message)
+        setGameState(previousGameState)
+        setIsLoading(false)
+      })
     }
   }
 
@@ -80,8 +74,8 @@ export function useGame() {
     await rematch(roomKey, client.auth.clientId)
   }
 
-  async function updateDisplayName(displayName: string) {
-    await internalUpdateDisplayName(roomKey, client.auth.clientId, displayName)
+  async function updateDisplayName(newDisplayName: string) {
+    await displayName(roomKey, client.auth.clientId, newDisplayName)
   }
 
   return {
