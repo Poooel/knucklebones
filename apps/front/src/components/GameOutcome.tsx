@@ -8,7 +8,7 @@ interface GameOutcomeProps extends GameState {
 }
 
 function getWinnerName(clientId: string, player: Player) {
-  return clientId === player.id ? 'You' : player.id
+  return clientId === player.id ? 'You' : player.displayName ?? player.id
 }
 
 const getWinMessage = (
@@ -36,12 +36,11 @@ export function GameOutcome({
   if (gameOutcome === 'not-started') {
     return (
       <p className='animate-pulse text-slate-900 dark:text-slate-200'>
-        Waiting for an opponent to join...
+        Waiting for an other player to join...
       </p>
     )
   }
   if (gameOutcome === 'ongoing') {
-    // Should add player names here
     return <p className='text-slate-900 dark:text-slate-200'>VS</p>
   }
   if (gameOutcome === 'tie') {
@@ -54,8 +53,8 @@ export function GameOutcome({
 
   const playerId =
     clientId !== gameState.playerOne?.id
-      ? gameState.playerOne!.id
-      : gameState.playerTwo!.id
+      ? gameState.playerOne?.displayName ?? gameState.playerOne!.id
+      : gameState.playerTwo?.displayName ?? gameState.playerTwo!.id
 
   return (
     <div className='grid justify-items-center gap-2 font-semibold text-slate-900 dark:text-slate-50'>

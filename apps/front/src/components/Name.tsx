@@ -1,18 +1,114 @@
 import * as React from 'react'
+import {
+  PencilSquareIcon,
+  CheckIcon,
+  XMarkIcon,
+  NoSymbolIcon
+} from '@heroicons/react/24/outline'
 
 interface NameProps {
+  id?: string
   name?: string
   isPlayerOne: boolean
+  isEditable: boolean
+  updateDisplayName?(displayName: string): void
 }
 
-export function Name({ name, isPlayerOne }: NameProps) {
-  // Will have to be accommodated for spectators
-  if (name === undefined) {
+export function Name({
+  id,
+  name,
+  isPlayerOne,
+  isEditable,
+  updateDisplayName
+}: NameProps) {
+  const [isBeingEdited, setIsBeingEdited] = React.useState(false)
+  const [displayName, setDisplayName] = React.useState(name ?? id)
+  const [previousDisplayName, setPreviousDisplayName] = React.useState(
+    name ?? id
+  )
+
+  React.useEffect(() => {
+    setDisplayName(name ?? id)
+    setPreviousDisplayName(name ?? id)
+  }, [name, id])
+
+  function handleOnChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setDisplayName(e.target.value)
+  }
+
+  function handleOnKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === 'Enter') {
+      sendNewDisplayName()
+    } else if (e.key === 'Escape') {
+      cancelUpdate()
+    }
+  }
+
+  function sendNewDisplayName() {
+    setIsBeingEdited(false)
+
+    if (displayName !== '') {
+      localStorage.displayName = displayName
+    } else {
+      localStorage.removeItem('displayName')
+    }
+
+    if (displayName !== previousDisplayName) {
+      updateDisplayName!(displayName ?? id!)
+    }
+  }
+
+  function cancelUpdate() {
+    setIsBeingEdited(false)
+    setDisplayName(previousDisplayName)
+  }
+
+  if (name === undefined && id === undefined) {
     return <p>{isPlayerOne ? 'You' : 'Opponent'}</p>
   }
-  return (
-    <p>
-      {name} ({isPlayerOne ? 'you' : 'opponent'})
-    </p>
-  )
+
+  if (isBeingEdited) {
+    return (
+      <div className='flex items-center gap-2'>
+        <input
+          type='text'
+          value={displayName}
+          className='rounded-lg bg-slate-200 p-2 dark:bg-slate-800'
+          onChange={handleOnChange}
+          onKeyDown={handleOnKeyDown}
+        />
+        <button
+          className='rounded-full text-slate-900 hover:text-slate-900/80 dark:text-slate-200 dark:hover:text-slate-50/80'
+          onClick={sendNewDisplayName}
+        >
+          <CheckIcon className='aspect-square h-6' />
+        </button>
+        <button
+          className='rounded-full text-slate-900 hover:text-slate-900/80 dark:text-slate-200 dark:hover:text-slate-50/80'
+          onClick={cancelUpdate}
+        >
+          <XMarkIcon className='aspect-square h-6' />
+        </button>
+      </div>
+    )
+  } else {
+    return (
+      <div className='flex items-center gap-2'>
+        <p>
+          {displayName} ({isPlayerOne ? 'you' : 'opponent'})
+        </p>
+        {isEditable && (
+          <button
+            className='rounded-full text-slate-900 hover:text-slate-900/80 dark:text-slate-200 dark:hover:text-slate-50/80'
+            onClick={() => {
+              setIsBeingEdited(true)
+              setPreviousDisplayName(displayName)
+            }}
+          >
+            <PencilSquareIcon className='aspect-square h-6' />
+          </button>
+        )}
+      </div>
+    )
+  }
 }

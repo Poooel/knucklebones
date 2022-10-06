@@ -10,6 +10,8 @@ interface BoardProps extends Partial<Player> {
   isPlayerOne: boolean
   canPlay: boolean
   onColumnClick?(colIndex: number): void
+  isDisplayNameEditable: boolean
+  updateDisplayName?(displayName: string): void
 }
 
 const MAX_COLUMNS = 3
@@ -27,8 +29,11 @@ export function Board({
   score = 0,
   scorePerColumn = [0, 0, 0],
   columns = [[], [], []],
+  displayName,
   canPlay = false,
-  onColumnClick
+  onColumnClick,
+  isDisplayNameEditable,
+  updateDisplayName
 }: BoardProps) {
   return (
     <div
@@ -51,7 +56,12 @@ export function Board({
           'flex-col-reverse': !isPlayerOne
         })}
       >
-        <Name name={id} isPlayerOne={isPlayerOne} />
+        <Name
+          name={displayName ?? id}
+          isPlayerOne={isPlayerOne}
+          isEditable={isDisplayNameEditable}
+          updateDisplayName={updateDisplayName}
+        />
         <div className='grid w-full grid-cols-3'>
           {scorePerColumn.map((score, index) => (
             <p className='text-center' key={index}>
@@ -74,7 +84,7 @@ export function Board({
                 }
               >
                 {CELLS_PER_COLUMN_PLACEHOLDER.map((_, cellIndex) => {
-                  // Reverses the render order to mirror the board for the opponent
+                  // Reverses the render order to mirror the board for the other player
                   const actualCellIndex = !isPlayerOne
                     ? MAX_CELLS_PER_COLUMNS - cellIndex - 1
                     : cellIndex

@@ -7,6 +7,7 @@ import { isItGameStateMessage } from '../utils/messages'
 import { sendPlay as internalSendPlay } from '../utils/sendPlay'
 import { useRoom } from './useRoom'
 import { rematch } from '../utils/rematch'
+import { updateDisplayName as internalUpdateDisplayName } from '../utils/updateDisplayName'
 
 function attributePlayers(
   playerId: string,
@@ -48,21 +49,26 @@ export function useGame() {
 
       const play = {
         column,
-        value: dice,
-        playerId: client.auth.clientId
+        value: dice
       }
 
       const previousGameState = gameState
 
-      const mutatedGameState = mutateGameState(play, gameState!)
+      const mutatedGameState = mutateGameState(
+        play,
+        client.auth.clientId,
+        gameState!
+      )
 
       setGameState(mutatedGameState)
 
-      await internalSendPlay(roomKey, play).catch((error) => {
-        setErrorMessage(error.message)
-        setGameState(previousGameState)
-        setIsLoading(false)
-      })
+      await internalSendPlay(roomKey, client.auth.clientId, play).catch(
+        (error) => {
+          setErrorMessage(error.message)
+          setGameState(previousGameState)
+          setIsLoading(false)
+        }
+      )
     }
   }
 
@@ -74,6 +80,10 @@ export function useGame() {
     await rematch(roomKey, client.auth.clientId)
   }
 
+  async function updateDisplayName(displayName: string) {
+    await internalUpdateDisplayName(roomKey, client.auth.clientId, displayName)
+  }
+
   return {
     gameState,
     isLoading,
@@ -82,6 +92,7 @@ export function useGame() {
     sendPlay,
     errorMessage,
     clearErrorMessage,
-    sendRematch
+    sendRematch,
+    updateDisplayName
   }
 }

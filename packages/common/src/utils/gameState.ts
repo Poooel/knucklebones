@@ -11,12 +11,16 @@ export const emptyGameState: GameState = {
   rematchVote: []
 }
 
-export function initialPlayerState(playerId: string): Player {
+export function initialPlayerState(
+  playerId: string,
+  displayName?: string
+): Player {
   return {
     id: playerId,
     columns: [[], [], []],
     score: 0,
-    scorePerColumn: [0, 0, 0]
+    scorePerColumn: [0, 0, 0],
+    displayName
   }
 }
 
@@ -26,20 +30,21 @@ function now(): number {
 
 export function initializePlayers(
   gameState: GameState,
-  clientId: string
+  clientId: string,
+  displayName?: string
 ): GameState {
   if (gameState.gameOutcome !== 'not-started') {
     return gameState
   }
 
   if (gameState.playerOne === undefined) {
-    gameState.playerOne = initialPlayerState(clientId)
+    gameState.playerOne = initialPlayerState(clientId, displayName)
     addLog(gameState, `${clientId} has connected to the game`)
   } else if (
     gameState.playerTwo === undefined &&
     clientId !== gameState.playerOne.id
   ) {
-    gameState.playerTwo = initialPlayerState(clientId)
+    gameState.playerTwo = initialPlayerState(clientId, displayName)
     addLog(gameState, `${clientId} has connected to the game`)
 
     // Starts game after second player joined
@@ -65,10 +70,14 @@ export function addLog(gameState: GameState, log: string) {
   })
 }
 
-export function mutateGameState(play: Play, gameState: GameState): GameState {
+export function mutateGameState(
+  play: Play,
+  clientId: string,
+  gameState: GameState
+): GameState {
   const copiedGameState = structuredClone(gameState)
 
-  const [playerOne, playerTwo] = getPlayers(play, copiedGameState)
+  const [playerOne, playerTwo] = getPlayers(clientId, copiedGameState)
 
   placeDice(playerOne, play, copiedGameState)
 
@@ -95,10 +104,10 @@ export function mutateGameState(play: Play, gameState: GameState): GameState {
   return copiedGameState
 }
 
-function getPlayers(play: Play, gameState: GameState): [Player, Player] {
-  if (play.playerId === gameState.playerOne?.id) {
+function getPlayers(clientId: string, gameState: GameState): [Player, Player] {
+  if (clientId === gameState.playerOne?.id) {
     return [gameState.playerOne, gameState.playerTwo!]
-  } else if (play.playerId === gameState.playerTwo?.id) {
+  } else if (clientId === gameState.playerTwo?.id) {
     return [gameState.playerTwo, gameState.playerOne!]
   } else {
     throw new Error('Unexpected playerId received.')
