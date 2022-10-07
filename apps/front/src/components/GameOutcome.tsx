@@ -33,14 +33,7 @@ export function GameOutcome({
   const { gameOutcome } = gameState
   const hasVotedRematch = !gameState.rematchVote.includes(clientId)
 
-  if (gameOutcome === 'not-started') {
-    return (
-      <p className='animate-pulse text-slate-900 dark:text-slate-200'>
-        Waiting for an other player to join...
-      </p>
-    )
-  }
-  if (gameOutcome === 'ongoing') {
+  if (gameOutcome === 'ongoing' || gameOutcome === 'not-started') {
     return <p className='text-slate-900 dark:text-slate-200'>VS</p>
   }
   if (gameOutcome === 'tie') {

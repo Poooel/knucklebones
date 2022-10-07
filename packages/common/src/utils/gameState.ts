@@ -39,25 +39,29 @@ export function initializePlayers(
 
   if (gameState.playerOne === undefined) {
     gameState.playerOne = initialPlayerState(clientId, displayName)
-    addLog(gameState, `${clientId} has connected to the game`)
+    addLog(gameState, `${displayName ?? clientId} has connected to the game`)
   } else if (
     gameState.playerTwo === undefined &&
     clientId !== gameState.playerOne.id
   ) {
     gameState.playerTwo = initialPlayerState(clientId, displayName)
-    addLog(gameState, `${clientId} has connected to the game`)
+    addLog(gameState, `${displayName ?? clientId} has connected to the game`)
 
-    // Starts game after second player joined
     const isPlayerOneStarting = getRandomValue() > 0.5
     if (isPlayerOneStarting) {
-      gameState.nextPlayer = gameState.playerOne.id
+      gameState.nextPlayer = gameState.playerOne
       gameState.playerOne.dice = getRandomDice()
     } else {
-      gameState.nextPlayer = gameState.playerTwo.id
+      gameState.nextPlayer = gameState.playerTwo
       gameState.playerTwo.dice = getRandomDice()
     }
     gameState.gameOutcome = 'ongoing'
-    addLog(gameState, `${gameState.nextPlayer} is going to play first`)
+    addLog(
+      gameState,
+      `${
+        gameState.nextPlayer.displayName ?? gameState.nextPlayer.id
+      } is going to play first`
+    )
   }
 
   return gameState
@@ -94,10 +98,12 @@ export function mutateGameState(
   } else {
     playerOne.dice = undefined
     playerTwo.dice = getRandomDice()
-    copiedGameState.nextPlayer = playerTwo.id
+    copiedGameState.nextPlayer = playerTwo
     addLog(
       copiedGameState,
-      `${playerTwo.id} is going to play next with a ${playerTwo.dice}`
+      `${playerTwo.displayName ?? playerTwo.id} is going to play next with a ${
+        playerTwo.dice
+      }`
     )
   }
 
@@ -118,9 +124,9 @@ function placeDice(player: Player, play: Play, gameState: GameState) {
   player.columns[play.column].push(play.value)
   addLog(
     gameState,
-    `${player.id} placed a dice in column ${play.column + 1} with a value of ${
-      play.value
-    }`
+    `${player.displayName ?? player.id} placed a dice in column ${
+      play.column + 1
+    } with a value of ${play.value}`
   )
 }
 
@@ -169,12 +175,22 @@ function computeGameOutcome(
   gameState: GameState
 ): GameOutcome {
   if (playerOne.score > playerTwo.score) {
-    addLog(gameState, `${playerOne.id} wins with a score of ${playerOne.score}`)
+    addLog(
+      gameState,
+      `${playerOne.displayName ?? playerOne.id} wins with a score of ${
+        playerOne.score
+      }`
+    )
     return isPlayerOneReallyPlayerOne(playerOne, gameState)
       ? 'player-one-win'
       : 'player-two-win'
   } else if (playerOne.score < playerTwo.score) {
-    addLog(gameState, `${playerTwo.id} wins with a score of ${playerTwo.score}`)
+    addLog(
+      gameState,
+      `${playerTwo.displayName ?? playerTwo.id} wins with a score of ${
+        playerTwo.score
+      }`
+    )
     return isPlayerOneReallyPlayerOne(playerOne, gameState)
       ? 'player-two-win'
       : 'player-one-win'

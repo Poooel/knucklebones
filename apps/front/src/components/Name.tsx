@@ -2,8 +2,7 @@ import * as React from 'react'
 import {
   PencilSquareIcon,
   CheckIcon,
-  XMarkIcon,
-  NoSymbolIcon
+  XMarkIcon
 } from '@heroicons/react/24/outline'
 
 interface NameProps {
@@ -64,7 +63,11 @@ export function Name({
   }
 
   if (name === undefined && id === undefined) {
-    return <p>{isPlayerOne ? 'You' : 'Opponent'}</p>
+    return (
+      <p className='animate-pulse text-slate-900 dark:text-slate-200'>
+        Waiting for an other player to join...
+      </p>
+    )
   }
 
   if (isBeingEdited) {
@@ -73,9 +76,11 @@ export function Name({
         <input
           type='text'
           value={displayName}
-          className='rounded-lg bg-slate-200 p-2 dark:bg-slate-800'
+          className='rounded-lg bg-slate-200 p-2 dark:bg-slate-700'
           onChange={handleOnChange}
           onKeyDown={handleOnKeyDown}
+          autoFocus
+          onFocus={(e) => e.target.select()}
         />
         <button
           className='rounded-full text-slate-900 hover:text-slate-900/80 dark:text-slate-200 dark:hover:text-slate-50/80'
@@ -95,7 +100,8 @@ export function Name({
     return (
       <div className='flex items-center gap-2'>
         <p>
-          {displayName} ({isPlayerOne ? 'you' : 'opponent'})
+          {displayName}
+          {isPlayerOne ? ' (you)' : ''}
         </p>
         {isEditable && (
           <button

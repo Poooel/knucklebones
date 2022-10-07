@@ -25,8 +25,8 @@ export function App() {
   const { gameOutcome, nextPlayer } = gameState
 
   const canPlay = !isLoading && gameOutcome === 'ongoing'
-  const canPlayerOnePlay = canPlay && nextPlayer === playerOne?.id
-  const canPlayerTwoPlay = canPlay && nextPlayer === playerTwo?.id
+  const canPlayerOnePlay = canPlay && nextPlayer?.id === playerOne?.id
+  const canPlayerTwoPlay = canPlay && nextPlayer?.id === playerTwo?.id
 
   return (
     <div className='flex flex-col items-center justify-between gap-12 px-2 py-4 md:p-8'>
