@@ -10,7 +10,6 @@ interface BoardProps extends Partial<Player> {
   isPlayerOne: boolean
   canPlay: boolean
   onColumnClick?(colIndex: number): void
-  isDisplayNameEditable: boolean
   updateDisplayName?(displayName: string): void
 }
 
@@ -32,7 +31,6 @@ export function Board({
   displayName,
   canPlay = false,
   onColumnClick,
-  isDisplayNameEditable,
   updateDisplayName
 }: BoardProps) {
   return (
@@ -59,7 +57,6 @@ export function Board({
         <Name
           name={displayName ?? id}
           isPlayerOne={isPlayerOne}
-          isEditable={isDisplayNameEditable}
           updateDisplayName={updateDisplayName}
         />
         <div className='grid w-full grid-cols-3'>

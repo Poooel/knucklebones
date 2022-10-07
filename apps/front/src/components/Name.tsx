@@ -9,31 +9,16 @@ interface NameProps {
   id?: string
   name?: string
   isPlayerOne: boolean
-  isEditable: boolean
   updateDisplayName?(displayName: string): void
 }
 
-export function Name({
-  id,
-  name,
-  isPlayerOne,
-  isEditable,
-  updateDisplayName
-}: NameProps) {
+export function Name({ id, name, isPlayerOne, updateDisplayName }: NameProps) {
   const [isBeingEdited, setIsBeingEdited] = React.useState(false)
   const [displayName, setDisplayName] = React.useState(name ?? id)
-  const [previousDisplayName, setPreviousDisplayName] = React.useState(
-    name ?? id
-  )
 
   React.useEffect(() => {
     setDisplayName(name ?? id)
-    setPreviousDisplayName(name ?? id)
   }, [name, id])
-
-  function handleOnChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setDisplayName(e.target.value)
-  }
 
   function handleOnKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === 'Enter') {
@@ -52,14 +37,14 @@ export function Name({
       localStorage.removeItem('displayName')
     }
 
-    if (displayName !== previousDisplayName) {
+    if (displayName !== name) {
       updateDisplayName!(displayName ?? id!)
     }
   }
 
   function cancelUpdate() {
     setIsBeingEdited(false)
-    setDisplayName(previousDisplayName)
+    setDisplayName(name)
   }
 
   if (name === undefined && id === undefined) {
@@ -77,19 +62,19 @@ export function Name({
           type='text'
           value={displayName}
           className='rounded-lg bg-slate-200 p-2 dark:bg-slate-700'
-          onChange={handleOnChange}
+          onChange={(e) => setDisplayName(e.target.value)}
           onKeyDown={handleOnKeyDown}
           autoFocus
           onFocus={(e) => e.target.select()}
         />
         <button
-          className='rounded-full text-slate-900 hover:text-slate-900/80 dark:text-slate-200 dark:hover:text-slate-50/80'
+          className='rounded-full text-slate-900 transition-colors duration-100 hover:text-slate-900/80 dark:text-slate-200 dark:hover:text-slate-50/80'
           onClick={sendNewDisplayName}
         >
           <CheckIcon className='aspect-square h-6' />
         </button>
         <button
-          className='rounded-full text-slate-900 hover:text-slate-900/80 dark:text-slate-200 dark:hover:text-slate-50/80'
+          className='rounded-full text-slate-900 transition-colors duration-100 hover:text-slate-900/80 dark:text-slate-200 dark:hover:text-slate-50/80'
           onClick={cancelUpdate}
         >
           <XMarkIcon className='aspect-square h-6' />
@@ -101,15 +86,12 @@ export function Name({
       <div className='flex items-center gap-2'>
         <p>
           {displayName}
-          {isPlayerOne ? ' (you)' : ''}
+          {isPlayerOne && ' (you)'}
         </p>
-        {isEditable && (
+        {isPlayerOne && (
           <button
-            className='rounded-full text-slate-900 hover:text-slate-900/80 dark:text-slate-200 dark:hover:text-slate-50/80'
-            onClick={() => {
-              setIsBeingEdited(true)
-              setPreviousDisplayName(displayName)
-            }}
+            className='rounded-full text-slate-900 transition-colors duration-100 hover:text-slate-900/80 dark:text-slate-200 dark:hover:text-slate-50/80'
+            onClick={() => setIsBeingEdited(true)}
           >
             <PencilSquareIcon className='aspect-square h-6' />
           </button>

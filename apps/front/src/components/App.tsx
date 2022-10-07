@@ -30,12 +30,7 @@ export function App() {
 
   return (
     <div className='flex flex-col items-center justify-between gap-12 px-2 py-4 md:p-8'>
-      <Board
-        {...playerTwo}
-        isPlayerOne={false}
-        canPlay={canPlayerTwoPlay}
-        isDisplayNameEditable={false}
-      />
+      <Board {...playerTwo} isPlayerOne={false} canPlay={canPlayerTwoPlay} />
       <GameOutcome
         {...gameState}
         clientId={playerOne.id}
@@ -48,8 +43,9 @@ export function App() {
         isPlayerOne
         onColumnClick={canPlayerOnePlay ? sendPlay : undefined}
         canPlay={canPlayerOnePlay}
-        isDisplayNameEditable={true}
-        updateDisplayName={updateDisplayName}
+        updateDisplayName={(displayName) => {
+          void updateDisplayName(displayName)
+        }}
       />
       <WarningToast message={errorMessage} onDismiss={clearErrorMessage} />
     </div>
