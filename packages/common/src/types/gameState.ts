@@ -7,6 +7,6 @@ export interface GameState {
   playerTwo?: Player
   logs: Log[]
   gameOutcome: GameOutcome
-  nextPlayer?: string
+  nextPlayer?: Player
   rematchVote: string[]
 }

@@ -11,12 +11,16 @@ export const emptyGameState: GameState = {
   rematchVote: []
 }
 
-export function initialPlayerState(playerId: string): Player {
+export function initialPlayerState(
+  playerId: string,
+  displayName?: string
+): Player {
   return {
     id: playerId,
     columns: [[], [], []],
     score: 0,
-    scorePerColumn: [0, 0, 0]
+    scorePerColumn: [0, 0, 0],
+    displayName
   }
 }
 
@@ -26,33 +30,38 @@ function now(): number {
 
 export function initializePlayers(
   gameState: GameState,
-  clientId: string
+  clientId: string,
+  displayName?: string
 ): GameState {
   if (gameState.gameOutcome !== 'not-started') {
     return gameState
   }
 
   if (gameState.playerOne === undefined) {
-    gameState.playerOne = initialPlayerState(clientId)
-    addLog(gameState, `${clientId} has connected to the game`)
+    gameState.playerOne = initialPlayerState(clientId, displayName)
+    addLog(gameState, `${displayName ?? clientId} has connected to the game`)
   } else if (
     gameState.playerTwo === undefined &&
     clientId !== gameState.playerOne.id
   ) {
-    gameState.playerTwo = initialPlayerState(clientId)
-    addLog(gameState, `${clientId} has connected to the game`)
+    gameState.playerTwo = initialPlayerState(clientId, displayName)
+    addLog(gameState, `${displayName ?? clientId} has connected to the game`)
 
-    // Starts game after second player joined
     const isPlayerOneStarting = getRandomValue() > 0.5
     if (isPlayerOneStarting) {
-      gameState.nextPlayer = gameState.playerOne.id
+      gameState.nextPlayer = gameState.playerOne
       gameState.playerOne.dice = getRandomDice()
     } else {
-      gameState.nextPlayer = gameState.playerTwo.id
+      gameState.nextPlayer = gameState.playerTwo
       gameState.playerTwo.dice = getRandomDice()
     }
     gameState.gameOutcome = 'ongoing'
-    addLog(gameState, `${gameState.nextPlayer} is going to play first`)
+    addLog(
+      gameState,
+      `${
+        gameState.nextPlayer.displayName ?? gameState.nextPlayer.id
+      } is going to play first`
+    )
   }
 
   return gameState
@@ -65,10 +74,14 @@ export function addLog(gameState: GameState, log: string) {
   })
 }
 
-export function mutateGameState(play: Play, gameState: GameState): GameState {
+export function mutateGameState(
+  play: Play,
+  clientId: string,
+  gameState: GameState
+): GameState {
   const copiedGameState = structuredClone(gameState)
 
-  const [playerOne, playerTwo] = getPlayers(play, copiedGameState)
+  const [playerOne, playerTwo] = getPlayers(clientId, copiedGameState)
 
   placeDice(playerOne, play, copiedGameState)
 
@@ -85,20 +98,22 @@ export function mutateGameState(play: Play, gameState: GameState): GameState {
   } else {
     playerOne.dice = undefined
     playerTwo.dice = getRandomDice()
-    copiedGameState.nextPlayer = playerTwo.id
+    copiedGameState.nextPlayer = playerTwo
     addLog(
       copiedGameState,
-      `${playerTwo.id} is going to play next with a ${playerTwo.dice}`
+      `${playerTwo.displayName ?? playerTwo.id} is going to play next with a ${
+        playerTwo.dice
+      }`
     )
   }
 
   return copiedGameState
 }
 
-function getPlayers(play: Play, gameState: GameState): [Player, Player] {
-  if (play.playerId === gameState.playerOne?.id) {
+function getPlayers(clientId: string, gameState: GameState): [Player, Player] {
+  if (clientId === gameState.playerOne?.id) {
     return [gameState.playerOne, gameState.playerTwo!]
-  } else if (play.playerId === gameState.playerTwo?.id) {
+  } else if (clientId === gameState.playerTwo?.id) {
     return [gameState.playerTwo, gameState.playerOne!]
   } else {
     throw new Error('Unexpected playerId received.')
@@ -109,9 +124,9 @@ function placeDice(player: Player, play: Play, gameState: GameState) {
   player.columns[play.column].push(play.value)
   addLog(
     gameState,
-    `${player.id} placed a dice in column ${play.column + 1} with a value of ${
-      play.value
-    }`
+    `${player.displayName ?? player.id} placed a dice in column ${
+      play.column + 1
+    } with a value of ${play.value}`
   )
 }
 
@@ -160,12 +175,22 @@ function computeGameOutcome(
   gameState: GameState
 ): GameOutcome {
   if (playerOne.score > playerTwo.score) {
-    addLog(gameState, `${playerOne.id} wins with a score of ${playerOne.score}`)
+    addLog(
+      gameState,
+      `${playerOne.displayName ?? playerOne.id} wins with a score of ${
+        playerOne.score
+      }`
+    )
     return isPlayerOneReallyPlayerOne(playerOne, gameState)
       ? 'player-one-win'
       : 'player-two-win'
   } else if (playerOne.score < playerTwo.score) {
-    addLog(gameState, `${playerTwo.id} wins with a score of ${playerTwo.score}`)
+    addLog(
+      gameState,
+      `${playerTwo.displayName ?? playerTwo.id} wins with a score of ${
+        playerTwo.score
+      }`
+    )
     return isPlayerOneReallyPlayerOne(playerOne, gameState)
       ? 'player-two-win'
       : 'player-one-win'

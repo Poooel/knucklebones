@@ -1,4 +1,4 @@
-import { Play } from '@knucklebones/common'
+import { DisplayNameUpdate, Play } from '@knucklebones/common'
 import { GameStateStoreProps } from '../durable-objects/gameStateStore'
 
 type PromisifyPublicFunctions<T> = {
@@ -14,5 +14,6 @@ export interface IttyDurableObjectNamespace<T> {
 export interface RequestWithProps extends Request, GameStateStoreProps {
   clientId?: string
   roomKey?: string
-  content?: Play
+  content?: Play | DisplayNameUpdate
+  query?: DisplayNameUpdate
 }

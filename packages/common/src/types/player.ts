@@ -4,4 +4,5 @@ export interface Player {
   columns: number[][]
   score: number
   scorePerColumn: number[]
+  displayName?: string
 }
