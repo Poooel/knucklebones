@@ -25,7 +25,11 @@ const getWinMessage = (
   }
 }
 
-export function Outcome({ clientId, onRematch, ...gameState }: OutcomeProps) {
+export function GameOutcome({
+  clientId,
+  onRematch,
+  ...gameState
+}: OutcomeProps) {
   const { gameOutcome } = gameState
   const hasVotedRematch = !gameState.rematchVote.includes(clientId)
 

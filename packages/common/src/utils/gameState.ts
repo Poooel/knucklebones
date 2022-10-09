@@ -1,4 +1,3 @@
-import { v4 as uuidv4 } from 'uuid'
 import { GameState } from '../types/gameState'
 import { countDiceInColumn } from '../utils/count'
 import { Play } from '../types/play'
@@ -23,10 +22,6 @@ export function initialPlayerState(
     scorePerColumn: [0, 0, 0],
     displayName
   }
-}
-
-function now(): number {
-  return Math.floor(Date.now() / 1000)
 }
 
 export function initializePlayers(
@@ -70,8 +65,7 @@ export function initializePlayers(
 
 export function addLog(gameState: GameState, log: string) {
   gameState.logs.push({
-    id: uuidv4(),
-    timestamp: now(),
+    timestamp: Date.now(),
     content: log
   })
 }

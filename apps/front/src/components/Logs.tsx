@@ -12,10 +12,8 @@ function formatTimestamp(timestamp: number) {
 
 const MemoizedLog = React.memo(function Log({ content, timestamp }: Log) {
   return (
-    <li className='px-4 py-2 leading-none text-slate-900 dark:text-slate-50'>
-      <span className='font-semibold'>
-        [{formatTimestamp(timestamp * 1000)}]
-      </span>{' '}
+    <li className='mx-2 border-b border-b-slate-300 px-2 py-2 leading-none text-slate-900 last:border-b-0 dark:text-slate-50'>
+      <span className='font-semibold'>[{formatTimestamp(timestamp)}]</span>{' '}
       <span>{content}</span>
     </li>
   )
@@ -24,10 +22,6 @@ const MemoizedLog = React.memo(function Log({ content, timestamp }: Log) {
 export function Logs({ logs }: LogsProps) {
   const ref = React.createRef<HTMLUListElement>()
 
-  // Ideally, we don't want to scroll if the user has been scrolling up, because
-  // that's annoying. But that's tricky to do.
-
-  // Auto-scrolls the logs to the bottom once we update them
   React.useEffect(() => {
     ref.current?.scrollTo({
       top: ref.current?.scrollHeight,
@@ -36,17 +30,14 @@ export function Logs({ logs }: LogsProps) {
   }, [ref, logs])
 
   return (
-    <div className='flex h-full flex-col rounded-md bg-slate-50 shadow-lg shadow-slate-300 dark:bg-slate-700 dark:shadow-slate-800'>
+    <div className='flex h-full flex-col rounded-md bg-slate-200 shadow-lg shadow-slate-300 dark:bg-slate-700 dark:shadow-slate-800'>
       {/* Write Text component */}
-      <p className='px-4 py-2 font-semibold text-slate-900 dark:text-slate-50'>
+      <p className='px-4 py-2 font-semibold text-slate-900 shadow-lg shadow-slate-300 dark:text-slate-50 dark:shadow-slate-800'>
         Logs
       </p>
-      <ul
-        ref={ref}
-        className='min-h-0 flex-1 divide-y-2 divide-slate-300 overflow-y-auto dark:divide-slate-800'
-      >
-        {logs.map((log) => (
-          <MemoizedLog key={log.id} {...log} />
+      <ul ref={ref} className='min-h-0 flex-1 overflow-y-auto'>
+        {logs.map((log, index) => (
+          <MemoizedLog key={index} {...log} />
         ))}
       </ul>
     </div>
