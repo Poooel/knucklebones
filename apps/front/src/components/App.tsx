@@ -36,7 +36,7 @@ export function App() {
 
   return (
     <div className='grid grid-rows-2 lg:grid-cols-3 lg:grid-rows-none'>
-      <div className='row-start-2 mb-4 flex flex-col items-center lg:row-start-auto lg:mb-0 lg:h-full lg:items-start lg:justify-end'>
+      <div className='row-start-2 flex h-[95vh] flex-col items-center pb-4 lg:row-start-auto lg:h-full lg:items-start lg:justify-end lg:pb-0'>
         {/* min-h-0 allows item to properly shrink, when used with flex-1.
         Ref: https://stackoverflow.com/questions/36247140/why-dont-flex-items-shrink-past-content-size */}
         <div className='min-h-0 flex-1 p-4 lg:h-60 lg:flex-none'>
@@ -50,7 +50,7 @@ export function App() {
           <ArrowUpIcon className='aspect-square h-6' />
         </button>
       </div>
-      <div className='grid h-[95vh] grid-cols-1 place-content-center'>
+      <div className='grid grid-cols-1 place-content-center'>
         <div className='flex flex-col items-center justify-between gap-12'>
           <Board
             {...playerTwo}
