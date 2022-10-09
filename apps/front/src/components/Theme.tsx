@@ -90,7 +90,7 @@ export function Theme({ children }: React.PropsWithChildren) {
       {children}
       <button
         onClick={changeTheme}
-        className='fixed top-0 right-0 rounded-full p-4 text-slate-900 transition-colors duration-100 hover:bg-black/10 dark:text-slate-50 dark:hover:bg-white/10'
+        className='absolute top-0 right-0 rounded-full p-4 text-slate-900 transition-colors duration-100 hover:bg-black/10 dark:text-slate-50 dark:hover:bg-white/10'
       >
         <ThemeIcon theme={theme} className='aspect-square h-6' />
       </button>

@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Link } from 'react-router-dom'
 import { GameState, Player } from '@knucklebones/common'
 
-interface GameOutcomeProps extends GameState {
+interface OutcomeProps extends GameState {
   clientId: string
   onRematch(): void
 }
@@ -29,7 +29,7 @@ export function GameOutcome({
   clientId,
   onRematch,
   ...gameState
-}: GameOutcomeProps) {
+}: OutcomeProps) {
   const { gameOutcome } = gameState
   const hasVotedRematch = !gameState.rematchVote.includes(clientId)
 

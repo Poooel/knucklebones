@@ -24,10 +24,6 @@ export function initialPlayerState(
   }
 }
 
-function now(): number {
-  return Math.floor(Date.now() / 1000)
-}
-
 export function initializePlayers(
   gameState: GameState,
   clientId: string,
@@ -69,7 +65,7 @@ export function initializePlayers(
 
 export function addLog(gameState: GameState, log: string) {
   gameState.logs.push({
-    timestamp: now(),
+    timestamp: Date.now(),
     content: log
   })
 }
