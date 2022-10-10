@@ -4,6 +4,7 @@ import {
   CheckIcon,
   XMarkIcon
 } from '@heroicons/react/24/outline'
+import { IconButton } from './IconButton'
 
 interface NameProps {
   id?: string
@@ -74,18 +75,8 @@ export function Name({
           autoFocus
           onFocus={(e) => e.target.select()}
         />
-        <button
-          className='rounded-full text-slate-900 transition-colors duration-100 hover:text-slate-900/80 dark:text-slate-200 dark:hover:text-slate-50/80'
-          onClick={sendNewDisplayName}
-        >
-          <CheckIcon className='aspect-square h-6' />
-        </button>
-        <button
-          className='rounded-full text-slate-900 transition-colors duration-100 hover:text-slate-900/80 dark:text-slate-200 dark:hover:text-slate-50/80'
-          onClick={cancelUpdate}
-        >
-          <XMarkIcon className='aspect-square h-6' />
-        </button>
+        <IconButton icon={<CheckIcon />} onClick={sendNewDisplayName} />
+        <IconButton icon={<XMarkIcon />} onClick={cancelUpdate} />
       </div>
     )
   } else {
@@ -96,12 +87,10 @@ export function Name({
           {isPlayerOne && isEditable && ' (you)'}
         </p>
         {isEditable && (
-          <button
-            className='rounded-full text-slate-900 transition-colors duration-100 hover:text-slate-900/80 dark:text-slate-200 dark:hover:text-slate-50/80'
+          <IconButton
+            icon={<PencilSquareIcon />}
             onClick={() => setIsBeingEdited(true)}
-          >
-            <PencilSquareIcon className='aspect-square h-6' />
-          </button>
+          />
         )}
       </div>
     )
