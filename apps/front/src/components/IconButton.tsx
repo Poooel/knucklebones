@@ -11,7 +11,7 @@ export function IconButton({ icon, onClick }: IconButtonProps) {
       className='text-slate-900 transition-colors duration-100 hover:text-slate-900/80 dark:text-slate-200 dark:hover:text-slate-50/80'
       onClick={onClick}
     >
-      <i className='aspect-square h-6'>{icon}</i>
+      <div className='aspect-square h-6'>{icon}</div>
     </button>
   )
 }
