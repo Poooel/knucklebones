@@ -30,6 +30,12 @@ export function initializePlayers(
   displayName?: string
 ): GameState {
   if (gameState.gameOutcome !== 'not-started') {
+    if (
+      gameState.playerOne?.id !== clientId &&
+      gameState.playerTwo?.id !== clientId
+    ) {
+      addLog(gameState, `${clientId} has joined as a spectator`)
+    }
     return gameState
   }
 
