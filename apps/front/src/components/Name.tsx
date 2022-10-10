@@ -11,9 +11,16 @@ interface NameProps {
   name?: string
   isPlayerOne: boolean
   updateDisplayName?(displayName: string): void
+  isEditable: boolean
 }
 
-export function Name({ id, name, isPlayerOne, updateDisplayName }: NameProps) {
+export function Name({
+  id,
+  name,
+  isPlayerOne,
+  updateDisplayName,
+  isEditable
+}: NameProps) {
   const [isBeingEdited, setIsBeingEdited] = React.useState(false)
   const [displayName, setDisplayName] = React.useState(name ?? id)
 
@@ -51,7 +58,7 @@ export function Name({ id, name, isPlayerOne, updateDisplayName }: NameProps) {
   if (name === undefined && id === undefined) {
     return (
       <p className='animate-pulse text-slate-900 dark:text-slate-200'>
-        Waiting for an other player to join...
+        Waiting for another player to join...
       </p>
     )
   }
@@ -77,9 +84,9 @@ export function Name({ id, name, isPlayerOne, updateDisplayName }: NameProps) {
       <div className='flex items-center gap-2'>
         <p>
           {displayName}
-          {isPlayerOne && ' (you)'}
+          {isPlayerOne && isEditable && ' (you)'}
         </p>
-        {isPlayerOne && (
+        {isEditable && (
           <IconButton
             icon={<PencilSquareIcon />}
             onClick={() => setIsBeingEdited(true)}

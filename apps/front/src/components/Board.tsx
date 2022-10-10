@@ -11,6 +11,7 @@ interface BoardProps extends Partial<Player> {
   canPlay: boolean
   onColumnClick?(colIndex: number): void
   updateDisplayName?(displayName: string): void
+  isDisplayNameEditable?: boolean
 }
 
 const MAX_COLUMNS = 3
@@ -31,7 +32,8 @@ export function Board({
   displayName,
   canPlay = false,
   onColumnClick,
-  updateDisplayName
+  updateDisplayName,
+  isDisplayNameEditable = false
 }: BoardProps) {
   return (
     <div
@@ -58,6 +60,7 @@ export function Board({
           name={displayName ?? id}
           isPlayerOne={isPlayerOne}
           updateDisplayName={updateDisplayName}
+          isEditable={isDisplayNameEditable}
         />
         <div className='grid w-full grid-cols-3'>
           {scorePerColumn.map((score, index) => (

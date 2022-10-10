@@ -87,6 +87,7 @@ export function useGame() {
     errorMessage,
     clearErrorMessage,
     sendRematch,
-    updateDisplayName
+    updateDisplayName,
+    clientId: client.auth.clientId
   }
 }

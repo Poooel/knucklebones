@@ -21,7 +21,8 @@ export function App() {
     errorMessage,
     clearErrorMessage,
     sendRematch,
-    updateDisplayName
+    updateDisplayName,
+    clientId
   } = useGame()
 
   if (gameState === null || playerOne === undefined) {
@@ -30,7 +31,9 @@ export function App() {
 
   const { gameOutcome, nextPlayer } = gameState
 
-  const canPlay = !isLoading && gameOutcome === 'ongoing'
+  const isSpectator = clientId !== playerOne?.id && clientId !== playerTwo?.id
+
+  const canPlay = !isLoading && gameOutcome === 'ongoing' && !isSpectator
   const canPlayerOnePlay = canPlay && nextPlayer?.id === playerOne?.id
   const canPlayerTwoPlay = canPlay && nextPlayer?.id === playerTwo?.id
 
@@ -72,6 +75,7 @@ export function App() {
             updateDisplayName={(displayName) => {
               void updateDisplayName(displayName)
             }}
+            isDisplayNameEditable={!isSpectator}
           />
           <WarningToast message={errorMessage} onDismiss={clearErrorMessage} />
         </div>
