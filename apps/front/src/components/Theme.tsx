@@ -5,22 +5,22 @@ import {
   MoonIcon,
   ComputerDesktopIcon
 } from '@heroicons/react/24/outline'
+import { IconButton } from './IconButton'
 
 type Themes = 'dark' | 'light' | 'default'
 
 interface ThemeIconButtonProps {
   theme: Themes
-  className: string
 }
 
-function ThemeIcon({ theme, className }: ThemeIconButtonProps) {
+function ThemeIcon({ theme }: ThemeIconButtonProps) {
   if (theme === 'dark') {
-    return <MoonIcon className={className} />
+    return <MoonIcon />
   }
   if (theme === 'light') {
-    return <SunIcon className={className} />
+    return <SunIcon />
   }
-  return <ComputerDesktopIcon className={className} />
+  return <ComputerDesktopIcon />
 }
 
 export function Theme({ children }: React.PropsWithChildren) {
@@ -88,12 +88,9 @@ export function Theme({ children }: React.PropsWithChildren) {
   return (
     <div className={clsx({ dark: isDarkMode })}>
       {children}
-      <button
-        onClick={changeTheme}
-        className='absolute top-0 right-0 rounded-full p-4 text-slate-900 transition-colors duration-100 hover:bg-black/10 dark:text-slate-50 dark:hover:bg-white/10'
-      >
-        <ThemeIcon theme={theme} className='aspect-square h-6' />
-      </button>
+      <div className='absolute top-0 right-0 p-4'>
+        <IconButton icon={<ThemeIcon theme={theme} />} onClick={changeTheme} />
+      </div>
     </div>
   )
 }
