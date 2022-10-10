@@ -38,8 +38,8 @@ export function App() {
   const canPlayerTwoPlay = canPlay && nextPlayer?.id === playerTwo?.id
 
   return (
-    <div className='grid grid-rows-2 lg:grid-cols-3 lg:grid-rows-none'>
-      <div className='row-start-2 flex h-[95vh] flex-col items-center pb-4 lg:row-start-auto lg:h-full lg:items-start lg:justify-end lg:pb-0'>
+    <div className='flex flex-col-reverse lg:flex-row lg:items-center lg:justify-between'>
+      <div className='flex h-[95vh] flex-col items-center pb-4 lg:h-full lg:flex-1 lg:items-start lg:justify-end lg:pb-0'>
         {/* min-h-0 allows item to properly shrink, when used with flex-1.
         Ref: https://stackoverflow.com/questions/36247140/why-dont-flex-items-shrink-past-content-size */}
         <div className='min-h-0 flex-1 p-4 lg:h-60 lg:flex-none'>
@@ -80,6 +80,7 @@ export function App() {
           <WarningToast message={errorMessage} onDismiss={clearErrorMessage} />
         </div>
       </div>
+      <div className='hidden lg:block lg:flex-1'></div>
     </div>
   )
 }
