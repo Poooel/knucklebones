@@ -38,70 +38,79 @@ export function Board({
   return (
     <div
       className={clsx(
-        'flex w-full flex-row justify-center gap-2 text-slate-900 transition duration-100 dark:text-slate-200 md:gap-8',
+        'flex items-center gap-4 text-slate-900 transition duration-100 dark:text-slate-200',
         {
-          'items-end': isPlayerOne,
-          'items-start': !isPlayerOne,
+          'flex-col': isPlayerOne,
+          'flex-col-reverse': !isPlayerOne,
           'opacity-75': !canPlay,
           'font-semibold': canPlay
         }
       )}
     >
-      <div className='my-4 grid flex-1 place-content-end'>
-        <Dice value={canPlay ? dice : undefined} />
-      </div>
+      <Name
+        name={displayName ?? id}
+        isPlayerOne={isPlayerOne}
+        updateDisplayName={updateDisplayName}
+        isEditable={isDisplayNameEditable}
+      />
       <div
-        className={clsx('flex items-center gap-1 md:gap-4', {
-          'flex-col': isPlayerOne,
-          'flex-col-reverse': !isPlayerOne
+        className={clsx('grid-cols-3-central grid gap-4 md:gap-8', {
+          'items-end': isPlayerOne,
+          'items-start': !isPlayerOne
         })}
       >
-        <Name
-          name={displayName ?? id}
-          isPlayerOne={isPlayerOne}
-          updateDisplayName={updateDisplayName}
-          isEditable={isDisplayNameEditable}
-        />
-        <div className='grid w-full grid-cols-3'>
-          {scorePerColumn.map((score, index) => (
-            <p className='text-center' key={index}>
-              {score}
-            </p>
-          ))}
+        <div className='my-4'>
+          <Dice value={canPlay ? dice : undefined} />
         </div>
-        <div className='grid aspect-square grid-cols-3 divide-x-2 divide-slate-300 rounded-lg bg-transparent shadow-lg shadow-slate-300 dark:divide-slate-800 dark:shadow-slate-800'>
-          {COLUMNS_PLACEHOLDER.map((_, colIndex) => {
-            const column = columns[colIndex]
-            const countedDice = countDiceInColumn(column)
-            const canPlayInColumn =
-              isPlayerOne && canPlay && column.length < MAX_CELLS_PER_COLUMNS
-            return (
-              <Column
-                key={colIndex}
-                readonly={!canPlayInColumn}
-                onClick={
-                  canPlayInColumn ? () => onColumnClick?.(colIndex) : undefined
-                }
-              >
-                {CELLS_PER_COLUMN_PLACEHOLDER.map((_, cellIndex) => {
-                  // Reverses the render order to mirror the board for the other player
-                  const actualCellIndex = !isPlayerOne
-                    ? MAX_CELLS_PER_COLUMNS - cellIndex - 1
-                    : cellIndex
-                  const value = column[actualCellIndex]
-                  return (
-                    <Cell key={cellIndex}>
-                      <Dice value={value} count={countedDice.get(value)} />
-                    </Cell>
-                  )
-                })}
-              </Column>
-            )
+        <div
+          className={clsx('flex items-center gap-1 md:gap-4', {
+            'flex-col': isPlayerOne,
+            'flex-col-reverse': !isPlayerOne
           })}
+        >
+          <div className='grid w-full grid-cols-3'>
+            {scorePerColumn.map((score, index) => (
+              <p className='text-center' key={index}>
+                {score}
+              </p>
+            ))}
+          </div>
+          <div className='grid aspect-square grid-cols-3 divide-x-2 divide-slate-300 rounded-lg bg-transparent shadow-lg shadow-slate-300 dark:divide-slate-800 dark:shadow-slate-800'>
+            {COLUMNS_PLACEHOLDER.map((_, colIndex) => {
+              const column = columns[colIndex]
+              const countedDice = countDiceInColumn(column)
+              const canPlayInColumn =
+                isPlayerOne && canPlay && column.length < MAX_CELLS_PER_COLUMNS
+              return (
+                <Column
+                  key={colIndex}
+                  readonly={!canPlayInColumn}
+                  onClick={
+                    canPlayInColumn
+                      ? () => onColumnClick?.(colIndex)
+                      : undefined
+                  }
+                >
+                  {CELLS_PER_COLUMN_PLACEHOLDER.map((_, cellIndex) => {
+                    // Reverses the render order to mirror the board for the other player
+                    const actualCellIndex = !isPlayerOne
+                      ? MAX_CELLS_PER_COLUMNS - cellIndex - 1
+                      : cellIndex
+                    const value = column[actualCellIndex]
+                    return (
+                      <Cell key={cellIndex}>
+                        <Dice value={value} count={countedDice.get(value)} />
+                      </Cell>
+                    )
+                  })}
+                </Column>
+              )
+            })}
+          </div>
         </div>
-      </div>
-      <div className='my-4 grid flex-1 place-content-start'>
-        <p>Total: {score}</p>
+        <div className='my-4'>
+          <p>Total: {score}</p>
+        </div>
       </div>
     </div>
   )

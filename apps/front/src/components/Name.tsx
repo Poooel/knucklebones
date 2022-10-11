@@ -70,7 +70,7 @@ export function Name({
           type='text'
           value={displayName}
           className='rounded-lg bg-slate-200 p-2 dark:bg-slate-700'
-          onChange={(e) => setDisplayName(e.target.value)}
+          onChange={(e) => setDisplayName(e.target.value.substring(0, 32))}
           onKeyDown={handleOnKeyDown}
           autoFocus
           onFocus={(e) => e.target.select()}
@@ -81,8 +81,8 @@ export function Name({
     )
   } else {
     return (
-      <div className='flex items-center gap-2'>
-        <p>
+      <div className='flex flex-wrap items-center justify-center gap-2'>
+        <p className='break-all text-center'>
           {displayName}
           {isPlayerOne && isEditable && ' (you)'}
         </p>
