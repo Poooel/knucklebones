@@ -23,7 +23,7 @@ const CELLS_PER_COLUMN_PLACEHOLDER = Array.from({
 })
 
 export function Board({
-  id,
+  id: playerId,
   dice,
   isPlayerOne,
   score = 0,
@@ -48,7 +48,8 @@ export function Board({
       )}
     >
       <Name
-        name={displayName ?? id}
+        playerId={playerId}
+        displayName={displayName}
         isPlayerOne={isPlayerOne}
         updateDisplayName={updateDisplayName}
         isEditable={isDisplayNameEditable}

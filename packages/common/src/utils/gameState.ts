@@ -1,53 +1,41 @@
 import { GameState } from '../types/gameState'
 import { countDiceInColumn } from '../utils/count'
 import { Play } from '../types/play'
-import { Player } from '../types/player'
+import { emptyPlayerState, Player } from '../types/player'
 import { GameOutcome } from '../types/gameOutcome'
 import { getRandomDice, getRandomValue } from './random'
-
-export const emptyGameState: GameState = {
-  logs: [],
-  gameOutcome: 'not-started',
-  rematchVote: []
-}
-
-export function initialPlayerState(
-  playerId: string,
-  displayName?: string
-): Player {
-  return {
-    id: playerId,
-    columns: [[], [], []],
-    score: 0,
-    scorePerColumn: [0, 0, 0],
-    displayName
-  }
-}
+import { getName, getNameFromPlayer } from './name'
 
 export function initializePlayers(
   gameState: GameState,
-  clientId: string,
+  playerId: string,
   displayName?: string
 ): GameState {
   if (gameState.gameOutcome !== 'not-started') {
     if (
-      gameState.playerOne?.id !== clientId &&
-      gameState.playerTwo?.id !== clientId
+      gameState.playerOne?.id !== playerId &&
+      gameState.playerTwo?.id !== playerId
     ) {
-      addLog(gameState, `${clientId} has joined as a spectator`)
+      addLog(gameState, `${playerId} has joined as a spectator`)
     }
     return gameState
   }
 
   if (gameState.playerOne === undefined) {
-    gameState.playerOne = initialPlayerState(clientId, displayName)
-    addLog(gameState, `${displayName ?? clientId} has connected to the game`)
+    gameState.playerOne = emptyPlayerState(playerId, displayName)
+    addLog(
+      gameState,
+      `${getName(playerId, displayName)} has connected to the game`
+    )
   } else if (
     gameState.playerTwo === undefined &&
-    clientId !== gameState.playerOne.id
+    playerId !== gameState.playerOne.id
   ) {
-    gameState.playerTwo = initialPlayerState(clientId, displayName)
-    addLog(gameState, `${displayName ?? clientId} has connected to the game`)
+    gameState.playerTwo = emptyPlayerState(playerId, displayName)
+    addLog(
+      gameState,
+      `${getName(playerId, displayName)} has connected to the game`
+    )
 
     const isPlayerOneStarting = getRandomValue() > 0.5
     if (isPlayerOneStarting) {
@@ -60,9 +48,7 @@ export function initializePlayers(
     gameState.gameOutcome = 'ongoing'
     addLog(
       gameState,
-      `${
-        gameState.nextPlayer.displayName ?? gameState.nextPlayer.id
-      } is going to play first`
+      `${getNameFromPlayer(gameState.nextPlayer)} is going to play first`
     )
   }
 
@@ -78,12 +64,12 @@ export function addLog(gameState: GameState, log: string) {
 
 export function mutateGameState(
   play: Play,
-  clientId: string,
+  playerId: string,
   gameState: GameState
 ): GameState {
   const copiedGameState = structuredClone(gameState)
 
-  const [playerOne, playerTwo] = getPlayers(clientId, copiedGameState)
+  const [playerOne, playerTwo] = getPlayers(playerId, copiedGameState)
 
   placeDice(playerOne, play, copiedGameState)
 
@@ -103,7 +89,7 @@ export function mutateGameState(
     copiedGameState.nextPlayer = playerTwo
     addLog(
       copiedGameState,
-      `${playerTwo.displayName ?? playerTwo.id} is going to play next with a ${
+      `${getNameFromPlayer(playerTwo)} is going to play next with a ${
         playerTwo.dice
       }`
     )
@@ -112,10 +98,10 @@ export function mutateGameState(
   return copiedGameState
 }
 
-function getPlayers(clientId: string, gameState: GameState): [Player, Player] {
-  if (clientId === gameState.playerOne?.id) {
+function getPlayers(playerId: string, gameState: GameState): [Player, Player] {
+  if (playerId === gameState.playerOne?.id) {
     return [gameState.playerOne, gameState.playerTwo!]
-  } else if (clientId === gameState.playerTwo?.id) {
+  } else if (playerId === gameState.playerTwo?.id) {
     return [gameState.playerTwo, gameState.playerOne!]
   } else {
     throw new Error('Unexpected playerId received.')
@@ -126,10 +112,20 @@ function placeDice(player: Player, play: Play, gameState: GameState) {
   player.columns[play.column].push(play.value)
   addLog(
     gameState,
-    `${player.displayName ?? player.id} placed a dice in column ${
-      play.column + 1
-    } with a value of ${play.value}`
+    `${getNameFromPlayer(player)} placed a dice in the ${getColumn(
+      play.column
+    )} column with a value of ${play.value}`
   )
+}
+
+function getColumn(columnIndex: number) {
+  if (columnIndex === 0) {
+    return 'left'
+  } else if (columnIndex === 1) {
+    return 'middle'
+  } else {
+    return 'right'
+  }
 }
 
 function removeFromPlayerTwoColumns(play: Play, playerTwo: Player) {
@@ -179,9 +175,7 @@ function computeGameOutcome(
   if (playerOne.score > playerTwo.score) {
     addLog(
       gameState,
-      `${playerOne.displayName ?? playerOne.id} wins with a score of ${
-        playerOne.score
-      }`
+      `${getNameFromPlayer(playerOne)} wins with a score of ${playerOne.score}`
     )
     return isPlayerOneReallyPlayerOne(playerOne, gameState)
       ? 'player-one-win'
@@ -189,9 +183,7 @@ function computeGameOutcome(
   } else if (playerOne.score < playerTwo.score) {
     addLog(
       gameState,
-      `${playerTwo.displayName ?? playerTwo.id} wins with a score of ${
-        playerTwo.score
-      }`
+      `${getNameFromPlayer(playerTwo)} wins with a score of ${playerTwo.score}`
     )
     return isPlayerOneReallyPlayerOne(playerOne, gameState)
       ? 'player-two-win'

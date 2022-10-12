@@ -2,34 +2,34 @@ import { Play } from '@knucklebones/common'
 
 export type Method = 'GET' | 'POST'
 
-export async function init(roomKey: string, clientId: string) {
+export async function init(roomKey: string, playerId: string) {
   let queryParams = ''
 
   if ('displayName' in localStorage) {
     queryParams = `?displayName=${localStorage.displayName}`
   }
 
-  const path = `/${roomKey}/${clientId}/init${queryParams}`
+  const path = `/${roomKey}/${playerId}/init${queryParams}`
 
   return await sendApiRequest(path, 'GET')
 }
 
-export async function rematch(roomKey: string, clientId: string) {
-  const path = `/${roomKey}/${clientId}/rematch`
+export async function rematch(roomKey: string, playerId: string) {
+  const path = `/${roomKey}/${playerId}/rematch`
   return await sendApiRequest(path, 'POST')
 }
 
-export async function play(roomKey: string, clientId: string, play: Play) {
-  const path = `/${roomKey}/${clientId}/play`
+export async function play(roomKey: string, playerId: string, play: Play) {
+  const path = `/${roomKey}/${playerId}/play`
   return await sendApiRequest(path, 'POST', play)
 }
 
 export async function displayName(
   roomKey: string,
-  clientId: string,
+  playerId: string,
   displayName: string
 ) {
-  const path = `/${roomKey}/${clientId}/displayName`
+  const path = `/${roomKey}/${playerId}/displayName`
   return await sendApiRequest(path, 'POST', { displayName })
 }
 

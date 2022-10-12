@@ -2,7 +2,7 @@ import Base64 from 'crypto-js/enc-base64'
 import hmacSHA256 from 'crypto-js/hmac-sha256'
 import utf8 from 'crypto-js/enc-utf8'
 import { GameState } from '@knucklebones/common'
-import { Env } from '../types/env'
+import { Env } from '../types/cloudflareEnvironment'
 
 type WordArray = ReturnType<typeof utf8.parse>
 

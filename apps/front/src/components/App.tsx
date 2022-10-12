@@ -23,7 +23,7 @@ export function App() {
     clearErrorMessage,
     sendRematch,
     updateDisplayName,
-    clientId
+    playerId
   } = useGame()
 
   if (gameState === null || playerOne === undefined) {
@@ -32,7 +32,7 @@ export function App() {
 
   const { gameOutcome, nextPlayer } = gameState
 
-  const isSpectator = clientId !== playerOne?.id && clientId !== playerTwo?.id
+  const isSpectator = playerId !== playerOne?.id && playerId !== playerTwo?.id
 
   const canPlay = !isLoading && gameOutcome === 'ongoing' && !isSpectator
   const canPlayerOnePlay = canPlay && nextPlayer?.id === playerOne?.id
@@ -49,7 +49,7 @@ export function App() {
           />
           <GameOutcome
             {...gameState}
-            clientId={playerOne.id}
+            playerId={playerOne.id}
             onRematch={() => {
               void sendRematch()
             }}

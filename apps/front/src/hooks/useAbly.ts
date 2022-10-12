@@ -10,8 +10,6 @@ export function useAbly() {
     const client = connectToAbly()
 
     client.connection.on('connected', () => {
-      // Save client ID after being authenticated
-      localStorage.setItem('clientId', client.auth.clientId)
       setIsConnected(true)
     })
     client.connection.on('disconnected', () => {
