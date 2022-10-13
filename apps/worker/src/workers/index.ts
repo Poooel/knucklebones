@@ -6,11 +6,7 @@ import {
 } from 'itty-router-extras'
 import { withDurables } from 'itty-durable'
 import { createCors } from 'itty-cors'
-import { auth } from '../endpoints/auth'
-import { init } from '../endpoints/init'
-import { play } from '../endpoints/play'
-import { rematch } from '../endpoints/rematch'
-import { displayName } from '../endpoints/displayName'
+import { auth, displayName, init, play, rematch } from '../endpoints'
 
 export { GameStateStore } from '../durable-objects/gameStateStore'
 
