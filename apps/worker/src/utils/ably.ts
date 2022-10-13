@@ -2,16 +2,16 @@ import Base64 from 'crypto-js/enc-base64'
 import hmacSHA256 from 'crypto-js/hmac-sha256'
 import utf8 from 'crypto-js/enc-utf8'
 import { GameState } from '@knucklebones/common'
-import { Env } from '../types/env'
+import { CloudflareEnvironment } from '../types/cloudflareEnvironment'
 
 type WordArray = ReturnType<typeof utf8.parse>
 
 export async function sendStateThroughAbly(
   gameState: GameState,
-  env: Env,
+  cloudflareEnvironment: CloudflareEnvironment,
   roomId: string
 ) {
-  const ablyJWT = await getAblyJWT(env)
+  const ablyJWT = await getAblyJWT(cloudflareEnvironment)
 
   await fetch(`https://rest.ably.io/channels/${roomId}/messages`, {
     method: 'POST',
@@ -27,12 +27,14 @@ export async function sendStateThroughAbly(
   })
 }
 
-async function getAblyJWT(env: Env) {
-  let ablyJWT = await env.ABLY_JWT_STORE.get('ablyJWT')
+async function getAblyJWT(cloudflareEnvironment: CloudflareEnvironment) {
+  let ablyJWT = await cloudflareEnvironment.ABLY_JWT_STORE.get('ablyJWT')
 
   if (ablyJWT === null) {
-    ablyJWT = createAblyJWT(env.ABLY_SERVER_SIDE_API_KEY)
-    await env.ABLY_JWT_STORE.put('ablyJWT', ablyJWT, { expirationTtl: 3600 })
+    ablyJWT = createAblyJWT(cloudflareEnvironment.ABLY_SERVER_SIDE_API_KEY)
+    await cloudflareEnvironment.ABLY_JWT_STORE.put('ablyJWT', ablyJWT, {
+      expirationTtl: 3600
+    })
   }
 
   return ablyJWT

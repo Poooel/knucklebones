@@ -1,4 +1,4 @@
-export interface Env {
+export interface CloudflareEnvironment {
   ABLY_SERVER_SIDE_API_KEY: string
   ABLY_CLIENT_SIDE_API_KEY: string
   ABLY_JWT_STORE: KVNamespace

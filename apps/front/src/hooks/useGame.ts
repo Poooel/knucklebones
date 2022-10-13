@@ -19,6 +19,7 @@ export function useGame() {
   const [gameState, setGameState] = React.useState<GameState | null>(null)
   const [isLoading, setIsLoading] = React.useState(true)
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
+  const [playerId, setPlayerId] = React.useState<string>()
   const { roomKey, roomId } = useRoom()
 
   const [, client] = useChannel(`[?rewind=1]${roomId}`, (message) => {
@@ -33,9 +34,13 @@ export function useGame() {
     void init(roomKey, client.auth.clientId)
   }, [roomKey, client.auth.clientId])
 
+  React.useEffect(() => {
+    setPlayerId(client.auth.clientId)
+  }, [client.auth.clientId])
+
   const [playerOne, playerTwo] =
-    gameState !== null && client.auth.clientId !== undefined
-      ? attributePlayers(client.auth.clientId, gameState)
+    gameState !== null && playerId !== undefined
+      ? attributePlayers(playerId, gameState)
       : []
 
   async function sendPlay(column: number) {
@@ -50,15 +55,11 @@ export function useGame() {
 
       const previousGameState = gameState
 
-      const mutatedGameState = mutateGameState(
-        body,
-        client.auth.clientId,
-        gameState!
-      )
+      const mutatedGameState = mutateGameState(body, playerId!, gameState!)
 
       setGameState(mutatedGameState)
 
-      await play(roomKey, client.auth.clientId, body).catch((error) => {
+      await play(roomKey, playerId!, body).catch((error) => {
         setErrorMessage(error.message)
         setGameState(previousGameState)
         setIsLoading(false)
@@ -71,11 +72,11 @@ export function useGame() {
   }
 
   async function sendRematch() {
-    await rematch(roomKey, client.auth.clientId)
+    await rematch(roomKey, playerId!)
   }
 
   async function updateDisplayName(newDisplayName: string) {
-    await displayName(roomKey, client.auth.clientId, newDisplayName)
+    await displayName(roomKey, playerId!, newDisplayName)
   }
 
   return {
@@ -88,6 +89,6 @@ export function useGame() {
     clearErrorMessage,
     sendRematch,
     updateDisplayName,
-    clientId: client.auth.clientId
+    playerId
   }
 }

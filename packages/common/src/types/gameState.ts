@@ -10,3 +10,9 @@ export interface GameState {
   nextPlayer?: Player
   rematchVote: string[]
 }
+
+export const emptyGameState: GameState = {
+  logs: [],
+  gameOutcome: 'not-started',
+  rematchVote: []
+}
