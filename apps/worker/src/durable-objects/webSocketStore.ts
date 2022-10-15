@@ -19,6 +19,13 @@ export class WebSocketStore {
 
     switch (url.pathname) {
       case '/websocket': {
+        if (request.headers.get('Upgrade') !== 'websocket') {
+          return new Response(
+            'Expected Upgrade header with websocket value but found nothing',
+            { status: 400 }
+          )
+        }
+
         const [client, server] = Object.values(new WebSocketPair())
 
         await this.handleSession(server)

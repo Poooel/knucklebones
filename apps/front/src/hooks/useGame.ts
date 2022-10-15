@@ -36,15 +36,16 @@ export function useGame() {
     setWebsocketUrl(url)
   }, [roomKey])
 
-  const { lastMessage, readyState } = useWebSocket(websocketUrl)
+  const { lastJsonMessage, readyState } = useWebSocket(websocketUrl)
 
   React.useEffect(() => {
-    if (lastMessage !== null) {
-      setGameState(lastMessage.data)
+    if (lastJsonMessage !== null) {
+      const gameState = JSON.parse(lastJsonMessage) as GameState
+      setGameState(gameState)
       setIsLoading(false)
       setErrorMessage(null)
     }
-  }, [lastMessage])
+  }, [lastJsonMessage])
 
   React.useEffect(() => {
     const fetchGameState = async () => {
