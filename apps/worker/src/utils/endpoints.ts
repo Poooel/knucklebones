@@ -40,10 +40,7 @@ async function broadcast(
   const id = cloudflareEnvironment.WEB_SOCKET_STORE.idFromName(roomId)
   const webSocketStore = cloudflareEnvironment.WEB_SOCKET_STORE.get(id)
 
-  const newUrl = new URL(url)
-  newUrl.pathname = '/broadcast'
-
-  return await webSocketStore.fetch(newUrl.toString(), {
+  return await webSocketStore.fetch('https://dummy-url/broadcast', {
     method: 'POST',
     body: JSON.stringify(gameState)
   })

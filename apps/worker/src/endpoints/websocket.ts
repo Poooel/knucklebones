@@ -12,14 +12,5 @@ export async function websocket(
   const id = cloudflareEnvironment.WEB_SOCKET_STORE.idFromName(roomId)
   const webSocketStore = cloudflareEnvironment.WEB_SOCKET_STORE.get(id)
 
-  const newUrl = new URL(request.url)
-  newUrl.pathname = '/websocket'
-
-  console.log('sent to durable object web socket')
-
-  const response = await webSocketStore.fetch(newUrl.toString(), request)
-
-  console.log('response code', response.statusText)
-
-  return response
+  return await webSocketStore.fetch('https://dummy-url/websocket', request)
 }
