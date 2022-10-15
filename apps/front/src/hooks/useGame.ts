@@ -2,7 +2,7 @@ import * as React from 'react'
 import { GameState, mutateGameState, Player } from '@knucklebones/common'
 import { useRoom } from './useRoom'
 import { displayName, init, play, rematch } from '../utils/api'
-import useWebSocket from 'react-use-websocket'
+import useWebSocket, { ReadyState } from 'react-use-websocket'
 
 function attributePlayers(
   playerId: string,
@@ -36,7 +36,7 @@ export function useGame() {
     setWebsocketUrl(url)
   }, [roomKey])
 
-  const { lastMessage } = useWebSocket(websocketUrl)
+  const { lastMessage, readyState } = useWebSocket(websocketUrl)
 
   React.useEffect(() => {
     if (lastMessage !== null) {
@@ -54,10 +54,12 @@ export function useGame() {
       setErrorMessage(null)
     }
 
-    fetchGameState().catch((error) => {
-      setErrorMessage(error.message)
-    })
-  }, [roomKey, playerId])
+    if (readyState === ReadyState.OPEN) {
+      fetchGameState().catch((error) => {
+        setErrorMessage(error.message)
+      })
+    }
+  }, [roomKey, playerId, readyState])
 
   const [playerOne, playerTwo] =
     gameState !== null && playerId !== undefined
