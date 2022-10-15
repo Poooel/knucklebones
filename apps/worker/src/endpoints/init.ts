@@ -7,9 +7,11 @@ export async function init(
   request: RequestWithProps,
   cloudflareEnvironment: CloudflareEnvironment
 ): Promise<Response> {
-  const { roomId, gameStateStore, gameState, url } = await fetchResources(
-    request
-  )
+  console.log('received request in endpoint')
+
+  const { roomId, gameStateStore, gameState } = await fetchResources(request)
+
+  console.log('fetched resources')
 
   const displayName = request.query?.displayName
   const initializedGameState = initializePlayers(
@@ -22,7 +24,6 @@ export async function init(
     initializedGameState,
     gameStateStore,
     roomId,
-    cloudflareEnvironment,
-    url
+    cloudflareEnvironment
   )
 }

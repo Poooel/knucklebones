@@ -15,7 +15,6 @@ export class WebSocketStore {
   }
 
   async fetch(request: Request) {
-    console.log('received by durable object web socket')
     const url = new URL(request.url)
 
     switch (url.pathname) {
