@@ -6,11 +6,8 @@ import { GameStateStore } from '../workers'
 import { getRoomId } from './room'
 
 export async function fetchResources(request: RequestWithProps) {
-  console.log('getting roomId')
   const roomId = getRoomId(request.roomKey!)
-  console.log('getting gamestatestore')
   const gameStateStore = request.GAME_STATE_STORE.get(roomId)
-  console.log('getting game state')
   const gameState = await gameStateStore.getState()
 
   return {
@@ -39,18 +36,8 @@ async function broadcast(
   const id = cloudflareEnvironment.WEB_SOCKET_STORE.idFromName(roomId)
   const webSocketStore = cloudflareEnvironment.WEB_SOCKET_STORE.get(id)
 
-  console.log('sending to durable object')
-
-  const response = await webSocketStore.fetch(
-    'https://itty-durable/broadcast',
-    {
-      method: 'POST',
-      body: JSON.stringify(gameState)
-    }
-  )
-
-  console.log('response status', response.status)
-  console.log('response status text', response.statusText)
-
-  return response
+  return await webSocketStore.fetch('https://itty-durable/broadcast', {
+    method: 'POST',
+    body: JSON.stringify(gameState)
+  })
 }
