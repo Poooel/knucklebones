@@ -24,11 +24,7 @@ export function QRCode({ dismissModal }: QRCodeProps) {
   return (
     <>
       <Toolbar>
-        <IconButton
-          icon={<QrCodeIcon />}
-          className='lg:hidden'
-          onClick={() => setOpen(true)}
-        />
+        <IconButton icon={<QrCodeIcon />} onClick={() => setOpen(true)} />
       </Toolbar>
       <Transition.Root show={open} as={Fragment}>
         <Dialog as='div' className='relative z-10' onClose={setOpen}>
