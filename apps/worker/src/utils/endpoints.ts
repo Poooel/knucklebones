@@ -41,7 +41,7 @@ async function broadcast(
   const webSocketStore = cloudflareEnvironment.WEB_SOCKET_STORE.get(id)
 
   const newUrl = new URL(url)
-  newUrl.pathname = '/websocket'
+  newUrl.pathname = '/broadcast'
 
   return await webSocketStore.fetch(newUrl.toString(), {
     method: 'POST',
