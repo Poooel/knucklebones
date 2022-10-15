@@ -40,6 +40,7 @@ export function useGame() {
 
   React.useEffect(() => {
     if (lastJsonMessage !== null) {
+      // @ts-expect-error
       const gameState = JSON.parse(lastJsonMessage) as GameState
       setGameState(gameState)
       setIsLoading(false)

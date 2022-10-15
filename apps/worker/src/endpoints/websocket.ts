@@ -12,5 +12,5 @@ export async function websocket(
   const id = cloudflareEnvironment.WEB_SOCKET_STORE.idFromName(roomId)
   const webSocketStore = cloudflareEnvironment.WEB_SOCKET_STORE.get(id)
 
-  return await webSocketStore.fetch('https://itty-durable/websocket', request)
+  return await webSocketStore.fetch('https://dummy-url/websocket', request)
 }

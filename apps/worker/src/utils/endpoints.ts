@@ -36,7 +36,7 @@ async function broadcast(
   const id = cloudflareEnvironment.WEB_SOCKET_STORE.idFromName(roomId)
   const webSocketStore = cloudflareEnvironment.WEB_SOCKET_STORE.get(id)
 
-  return await webSocketStore.fetch('https://itty-durable/broadcast', {
+  return await webSocketStore.fetch('https://dummy-url/broadcast', {
     method: 'POST',
     body: JSON.stringify(gameState)
   })
