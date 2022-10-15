@@ -5,6 +5,7 @@ import { IconButton } from './IconButton'
 import { Fragment } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { QRCodeSVG } from 'qrcode.react'
+import { useClipboard } from 'use-clipboard-copy'
 
 interface QRCodeProps {
   dismissModal: boolean
@@ -12,6 +13,7 @@ interface QRCodeProps {
 
 export function QRCode({ dismissModal }: QRCodeProps) {
   const [open, setOpen] = React.useState(false)
+  const { copy, copied } = useClipboard({ copiedTimeout: 750 })
 
   React.useEffect(() => {
     if (dismissModal) {
@@ -65,9 +67,18 @@ export function QRCode({ dismissModal }: QRCodeProps) {
                       <div className='rounded-lg border-2 border-slate-200 bg-slate-50 p-2 dark:border-0'>
                         <QRCodeSVG value={window.location.href} />
                       </div>
-                      <button className='flex flex-row items-center gap-2 rounded-md border-2 border-slate-200 bg-transparent py-2 px-4 transition-colors duration-100 enabled:hover:bg-black/10 disabled:opacity-50 dark:border-slate-700 enabled:dark:hover:bg-white/10'>
-                        <span>Copy link</span>
-                        <LinkIcon className='aspect-square h-5' />
+                      <button
+                        className='flex flex-row items-center gap-2 rounded-md border-2 border-slate-200 bg-transparent py-2 px-4 transition-colors duration-100 enabled:hover:bg-black/10 disabled:opacity-50 dark:border-slate-700 enabled:dark:hover:bg-white/10'
+                        onClick={() => copy(window.location.href)}
+                      >
+                        {copied ? (
+                          <span>Copied!</span>
+                        ) : (
+                          <>
+                            <span>Copy link</span>
+                            <LinkIcon className='aspect-square h-5' />
+                          </>
+                        )}
                       </button>
                     </div>
                   </div>
