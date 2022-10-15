@@ -1,11 +1,11 @@
 import * as React from 'react'
-import { clsx } from 'clsx'
 import {
   SunIcon,
   MoonIcon,
   ComputerDesktopIcon
 } from '@heroicons/react/24/outline'
 import { IconButton } from './IconButton'
+import { Toolbar } from './Toolbar'
 
 type Themes = 'dark' | 'light' | 'default'
 
@@ -23,9 +23,12 @@ function ThemeIcon({ theme }: ThemeIconButtonProps) {
   return <ComputerDesktopIcon />
 }
 
-export function Theme({ children }: React.PropsWithChildren) {
+interface ThemeProps {
+  setDarkMode(darkMode: boolean): void
+}
+
+export function Theme({ setDarkMode }: ThemeProps) {
   const [theme, setTheme] = React.useState<Themes>('default')
-  const [isDarkMode, setIsDarkMode] = React.useState(false)
 
   function changeTheme() {
     let localTheme: Themes = 'dark'
@@ -45,17 +48,18 @@ export function Theme({ children }: React.PropsWithChildren) {
       '(prefers-color-scheme: dark)'
     ).matches
     if (localTheme === 'dark') {
-      setIsDarkMode(true)
+      setDarkMode(true)
     } else if (localTheme === 'light') {
-      setIsDarkMode(false)
+      setDarkMode(false)
     } else {
-      setIsDarkMode(hasDarkMode)
+      setDarkMode(hasDarkMode)
     }
   }
 
   // Update the dark mode and the local storage when theme changes
   React.useEffect(() => {
     computeDarkMode(theme)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [theme])
 
   // On initial mount, we read from the local storage to update the theme
@@ -66,6 +70,7 @@ export function Theme({ children }: React.PropsWithChildren) {
     } else {
       computeDarkMode('default')
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // Detects theme changes and update the theme if using the default theme
@@ -83,14 +88,12 @@ export function Theme({ children }: React.PropsWithChildren) {
     return () => {
       mediaQuery.removeEventListener('change', update)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [theme])
 
   return (
-    <div className={clsx({ dark: isDarkMode })}>
-      {children}
-      <div className='absolute top-0 right-0 p-4'>
-        <IconButton icon={<ThemeIcon theme={theme} />} onClick={changeTheme} />
-      </div>
-    </div>
+    <Toolbar>
+      <IconButton icon={<ThemeIcon theme={theme} />} onClick={changeTheme} />
+    </Toolbar>
   )
 }
