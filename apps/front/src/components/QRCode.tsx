@@ -57,7 +57,7 @@ export function QRCode({ dismissModal }: QRCodeProps) {
                       as='h3'
                       className='text-center text-lg font-medium leading-6'
                     >
-                      Scan the QR Code to share the room with the other player
+                      Scan the QR Code to share the room with other players
                     </Dialog.Title>
                     <div className='flex flex-col items-center justify-center gap-6'>
                       <div className='rounded-lg border-2 border-slate-200 bg-slate-50 p-2 dark:border-0'>
