@@ -18,7 +18,7 @@ router
   .all('*', withDurables({ parse: true }))
   .options('*', preflight)
 
-  .get('/auth', withParams, auth)
+  .get('/auth/:playerId?', withParams, auth)
   .get('/:roomKey/:playerId/init', withParams, init)
   .post('/:roomKey/:playerId/play', withParams, withContent, play)
   .post('/:roomKey/:playerId/rematch/', withParams, rematch)
