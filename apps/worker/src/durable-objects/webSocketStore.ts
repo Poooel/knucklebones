@@ -33,7 +33,7 @@ export class WebSocketStore {
         return new Response(null, { status: 101, webSocket: client })
       }
       case '/broadcast': {
-        this.broadcast(JSON.stringify(await request.text()))
+        this.broadcast(await request.text())
         return new Response(null, { status: 200 })
       }
       default:
