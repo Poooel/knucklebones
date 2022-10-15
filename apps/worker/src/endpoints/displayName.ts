@@ -8,7 +8,9 @@ export async function displayName(
   request: RequestWithProps,
   cloudflareEnvironment: CloudflareEnvironment
 ): Promise<Response> {
-  const { roomId, gameStateStore, gameState } = await fetchResources(request)
+  const { roomId, gameStateStore, gameState, url } = await fetchResources(
+    request
+  )
 
   const displayNameUpdate = request.content! as DisplayNameUpdate
 
@@ -22,8 +24,9 @@ export async function displayName(
 
   return await saveAndPropagate(
     gameState,
-    roomId,
     gameStateStore,
-    cloudflareEnvironment
+    roomId,
+    cloudflareEnvironment,
+    url
   )
 }

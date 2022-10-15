@@ -8,7 +8,9 @@ export async function rematch(
   request: RequestWithProps,
   cloudflareEnvironment: CloudflareEnvironment
 ): Promise<Response> {
-  const { roomId, gameStateStore, gameState } = await fetchResources(request)
+  const { roomId, gameStateStore, gameState, url } = await fetchResources(
+    request
+  )
 
   let mutatedGameState = gameState
 
@@ -36,8 +38,9 @@ export async function rematch(
 
   return await saveAndPropagate(
     mutatedGameState,
-    roomId,
     gameStateStore,
-    cloudflareEnvironment
+    roomId,
+    cloudflareEnvironment,
+    url
   )
 }

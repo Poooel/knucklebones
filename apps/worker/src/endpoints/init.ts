@@ -7,7 +7,9 @@ export async function init(
   request: RequestWithProps,
   cloudflareEnvironment: CloudflareEnvironment
 ): Promise<Response> {
-  const { roomId, gameStateStore, gameState } = await fetchResources(request)
+  const { roomId, gameStateStore, gameState, url } = await fetchResources(
+    request
+  )
 
   const displayName = request.query?.displayName
   const initializedGameState = initializePlayers(
@@ -18,8 +20,9 @@ export async function init(
 
   return await saveAndPropagate(
     initializedGameState,
-    roomId,
     gameStateStore,
-    cloudflareEnvironment
+    roomId,
+    cloudflareEnvironment,
+    url
   )
 }

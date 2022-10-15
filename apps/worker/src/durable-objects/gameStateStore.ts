@@ -1,13 +1,16 @@
 import { createDurable } from 'itty-durable'
 import { GameState, emptyGameState } from '@knucklebones/common'
-import { Env } from '../types/cloudflareEnvironment'
+import { CloudflareEnvironment } from '../types/cloudflareEnvironment'
 import { IttyDurableObjectNamespace } from '../types/itty'
 
 export class GameStateStore extends createDurable({ autoPersist: true }) {
   gameState: GameState
 
-  constructor(state: DurableObjectState, env: Env) {
-    super(state, env)
+  constructor(
+    state: DurableObjectState,
+    cloudflareEnvironment: CloudflareEnvironment
+  ) {
+    super(state, cloudflareEnvironment)
     this.gameState = emptyGameState
   }
 

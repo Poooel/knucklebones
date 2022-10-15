@@ -6,9 +6,11 @@ import {
 } from 'itty-router-extras'
 import { withDurables } from 'itty-durable'
 import { createCors } from 'itty-cors'
-import { auth, displayName, init, play, rematch } from '../endpoints'
+import { displayName, init, play, rematch, websocket } from '../endpoints'
+import { CloudflareEnvironment } from '../types/cloudflareEnvironment'
 
 export { GameStateStore } from '../durable-objects/gameStateStore'
+export { WebSocketStore } from '../durable-objects/webSocketStore'
 
 const router = ThrowableRouter()
 // @ts-expect-error
@@ -18,7 +20,6 @@ router
   .all('*', withDurables({ parse: true }))
   .options('*', preflight)
 
-  .get('/auth/:playerId?', withParams, auth)
   .get('/:roomKey/:playerId/init', withParams, init)
   .post('/:roomKey/:playerId/play', withParams, withContent, play)
   .post('/:roomKey/:playerId/rematch/', withParams, rematch)
@@ -27,6 +28,14 @@ router
   .all('*', () => missing('Are you sure about that?'))
 
 export default {
-  // @ts-expect-error
-  fetch: async (...args) => await router.handle(...args).then(corsify)
+  async fetch(request: Request, cloudflareEnvironment: CloudflareEnvironment) {
+    const websocketEndpointRegex = /\/[a-zA-Z0-9-]+\/websocket/
+    const pathname = new URL(request.url).pathname
+
+    if (websocketEndpointRegex.test(pathname)) {
+      return await websocket(request, cloudflareEnvironment)
+    }
+
+    return await router.handle(request, cloudflareEnvironment).then(corsify)
+  }
 }

@@ -7,15 +7,18 @@ export async function play(
   request: RequestWithProps,
   cloudflareEnvironment: CloudflareEnvironment
 ): Promise<Response> {
-  const { roomId, gameStateStore, gameState } = await fetchResources(request)
+  const { roomId, gameStateStore, gameState, url } = await fetchResources(
+    request
+  )
 
   const play = request.content! as Play
   const mutatedGameState = mutateGameState(play, request.playerId!, gameState)
 
   return await saveAndPropagate(
     mutatedGameState,
-    roomId,
     gameStateStore,
-    cloudflareEnvironment
+    roomId,
+    cloudflareEnvironment,
+    url
   )
 }

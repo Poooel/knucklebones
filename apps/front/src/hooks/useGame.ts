@@ -1,9 +1,8 @@
 import * as React from 'react'
-import { useChannel } from '@ably-labs/react-hooks'
 import { GameState, mutateGameState, Player } from '@knucklebones/common'
-import { isItGameStateMessage } from '../utils/messages'
 import { useRoom } from './useRoom'
 import { displayName, init, play, rematch } from '../utils/api'
+import useWebSocket from 'react-use-websocket'
 
 function attributePlayers(
   playerId: string,
@@ -19,24 +18,46 @@ export function useGame() {
   const [gameState, setGameState] = React.useState<GameState | null>(null)
   const [isLoading, setIsLoading] = React.useState(true)
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
-  const [playerId, setPlayerId] = React.useState<string>()
-  const { roomKey, roomId } = useRoom()
+  const [websocketUrl, setWebsocketUrl] = React.useState<string | null>(null)
+  const { roomKey } = useRoom()
+  const playerId = localStorage.getItem('clientId')!
 
-  const [, client] = useChannel(`[?rewind=1]${roomId}`, (message) => {
-    if (isItGameStateMessage(message)) {
-      setGameState(message.data)
+  React.useEffect(() => {
+    let hostname = import.meta.env.VITE_WORKER_URL
+
+    if (hostname.startsWith('http://')) {
+      hostname = hostname.replace('http', 'ws')
+    } else if (hostname.startsWith('https://')) {
+      hostname = hostname.replace('https', 'wss')
+    }
+
+    const url = `${hostname}/${roomKey}/websocket`
+
+    setWebsocketUrl(url)
+  }, [roomKey])
+
+  const { lastMessage } = useWebSocket(websocketUrl)
+
+  React.useEffect(() => {
+    if (lastMessage !== null) {
+      setGameState(lastMessage.data)
       setIsLoading(false)
       setErrorMessage(null)
     }
-  })
+  }, [lastMessage])
 
   React.useEffect(() => {
-    void init(roomKey, client.auth.clientId)
-  }, [roomKey, client.auth.clientId])
+    const fetchGameState = async () => {
+      const gameState = await init(roomKey, playerId)
+      setGameState(gameState)
+      setIsLoading(false)
+      setErrorMessage(null)
+    }
 
-  React.useEffect(() => {
-    setPlayerId(client.auth.clientId)
-  }, [client.auth.clientId])
+    fetchGameState().catch((error) => {
+      setErrorMessage(error.message)
+    })
+  }, [roomKey, playerId])
 
   const [playerOne, playerTwo] =
     gameState !== null && playerId !== undefined
@@ -55,11 +76,11 @@ export function useGame() {
 
       const previousGameState = gameState
 
-      const mutatedGameState = mutateGameState(body, playerId!, gameState!)
+      const mutatedGameState = mutateGameState(body, playerId, gameState!)
 
       setGameState(mutatedGameState)
 
-      await play(roomKey, playerId!, body).catch((error) => {
+      await play(roomKey, playerId, body).catch((error) => {
         setErrorMessage(error.message)
         setGameState(previousGameState)
         setIsLoading(false)
@@ -72,11 +93,15 @@ export function useGame() {
   }
 
   async function sendRematch() {
-    await rematch(roomKey, playerId!)
+    await rematch(roomKey, playerId).catch((error) => {
+      setErrorMessage(error.message)
+    })
   }
 
   async function updateDisplayName(newDisplayName: string) {
-    await displayName(roomKey, playerId!, newDisplayName)
+    await displayName(roomKey, playerId, newDisplayName).catch((error) => {
+      setErrorMessage(error.message)
+    })
   }
 
   return {
