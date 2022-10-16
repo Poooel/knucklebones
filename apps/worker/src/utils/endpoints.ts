@@ -1,39 +1,31 @@
 import { GameState } from '@knucklebones/common'
 import { json } from 'itty-router-extras'
 import { CloudflareEnvironment } from '../types/cloudflareEnvironment'
-import { PromisifyPublicFunctions, RequestWithProps } from '../types/itty'
-import { GameStateStore } from '../workers'
-import { getRoomId } from './room'
+import { RequestWithProps } from '../types/itty'
 
-export async function fetchResources(request: RequestWithProps) {
-  const roomId = getRoomId(request.roomKey!)
-  const gameStateStore = request.GAME_STATE_STORE.get(roomId)
-  const gameState = await gameStateStore.getState()
-
-  return {
-    roomId,
-    gameStateStore,
-    gameState
-  }
+export async function getGameState(request: RequestWithProps) {
+  const gameStateStore = request.GAME_STATE_STORE.get(request.roomKey!)
+  return await gameStateStore.getState()
 }
 
 export async function saveAndPropagate(
   gameState: GameState,
-  gameStateStore: PromisifyPublicFunctions<GameStateStore>,
-  roomId: string,
+  request: RequestWithProps,
   cloudflareEnvironment: CloudflareEnvironment
 ) {
+  const roomKey = request.roomKey!
+  const gameStateStore = request.GAME_STATE_STORE.get(roomKey)
   await gameStateStore.save(gameState)
-  await broadcast(gameState, roomId, cloudflareEnvironment)
+  await broadcast(gameState, roomKey, cloudflareEnvironment)
   return json(gameState)
 }
 
 async function broadcast(
   gameState: GameState,
-  roomId: string,
+  roomKey: string,
   cloudflareEnvironment: CloudflareEnvironment
 ) {
-  const id = cloudflareEnvironment.WEB_SOCKET_STORE.idFromName(roomId)
+  const id = cloudflareEnvironment.WEB_SOCKET_STORE.idFromName(roomKey)
   const webSocketStore = cloudflareEnvironment.WEB_SOCKET_STORE.get(id)
 
   return await webSocketStore.fetch('https://dummy-url/broadcast', {

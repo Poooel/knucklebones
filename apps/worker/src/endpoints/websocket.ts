@@ -1,15 +1,15 @@
 import { CloudflareEnvironment } from '../types/cloudflareEnvironment'
-import { getRoomId } from '../utils/room'
 
-export async function websocket(
+export async function webSocket(
   request: Request,
   cloudflareEnvironment: CloudflareEnvironment
 ): Promise<Response> {
   const pathname = new URL(request.url).pathname
-  const roomKey = pathname.split('/').filter((x) => x)[0]
-  const roomId = getRoomId(roomKey)
+  // slice(1) removes leading slash
+  // so no empty entries when splitting
+  const roomKey = pathname.slice(1).split('/')[0]
 
-  const id = cloudflareEnvironment.WEB_SOCKET_STORE.idFromName(roomId)
+  const id = cloudflareEnvironment.WEB_SOCKET_STORE.idFromName(roomKey)
   const webSocketStore = cloudflareEnvironment.WEB_SOCKET_STORE.get(id)
 
   return await webSocketStore.fetch('https://dummy-url/websocket', request)

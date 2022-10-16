@@ -1,13 +1,13 @@
 import { initializePlayers } from '@knucklebones/common'
 import { CloudflareEnvironment } from '../types/cloudflareEnvironment'
 import { RequestWithProps } from '../types/itty'
-import { fetchResources, saveAndPropagate } from '../utils/endpoints'
+import { getGameState, saveAndPropagate } from '../utils/endpoints'
 
 export async function init(
   request: RequestWithProps,
   cloudflareEnvironment: CloudflareEnvironment
 ): Promise<Response> {
-  const { roomId, gameStateStore, gameState } = await fetchResources(request)
+  const gameState = await getGameState(request)
 
   const displayName = request.query?.displayName
   const initializedGameState = initializePlayers(
@@ -18,8 +18,7 @@ export async function init(
 
   return await saveAndPropagate(
     initializedGameState,
-    gameStateStore,
-    roomId,
+    request,
     cloudflareEnvironment
   )
 }

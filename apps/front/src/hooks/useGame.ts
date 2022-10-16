@@ -1,8 +1,12 @@
 import * as React from 'react'
 import { GameState, mutateGameState, Player } from '@knucklebones/common'
-import { useRoom } from './useRoom'
 import { displayName, init, play, rematch } from '../utils/api'
 import useWebSocket, { ReadyState } from 'react-use-websocket'
+import { useParams } from 'react-router-dom'
+
+interface Params {
+  roomKey: string
+}
 
 function attributePlayers(
   playerId: string,
@@ -14,29 +18,26 @@ function attributePlayers(
   return [gameState.playerTwo, gameState.playerOne]
 }
 
+function getWebSocketUrl(roomKey: string) {
+  let hostname = import.meta.env.VITE_WORKER_URL
+
+  if (hostname.startsWith('http://')) {
+    hostname = hostname.replace('http', 'ws')
+  } else if (hostname.startsWith('https://')) {
+    hostname = hostname.replace('https', 'wss')
+  }
+
+  return `${hostname}/${roomKey}/websocket`
+}
+
 export function useGame() {
   const [gameState, setGameState] = React.useState<GameState | null>(null)
   const [isLoading, setIsLoading] = React.useState(true)
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
-  const [websocketUrl, setWebsocketUrl] = React.useState<string | null>(null)
-  const { roomKey } = useRoom()
+  const { roomKey } = useParams<keyof Params>() as Params
   const playerId = localStorage.getItem('clientId')!
 
-  React.useEffect(() => {
-    let hostname = import.meta.env.VITE_WORKER_URL
-
-    if (hostname.startsWith('http://')) {
-      hostname = hostname.replace('http', 'ws')
-    } else if (hostname.startsWith('https://')) {
-      hostname = hostname.replace('https', 'wss')
-    }
-
-    const url = `${hostname}/${roomKey}/websocket`
-
-    setWebsocketUrl(url)
-  }, [roomKey])
-
-  const { lastJsonMessage, readyState } = useWebSocket(websocketUrl)
+  const { lastJsonMessage, readyState } = useWebSocket(getWebSocketUrl(roomKey))
 
   React.useEffect(() => {
     if (lastJsonMessage !== null) {
@@ -49,14 +50,14 @@ export function useGame() {
   }, [lastJsonMessage])
 
   React.useEffect(() => {
-    const fetchGameState = async () => {
-      const gameState = await init(roomKey, playerId)
-      setGameState(gameState)
-      setIsLoading(false)
-      setErrorMessage(null)
-    }
-
     if (readyState === ReadyState.OPEN) {
+      const fetchGameState = async () => {
+        const gameState = await init(roomKey, playerId)
+        setGameState(gameState)
+        setIsLoading(false)
+        setErrorMessage(null)
+      }
+
       fetchGameState().catch((error) => {
         setErrorMessage(error.message)
       })

@@ -1,8 +1,8 @@
 name = "knuclebones-worker"
 main = "dist/index.mjs"
 compatibility_date = "2022-09-08"
-usage_model = "unbound"
-workers_dev = true
+usage_model = "bundled"
+workers_dev = false
 
 durable_objects.bindings = [
   { name = "GAME_STATE_STORE", class_name = "GameStateStore" },

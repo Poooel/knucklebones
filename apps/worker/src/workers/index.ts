@@ -6,7 +6,7 @@ import {
 } from 'itty-router-extras'
 import { withDurables } from 'itty-durable'
 import { createCors } from 'itty-cors'
-import { displayName, init, play, rematch, websocket } from '../endpoints'
+import { displayName, init, play, rematch, webSocket } from '../endpoints'
 import { CloudflareEnvironment } from '../types/cloudflareEnvironment'
 
 export { GameStateStore } from '../durable-objects/gameStateStore'
@@ -29,13 +29,16 @@ router
 
 export default {
   async fetch(request: Request, cloudflareEnvironment: CloudflareEnvironment) {
-    const websocketEndpointRegex = /\/[a-zA-Z0-9-]+\/websocket/
-    const pathname = new URL(request.url).pathname
-
-    if (websocketEndpointRegex.test(pathname)) {
-      return await websocket(request, cloudflareEnvironment)
+    if (isWebSocketEndpointCalled(request)) {
+      return await webSocket(request, cloudflareEnvironment)
     }
 
     return await router.handle(request, cloudflareEnvironment).then(corsify)
   }
+}
+
+function isWebSocketEndpointCalled(request: Request) {
+  const webSocketEndpointRegex = /\/[a-zA-Z0-9-]+\/websocket/
+  const pathname = new URL(request.url).pathname
+  return webSocketEndpointRegex.test(pathname)
 }

@@ -1,7 +1,12 @@
 import { CloudflareEnvironment } from '../types/cloudflareEnvironment'
 
+interface Session {
+  webSocket: WebSocket
+  quit: boolean
+}
+
 export class WebSocketStore {
-  sessions: Array<{ webSocket: WebSocket; quit: boolean }>
+  sessions: Session[]
   state: DurableObjectState
   cloudflareEnvironment: CloudflareEnvironment
 
@@ -21,7 +26,7 @@ export class WebSocketStore {
       case '/websocket': {
         if (request.headers.get('Upgrade') !== 'websocket') {
           return new Response(
-            'Expected Upgrade header with websocket value but found nothing',
+            'Expected Upgrade header with webSocket value but found nothing',
             { status: 400 }
           )
         }
