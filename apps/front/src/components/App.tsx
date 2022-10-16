@@ -16,8 +16,8 @@ export function App() {
   }
 
   React.useEffect(() => {
-    if (localStorage.getItem('clientId') === null) {
-      localStorage.setItem('clientId', randomName())
+    if (localStorage.getItem('playerId') === null) {
+      localStorage.setItem('playerId', randomName())
     }
   }, [])
 

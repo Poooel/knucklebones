@@ -35,7 +35,7 @@ export function useGame() {
   const [isLoading, setIsLoading] = React.useState(true)
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
   const { roomKey } = useParams<keyof Params>() as Params
-  const playerId = localStorage.getItem('clientId')!
+  const playerId = localStorage.getItem('playerId')!
 
   const { lastJsonMessage, readyState } = useWebSocket(getWebSocketUrl(roomKey))
 
