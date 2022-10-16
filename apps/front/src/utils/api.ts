@@ -44,11 +44,13 @@ async function sendApiRequest(path: string, method: Method, body?: any) {
     headers,
     ...(body !== undefined && { body: JSON.stringify(body) })
   })
-    .then((resp) => {
+    .then(async (resp) => {
       if (!resp.ok) {
         throw new Error(
           `[${resp.status}:${resp.statusText}] There was an error while doing a network call. Please try again.`
         )
+      } else {
+        return await resp.json()
       }
     })
     .catch(() => {

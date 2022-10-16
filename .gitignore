@@ -22,3 +22,4 @@ dist-ssr
 .dev.vars
 .turbo
 .env.local.development
+*.wrangler

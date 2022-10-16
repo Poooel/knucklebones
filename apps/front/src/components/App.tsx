@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { BrowserRouter } from 'react-router-dom'
-import { Ably } from './Ably'
+import { randomName } from '../utils/randomName'
 import { Container } from './Container'
 import { Router } from './Router'
 import { Theme } from './Theme'
@@ -15,15 +15,19 @@ export function App() {
     }
   }
 
+  React.useEffect(() => {
+    if (localStorage.getItem('playerId') === null) {
+      localStorage.setItem('playerId', randomName())
+    }
+  }, [])
+
   return (
     <>
       <ToolbarContainer />
       <Container>
-        <Ably>
-          <BrowserRouter>
-            <Router />
-          </BrowserRouter>
-        </Ably>
+        <BrowserRouter>
+          <Router />
+        </BrowserRouter>
       </Container>
       <Theme setDarkMode={setDarkMode} />
     </>

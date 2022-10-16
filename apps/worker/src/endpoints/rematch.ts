@@ -2,13 +2,13 @@ import { emptyGameState, initializePlayers } from '@knucklebones/common'
 import { error } from 'itty-router-extras'
 import { CloudflareEnvironment } from '../types/cloudflareEnvironment'
 import { RequestWithProps } from '../types/itty'
-import { fetchResources, saveAndPropagate } from '../utils/endpoints'
+import { getGameState, saveAndPropagate } from '../utils/endpoints'
 
 export async function rematch(
   request: RequestWithProps,
   cloudflareEnvironment: CloudflareEnvironment
 ): Promise<Response> {
-  const { roomId, gameStateStore, gameState } = await fetchResources(request)
+  const gameState = await getGameState(request)
 
   let mutatedGameState = gameState
 
@@ -36,8 +36,7 @@ export async function rematch(
 
   return await saveAndPropagate(
     mutatedGameState,
-    roomId,
-    gameStateStore,
+    request,
     cloudflareEnvironment
   )
 }

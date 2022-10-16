@@ -6,19 +6,15 @@
   "module": "./dist/index.mjs",
   "scripts": {
     "build": "node build.js",
-    "dev": "wrangler dev",
+    "dev": "wrangler dev --local --persist",
     "publish:staging": "wrangler publish --env staging",
     "publish:prod": "wrangler publish --env production"
   },
   "dependencies": {
-    "@cloudflare/pages-plugin-sentry": "^1.0.0",
     "@knucklebones/common": "*",
-    "ably": "^1.2.29",
-    "crypto-js": "^4.1.1",
     "itty-cors": "^0.1.0",
     "itty-durable": "^1.2.0",
     "itty-router": "^2.6.5",
-    "itty-router-extras": "^0.4.2",
-    "unique-names-generator": "^4.7.1"
+    "itty-router-extras": "^0.4.2"
   }
 }

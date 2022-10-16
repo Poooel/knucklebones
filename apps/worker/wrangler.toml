@@ -1,16 +1,12 @@
 name = "knuclebones-worker"
 main = "dist/index.mjs"
 compatibility_date = "2022-09-08"
-node_compat = true
 usage_model = "bundled"
 workers_dev = false
 
-kv_namespaces = [
-  { binding = "ABLY_JWT_STORE", id = "0de1b2bd0f3a442896830de217b8552b", preview_id = "d25f79e1f783418e9b0da7e4d0357259" }
-]
-
 durable_objects.bindings = [
-  { name = "GAME_STATE_STORE", class_name = "GameStateStore" }
+  { name = "GAME_STATE_STORE", class_name = "GameStateStore" },
+  { name = "WEB_SOCKET_STORE", class_name = "WebSocketStore" }
 ]
 
 [build]
@@ -20,22 +16,22 @@ command = "yarn build"
 tag = "v1"
 new_classes = ["GameStateStore"]
 
+[[migrations]]
+tag = "v2"
+new_classes = ["WebSocketStore"]
+
 [env.staging]
 name = "knucklebones-worker-staging"
 route = { pattern = "staging.api.knucklebones.io", custom_domain = true, zone_name = "knucklebones.io" }
-kv_namespaces = [
-  { binding = "ABLY_JWT_STORE", id = "0de1b2bd0f3a442896830de217b8552b" }
-]
 durable_objects.bindings = [
-  { name = "GAME_STATE_STORE", class_name = "GameStateStore" }
+  { name = "GAME_STATE_STORE", class_name = "GameStateStore" },
+  { name = "WEB_SOCKET_STORE", class_name = "WebSocketStore" }
 ]
 
 [env.production]
 name = "knucklebones-worker-production"
 route = { pattern = "api.knucklebones.io", custom_domain = true, zone_name = "knucklebones.io" }
-kv_namespaces = [
-  { binding = "ABLY_JWT_STORE", id = "0de1b2bd0f3a442896830de217b8552b" }
-]
 durable_objects.bindings = [
-  { name = "GAME_STATE_STORE", class_name = "GameStateStore" }
+  { name = "GAME_STATE_STORE", class_name = "GameStateStore" },
+  { name = "WEB_SOCKET_STORE", class_name = "WebSocketStore" }
 ]
