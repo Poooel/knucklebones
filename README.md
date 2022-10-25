@@ -1,48 +1,33 @@
-# knucklebones
+<p align="center">
+  <a href="https://knucklebones.io" target="_blank">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="./.github/logo-dark.svg">
+      <source media="(prefers-color-scheme: light)" srcset="./.github/logo-light.svg">
+      <img alt="Knucklebones" src="./.github/logo-light.svg" width="350" height="70" style="max-width: 100%;">
+    </picture>
+  </a>
+</p>
 
-Inspired by the Knucklebones mini game from Cult of the Lamb.
+<p align="center">
+  From the Knucklebones dice game in <a href="https://www.cultofthelamb.com/" target="_blank">Cult of the Lamb</a>.
+</p>
 
-Hosted on [knucklebones.io](https://knucklebones.io/), via CloudFlare pages ([specific deployment for Vite](https://developers.cloudflare.com/pages/framework-guides/deploy-a-vite3-project/)).
+---
 
-Built with React, Vite, TypeScript, Turbo, Tailwind and Ably (messaging system).
+You can find the game at [knucklebones.io](https://knucklebones.io/).
 
-## Folder structure
+The frontend is built with: [React](https://reactjs.org/), [Vite](https://vitejs.dev/) & [Tailwind CSS](https://tailwindcss.com/).
 
-This repository is a monorepo, and uses `turbo` is used to orchestrate the commands across apps (e.g. `dev` and `build`) in a fast manner, and cache them when needed.
+The backend is built with: [Cloudflare Workers](https://developers.cloudflare.com/workers/) & [Durable Objects](https://developers.cloudflare.com/workers/runtime-apis/durable-objects/)
 
-### `apps`
+The frontend is hosted with [Cloudflare Pages](https://developers.cloudflare.com/pages/) while the backend is a Cloudflare Worker.
 
-Projects within this folder are applications meant to be run:
+All of it is written with [TypeScript](https://www.typescriptlang.org/).
 
-- `worker` is running on CloudFlare and serves as the back-end of the application, storing and serving the game state;
-- `front` is served by CloudFlare and running on the browser, rendering the game on the client side.
+## Repository structure
 
-### `packages`
+We use [TurboRepo](https://turbo.build/) to manage our monorepo.
 
-Projects within this folder are libraries, code that is not run directly but used in applications:
+The `apps` directory contains the React application (`front`) and the Cloudflare Worker (`worker`) (along with the definition of the Durable Object).
 
-- `common` is a set of types and utilities shared across the `apps`.
-
-### Root level
-
-The root level is used for configuration files that are shared across `apps` and `packages`, and a central point for commands via `turbo`.
-
-Configuration files include but are not limited to: `eslint`, `prettier`, `tsconfig` (the base file is imported when needed), `turbo`.
-
-> Note: `devDependencies` should all be installed at the root level, while bundled dependencies should be installed within the project that are using them.
-
-## Development
-
-Install the dependencies with:
-
-```sh
-yarn install
-```
-
-Be sure that you have a `.dev.vars` file within the `/apps/worker` folder. It must define a value for `ABLY_CLIENT_SIDE_API_KEY` and `ABLY_SERVER_SIDE_API_KEY`, which will be used as an environment variables when running the worker.
-
-Then, to start the apps (page and worker), run:
-
-```sh
-yarn dev
-```
+The `packages` directory contains code that's shared between the React application and Cloudflare worker.
