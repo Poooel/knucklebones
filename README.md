@@ -26,7 +26,7 @@ All of it is written with [TypeScript](https://www.typescriptlang.org/).
 
 ## Repository structure
 
-We use [TurboRepo](https://turbo.build/) to manage our monorepo.
+We use [Turborepo](https://turbo.build/) to manage our monorepo.
 
 The `apps` directory contains the React application (`front`) and the Cloudflare Worker (`worker`) (along with the definition of the Durable Object).
 
