@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  From the Knucklebones dice game in <a href="https://www.cultofthelamb.com/" target="_blank">Cult of the Lamb</a>.
+  The Knucklebones dice game in <a href="https://www.cultofthelamb.com/" target="_blank">Cult of the Lamb</a>.
 </p>
 
 ---
