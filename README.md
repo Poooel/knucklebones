@@ -3,7 +3,7 @@
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="./.github/logo-dark.svg">
       <source media="(prefers-color-scheme: light)" srcset="./.github/logo-light.svg">
-      <img alt="Knucklebones" src="./.github/logo-light.svg" width="350" height="70" style="max-width: 100%;">
+      <img alt="Knucklebones" src="./.github/logo-light.svg" width="525" height="105" style="max-width: 100%;">
     </picture>
   </a>
 </p>
