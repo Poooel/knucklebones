@@ -23,3 +23,4 @@ dist-ssr
 .turbo
 .env.local.development
 *.wrangler
+.env
