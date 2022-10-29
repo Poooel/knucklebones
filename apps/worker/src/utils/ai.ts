@@ -6,14 +6,18 @@ interface Move {
   score: number
 }
 
-type MoveArray = Array<Move | null>
+const WORST_MOVE: Move = {
+  gain: Number.MIN_SAFE_INTEGER,
+  risk: Number.MAX_SAFE_INTEGER,
+  score: Number.MIN_SAFE_INTEGER
+}
 
 export function computeScoresForAi(
   playerOne: Player,
   playerTwo: Player,
   nextDice: number
 ) {
-  const scorePerColumns: MoveArray = []
+  const scorePerColumns: Move[] = []
 
   console.log('Computing scores for next move for: ', playerOne.id)
 
@@ -29,42 +33,67 @@ export function computeScoresForAi(
       scorePerColumns.push(scoreForColumn)
     } else {
       console.log('Column is full')
-      scorePerColumns.push(null)
+      scorePerColumns.push(WORST_MOVE)
     }
     console.log()
   })
 
-  console.log('Recommended move: ')
+  console.log(
+    'Recommended offensive move: ',
+    findRecommendedMove(scorePerColumns, 'offensive')
+  )
+  console.log(
+    'Recommended defensive move: ',
+    findRecommendedMove(scorePerColumns, 'defensive')
+  )
 
-  console.log()
-
-  return scorePerColumns
+  return scorePerColumns.map((item) =>
+    item.score === Number.MIN_SAFE_INTEGER ? NaN : item.score
+  )
 }
 
 // offensive: optimize gain; defensive: optimize risk
-type Strategy = 'offensive' | 'defensive'
-
-function findRecommendedMove(scorePerColumns: MoveArray, strategy: Strategy) {
-  const recommendedMove = Math.max(
-    ...scorePerColumns.map((value) => value?.score ?? 0)
+function findRecommendedMove(
+  scorePerColumns: Move[],
+  strategy: 'offensive' | 'defensive'
+): Move {
+  const recommendedMove = scorePerColumns.reduce((max, current) =>
+    current.score > max.score ? current : max
   )
+  // const recommendedMove = optimize(scorePerColumns, 'score', 'maximize')
   const duplicates = scorePerColumns.filter(
-    (value) => value?.score === recommendedMove
+    (value) => value.score === recommendedMove.score
   )
 
   if (duplicates.length > 1) {
     if (strategy === 'offensive') {
       return duplicates.reduce((max, current) =>
-        (current?.gain ?? 0) > (max?.gain ?? 0) ? current : max
+        current.gain > max.gain ? current : max
       )
+      // return optimize(duplicates, 'gain', 'maximize')
     } else {
-      return duplicates.reduce((max, current) =>
-        (current?.risk ?? 0) < (max?.risk ?? 0) ? current : max
+      return duplicates.reduce((min, current) =>
+        current.risk < min.risk ? current : min
       )
+      // return optimize(duplicates, 'gain', 'minimize')
     }
   } else {
     return recommendedMove
   }
+}
+
+function optimize<T extends Object>(
+  array: T[],
+  key: keyof T,
+  strategy: 'minimize' | 'maximize'
+) {
+  return array.reduce((acc, current) => {
+    if (strategy === 'minimize') {
+      return current[key] < acc[key] ? current : acc
+    } else {
+      return current[key] > acc[key] ? current : acc
+    }
+  })
 }
 
 function computeScoreForColumn(
