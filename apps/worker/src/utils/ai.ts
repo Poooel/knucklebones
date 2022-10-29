@@ -1,5 +1,4 @@
 import { countDiceInColumn, getColumnScore, Player } from '@knucklebones/common'
-import { status } from 'itty-router-extras'
 
 interface Move {
   gain: number
@@ -42,9 +41,10 @@ export function computeScoresForAi(
   return scorePerColumns
 }
 
-function findRecommendedMove(scorePerColumns: MoveArray) {
-  const strategy = 'offensive' // optimize gain
+// offensive: optimize gain; defensive: optimize risk
+type Strategy = 'offensive' | 'defensive'
 
+function findRecommendedMove(scorePerColumns: MoveArray, strategy: Strategy) {
   const recommendedMove = Math.max(
     ...scorePerColumns.map((value) => value?.score ?? 0)
   )
@@ -54,7 +54,13 @@ function findRecommendedMove(scorePerColumns: MoveArray) {
 
   if (duplicates.length > 1) {
     if (strategy === 'offensive') {
-      return Math.max(...duplicates.map((value) => value?.gain ?? 0))
+      return duplicates.reduce((max, current) =>
+        (current?.gain ?? 0) > (max?.gain ?? 0) ? current : max
+      )
+    } else {
+      return duplicates.reduce((max, current) =>
+        (current?.risk ?? 0) < (max?.risk ?? 0) ? current : max
+      )
     }
   } else {
     return recommendedMove
