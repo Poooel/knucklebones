@@ -1,24 +1,27 @@
-import { DisplayNameUpdate } from '@knucklebones/common'
-import { error } from 'itty-router-extras'
+import { error, status } from 'itty-router-extras'
 import { CloudflareEnvironment } from '../types/cloudflareEnvironment'
-import { RequestWithProps } from '../types/itty'
+import { BaseRequestWithProps } from '../types/itty'
 import { getGameState, saveAndPropagate } from '../utils/endpoints'
 
+interface DisplayNameRequest extends BaseRequestWithProps {
+  displayName: string
+}
+
 export async function displayName(
-  request: RequestWithProps,
+  request: DisplayNameRequest,
   cloudflareEnvironment: CloudflareEnvironment
-): Promise<Response> {
+) {
   const gameState = await getGameState(request)
 
-  const displayNameUpdate = request.content! as DisplayNameUpdate
-
-  if (gameState.playerOne?.id === request.playerId!) {
-    gameState.playerOne.displayName = displayNameUpdate.displayName
+  if (gameState.playerOne?.id === request.playerId) {
+    gameState.playerOne.displayName = request.displayName
   } else if (gameState.playerTwo?.id === request.playerId) {
-    gameState.playerTwo!.displayName = displayNameUpdate.displayName
+    gameState.playerTwo.displayName = request.displayName
   } else {
     return error(400, 'Unexpected playerId received.')
   }
 
-  return await saveAndPropagate(gameState, request, cloudflareEnvironment)
+  await saveAndPropagate(gameState, request, cloudflareEnvironment)
+
+  return status(200)
 }

@@ -1,13 +1,18 @@
-import { emptyGameState, initializePlayers } from '@knucklebones/common'
-import { error } from 'itty-router-extras'
+import {
+  emptyGameState,
+  initializePlayers,
+  mutateGameState
+} from '@knucklebones/common'
+import { error, status } from 'itty-router-extras'
 import { CloudflareEnvironment } from '../types/cloudflareEnvironment'
-import { RequestWithProps } from '../types/itty'
+import { BaseRequestWithProps } from '../types/itty'
+import { getNextMove } from '../utils/ai'
 import { getGameState, saveAndPropagate } from '../utils/endpoints'
 
 export async function rematch(
-  request: RequestWithProps,
+  request: BaseRequestWithProps,
   cloudflareEnvironment: CloudflareEnvironment
-): Promise<Response> {
+) {
   const gameState = await getGameState(request)
 
   let mutatedGameState = gameState
@@ -19,24 +24,49 @@ export async function rematch(
     return error(400, "The game is still ongoing. Can't rematch.")
   }
 
-  if (!mutatedGameState.rematchVote.includes(request.playerId!)) {
-    mutatedGameState.rematchVote.push(request.playerId!)
+  if (!mutatedGameState.rematchVote.includes(request.playerId)) {
+    mutatedGameState.rematchVote.push(request.playerId)
   }
 
   const { playerOne, playerTwo } = mutatedGameState
 
   if (
-    mutatedGameState.rematchVote.includes(playerOne!.id) &&
-    mutatedGameState.rematchVote.includes(playerTwo!.id)
+    (mutatedGameState.rematchVote.includes(playerOne!.id) &&
+      mutatedGameState.rematchVote.includes(playerTwo!.id)) ||
+    (mutatedGameState.rematchVote.includes(playerOne!.id) &&
+      mutatedGameState.playingAgainstAi)
   ) {
     mutatedGameState = emptyGameState
     initializePlayers(mutatedGameState, playerOne!.id, playerOne?.displayName)
     initializePlayers(mutatedGameState, playerTwo!.id, playerTwo?.displayName)
+
+    if (gameState.playingAgainstAi) {
+      mutatedGameState.playingAgainstAi = true
+      mutatedGameState.aiDifficulty = gameState.aiDifficulty
+
+      if (mutatedGameState.nextPlayer!.id === mutatedGameState.playerTwo!.id) {
+        const nextMove = getNextMove(
+          mutatedGameState.playerTwo!,
+          mutatedGameState.playerOne!,
+          mutatedGameState.playerTwo!.dice!,
+          mutatedGameState.aiDifficulty!
+        )
+
+        const playObject = {
+          column: Number(nextMove.columnIndex),
+          value: Number(nextMove.nextDice)
+        }
+
+        mutatedGameState = mutateGameState(
+          playObject,
+          mutatedGameState.playerTwo!.id,
+          mutatedGameState
+        )
+      }
+    }
   }
 
-  return await saveAndPropagate(
-    mutatedGameState,
-    request,
-    cloudflareEnvironment
-  )
+  await saveAndPropagate(mutatedGameState, request, cloudflareEnvironment)
+
+  return status(200)
 }

@@ -1,10 +1,17 @@
 import { GameState } from '../types/gameState'
-import { countDiceInColumn } from '../utils/count'
 import { Play } from '../types/play'
 import { emptyPlayerState, Player } from '../types/player'
 import { GameOutcome } from '../types/gameOutcome'
 import { getRandomDice, getRandomValue } from './random'
 import { getName, getNameFromPlayer } from './name'
+import { getColumnScore } from './score'
+
+function addLog(gameState: GameState, log: string) {
+  gameState.logs.push({
+    timestamp: Date.now(),
+    content: log
+  })
+}
 
 export function initializePlayers(
   gameState: GameState,
@@ -53,13 +60,6 @@ export function initializePlayers(
   }
 
   return gameState
-}
-
-export function addLog(gameState: GameState, log: string) {
-  gameState.logs.push({
-    timestamp: Date.now(),
-    content: log
-  })
 }
 
 export function mutateGameState(
@@ -131,7 +131,9 @@ function getColumn(columnIndex: number) {
 function removeFromPlayerTwoColumns(play: Play, playerTwo: Player) {
   playerTwo.columns = playerTwo.columns.map((column, colIndex) => {
     if (colIndex === play.column) {
-      return column.filter((dice) => dice !== play.value)
+      return column.filter((dice) => {
+        return dice !== play.value
+      })
     }
     return column
   })
@@ -148,23 +150,12 @@ function updateScores(gameState: GameState) {
 
 function updateScore(player: Player) {
   const scorePerColumn = player.columns.map((column) => {
-    const countedDice = countDiceInColumn(column)
-    return getColumnScore(countedDice)
+    return getColumnScore(column)
   })
   const score = scorePerColumn.reduce((acc, total) => acc + total, 0)
 
   player.scorePerColumn = scorePerColumn
   player.score = score
-}
-
-function getColumnScore(countedDice: Map<number, number>) {
-  return [...countedDice.entries()].reduce((acc, [dice, count]) => {
-    return acc + getDiceScore(dice, count)
-  }, 0)
-}
-
-function getDiceScore(dice: number, count: number) {
-  return dice * Math.pow(count, 2)
 }
 
 function computeGameOutcome(

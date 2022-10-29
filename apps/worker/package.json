@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@knucklebones/common": "*",
-    "itty-cors": "^0.1.0",
+    "itty-cors": "^0.3.4",
     "itty-durable": "^1.2.0",
     "itty-router": "^2.6.5",
     "itty-router-extras": "^0.4.2"
