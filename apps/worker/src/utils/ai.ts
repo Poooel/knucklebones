@@ -4,12 +4,14 @@ interface Move {
   gain: number
   risk: number
   score: number
+  columnIndex: number
 }
 
 const WORST_MOVE: Move = {
   gain: Number.MIN_SAFE_INTEGER,
   risk: Number.MAX_SAFE_INTEGER,
-  score: Number.MIN_SAFE_INTEGER
+  score: Number.MIN_SAFE_INTEGER,
+  columnIndex: -1
 }
 
 export function computeScoresForAi(
@@ -38,44 +40,38 @@ export function computeScoresForAi(
     console.log()
   })
 
-  console.log(
-    'Recommended offensive move: ',
-    findRecommendedMove(scorePerColumns, 'offensive')
-  )
-  console.log(
-    'Recommended defensive move: ',
-    findRecommendedMove(scorePerColumns, 'defensive')
-  )
+  if (playerOne.score > playerTwo.score) {
+    console.log(
+      'Recommended defensive move: ',
+      findRecommendedMove(scorePerColumns, 'defensive')
+    )
+  } else {
+    console.log(
+      'Recommended offensive move: ',
+      findRecommendedMove(scorePerColumns, 'offensive')
+    )
+  }
 
   return scorePerColumns.map((item) =>
     item.score === Number.MIN_SAFE_INTEGER ? NaN : item.score
   )
 }
 
-// offensive: optimize gain; defensive: optimize risk
+// offensive: maximize gain; defensive: minimize risk
 function findRecommendedMove(
   scorePerColumns: Move[],
   strategy: 'offensive' | 'defensive'
 ): Move {
-  const recommendedMove = scorePerColumns.reduce((max, current) =>
-    current.score > max.score ? current : max
-  )
-  // const recommendedMove = optimize(scorePerColumns, 'score', 'maximize')
+  const recommendedMove = optimize(scorePerColumns, 'score', 'maximize')
   const duplicates = scorePerColumns.filter(
     (value) => value.score === recommendedMove.score
   )
 
   if (duplicates.length > 1) {
     if (strategy === 'offensive') {
-      return duplicates.reduce((max, current) =>
-        current.gain > max.gain ? current : max
-      )
-      // return optimize(duplicates, 'gain', 'maximize')
+      return optimize(duplicates, 'gain', 'maximize')
     } else {
-      return duplicates.reduce((min, current) =>
-        current.risk < min.risk ? current : min
-      )
-      // return optimize(duplicates, 'gain', 'minimize')
+      return optimize(duplicates, 'risk', 'minimize')
     }
   } else {
     return recommendedMove
@@ -104,10 +100,13 @@ function computeScoreForColumn(
 ) {
   const gain = computeGain(playerOne, playerTwo, columnIndex, nextDice)
   const risk = computeRisk(playerOne, playerTwo, columnIndex)
+  const score = gain - risk
 
-  console.log(`Perceived gain is: ${gain} -- risk is: ${risk}`)
+  console.log(
+    `Perceived gain is: ${gain} -- risk is: ${risk} -- score is: ${score}`
+  )
 
-  return { gain, risk, score: gain - risk }
+  return { gain, risk, score, columnIndex }
 }
 
 function computeGain(
