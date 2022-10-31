@@ -23,6 +23,9 @@ const getWinMessage = (
     const winnerName = getWinnerName(playerId, playerTwo!)
     return `${winnerName} won with ${playerTwo!.score} points!`
   }
+  if (gameOutcome === 'tie') {
+    return 'This is a tie! Nobody wins!'
+  }
 }
 
 export function GameOutcome({
@@ -35,13 +38,6 @@ export function GameOutcome({
 
   if (gameOutcome === 'ongoing' || gameOutcome === 'not-started') {
     return <p className='text-slate-900 dark:text-slate-200'>VS</p>
-  }
-  if (gameOutcome === 'tie') {
-    return (
-      <p className='font-semibold text-slate-900 dark:text-slate-200'>
-        This is a tie! Nobody wins!
-      </p>
-    )
   }
 
   const playerTwoId =
