@@ -11,7 +11,8 @@ interface DotProps {
   className?: string
 }
 
-const className = 'aspect-square h-12 md:h-16'
+const className =
+  'aspect-square h-12 portrait:md:h-16 landscape:md:h-12 landscape:lg:h-16'
 
 export function DicePlaceholder() {
   return <div className={className}></div>
@@ -19,7 +20,7 @@ export function DicePlaceholder() {
 
 function DiceContainer({ children }: React.PropsWithChildren) {
   return (
-    <div className='grid h-full w-full grid-cols-3 grid-rows-3 place-items-center p-1 md:p-2'>
+    <div className='grid h-full w-full grid-cols-3 grid-rows-3 place-items-center p-1 xl:p-2'>
       {children}
     </div>
   )
@@ -29,7 +30,7 @@ function Dot({ className }: DotProps) {
   return (
     <div
       className={clsx(
-        'aspect-square h-2 rounded-full bg-slate-900 dark:bg-slate-200 md:h-3',
+        'aspect-square h-2 rounded-full bg-slate-900 dark:bg-slate-200 xl:h-3',
         className
       )}
     ></div>

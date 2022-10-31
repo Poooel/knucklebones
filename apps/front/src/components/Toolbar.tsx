@@ -5,7 +5,7 @@ export function ToolbarContainer() {
   return (
     <div
       id='toolbar'
-      className='absolute top-0 right-0 flex flex-row-reverse gap-4 p-4'
+      className='fixed top-0 right-0 flex flex-row-reverse gap-4 p-2 md:p-4'
     ></div>
   )
 }

@@ -38,7 +38,7 @@ export function Board({
   return (
     <div
       className={clsx(
-        'flex items-center gap-4 text-slate-900 transition duration-100 dark:text-slate-200',
+        'flex items-center gap-1 text-slate-900 transition duration-100 dark:text-slate-200 md:gap-4',
         {
           'flex-col': isPlayerOne,
           'flex-col-reverse': !isPlayerOne,
