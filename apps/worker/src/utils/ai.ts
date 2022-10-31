@@ -1,98 +1,80 @@
 import { countDiceInColumn, getColumnScore, Player } from '@knucklebones/common'
+import { getMaxBy, getMinBy } from './array'
 
 interface Move {
   gain: number
   risk: number
   score: number
   columnIndex: number
+  nextDice: number
 }
 
 const WORST_MOVE: Move = {
   gain: Number.MIN_SAFE_INTEGER,
   risk: Number.MAX_SAFE_INTEGER,
   score: Number.MIN_SAFE_INTEGER,
-  columnIndex: -1
+  columnIndex: -1,
+  nextDice: -1
 }
 
-export function computeScoresForAi(
+type Difficulty = 'easy' | 'normal' | 'hard'
+
+type Strategy = 'defensive' | 'offensive'
+
+export function getNextMove(
   playerOne: Player,
   playerTwo: Player,
-  nextDice: number
+  nextDice: number,
+  difficulty: Difficulty
 ) {
-  const scorePerColumns: Move[] = []
-
-  console.log('Computing scores for next move for: ', playerOne.id)
-
-  playerOne.columns.forEach((_, index) => {
-    console.log('Column: ', index + 1)
-    if (playerOne.columns[index].length !== 3) {
-      const scoreForColumn = computeScoreForColumn(
-        playerOne,
-        playerTwo,
-        index,
-        nextDice
-      )
-      scorePerColumns.push(scoreForColumn)
-    } else {
-      console.log('Column is full')
-      scorePerColumns.push(WORST_MOVE)
-    }
-    console.log()
-  })
+  const scoredMoves = evaluateMoves(playerOne, playerTwo, nextDice)
 
   if (playerOne.score > playerTwo.score) {
-    console.log(
-      'Recommended defensive move: ',
-      findRecommendedMove(scorePerColumns, 'defensive')
-    )
+    return getBestMove(scoredMoves, 'defensive')
   } else {
-    console.log(
-      'Recommended offensive move: ',
-      findRecommendedMove(scorePerColumns, 'offensive')
-    )
+    return getBestMove(scoredMoves, 'offensive')
   }
-
-  return scorePerColumns.map((item) =>
-    item.score === Number.MIN_SAFE_INTEGER ? NaN : item.score
-  )
 }
 
-// offensive: maximize gain; defensive: minimize risk
-function findRecommendedMove(
-  scorePerColumns: Move[],
-  strategy: 'offensive' | 'defensive'
-): Move {
-  const recommendedMove = optimize(scorePerColumns, 'score', 'maximize')
-  const duplicates = scorePerColumns.filter(
+function getBestMove(scoredMoves: Move[], strategy: Strategy): Move {
+  const recommendedMove = getMaxBy(scoredMoves, 'score')
+
+  const duplicateMoves = scoredMoves.filter(
     (value) => value.score === recommendedMove.score
   )
 
-  if (duplicates.length > 1) {
+  if (duplicateMoves.length > 1) {
     if (strategy === 'offensive') {
-      return optimize(duplicates, 'gain', 'maximize')
+      return getMaxBy(duplicateMoves, 'gain')
     } else {
-      return optimize(duplicates, 'risk', 'minimize')
+      return getMinBy(duplicateMoves, 'risk')
     }
   } else {
     return recommendedMove
   }
 }
 
-function optimize<T extends Object>(
-  array: T[],
-  key: keyof T,
-  strategy: 'minimize' | 'maximize'
-) {
-  return array.reduce((acc, current) => {
-    if (strategy === 'minimize') {
-      return current[key] < acc[key] ? current : acc
+function evaluateMoves(playerOne: Player, playerTwo: Player, nextDice: number) {
+  const scoredMoves: Move[] = []
+
+  playerOne.columns.forEach((_, columnIndex) => {
+    if (playerOne.columns[columnIndex].length !== 3) {
+      const scoredMove = evaluateMoveScoreInColumn(
+        playerOne,
+        playerTwo,
+        columnIndex,
+        nextDice
+      )
+      scoredMoves.push(scoredMove)
     } else {
-      return current[key] > acc[key] ? current : acc
+      scoredMoves.push(WORST_MOVE)
     }
   })
+
+  return scoredMoves
 }
 
-function computeScoreForColumn(
+function evaluateMoveScoreInColumn(
   playerOne: Player,
   playerTwo: Player,
   columnIndex: number,
@@ -102,11 +84,7 @@ function computeScoreForColumn(
   const risk = computeRisk(playerOne, playerTwo, columnIndex)
   const score = gain - risk
 
-  console.log(
-    `Perceived gain is: ${gain} -- risk is: ${risk} -- score is: ${score}`
-  )
-
-  return { gain, risk, score, columnIndex }
+  return { gain, risk, score, columnIndex, nextDice }
 }
 
 function computeGain(
@@ -153,25 +131,9 @@ function computeRisk(
     columnIndex
   )
 
-  console.log(
-    'Perceived risk from player one column is: ',
-    riskFromPlayerOneColumn
-  )
-  console.log(
-    'Perceived risk from player two column is: ',
-    riskFromPlayerTwoColumn
-  )
-  console.log(
-    'Perceived risk from score difference is: ',
-    riskFromScoreDifference
-  )
-
-  const risk = Math.max(
-    1,
+  return (
     riskFromPlayerOneColumn + riskFromPlayerTwoColumn + riskFromScoreDifference
   )
-
-  return risk
 }
 
 function findMaxInMapValues(map: Map<number, number>) {
@@ -201,9 +163,4 @@ function compareScores(
   } else {
     return 0
   }
-}
-
-// round to 2 decimal places: 1.3456 -> 1.35
-function round(number: number) {
-  return Math.round((number + Number.EPSILON) * 100) / 100
 }

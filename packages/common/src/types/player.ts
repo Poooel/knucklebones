@@ -5,7 +5,6 @@ export interface Player {
   score: number
   scorePerColumn: number[]
   displayName?: string
-  scoresForAi?: number[]
 }
 
 export function emptyPlayerState(

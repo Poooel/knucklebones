@@ -1,31 +1,64 @@
-import { getPlayers, mutateGameState, Play } from '@knucklebones/common'
+import { getRandomValue, mutateGameState } from '@knucklebones/common'
+import { status } from 'itty-router-extras'
 import { CloudflareEnvironment } from '../types/cloudflareEnvironment'
-import { RequestWithProps } from '../types/itty'
-import { computeScoresForAi } from '../utils/ai'
+import { BaseRequestWithProps } from '../types/itty'
+import { getNextMove } from '../utils/ai'
 import { getGameState, saveAndPropagate } from '../utils/endpoints'
+import { sleep } from '../utils/sleep'
+
+interface PlayRequest extends BaseRequestWithProps {
+  column: number
+  value: number
+}
 
 export async function play(
-  request: RequestWithProps,
-  cloudflareEnvironment: CloudflareEnvironment
-): Promise<Response> {
+  request: PlayRequest,
+  cloudflareEnvironment: CloudflareEnvironment,
+  context: ExecutionContext
+) {
   const gameState = await getGameState(request)
 
-  const play = request.content! as Play
-  const mutatedGameState = mutateGameState(play, request.playerId!, gameState)
-
-  // temp for AI testing
-  const [playerOne, playerTwo] = getPlayers(request.playerId!, mutatedGameState)
-  playerOne.scoresForAi = undefined
-  playerTwo.scoresForAi = computeScoresForAi(
-    playerTwo,
-    playerOne,
-    playerTwo.dice!
+  const playObject = {
+    column: Number(request.column),
+    value: Number(request.value)
+  }
+  const mutatedGameState = mutateGameState(
+    playObject,
+    request.playerId,
+    gameState
   )
-  // temp for AI testing
 
-  return await saveAndPropagate(
-    mutatedGameState,
-    request,
-    cloudflareEnvironment
-  )
+  await saveAndPropagate(mutatedGameState, request, cloudflareEnvironment)
+
+  if (
+    mutatedGameState.playingAgainstAi &&
+    mutatedGameState.nextPlayer!.id === mutatedGameState.playerTwo!.id
+  ) {
+    const aiPlay = async () => {
+      const nextMove = getNextMove(
+        mutatedGameState.playerTwo!,
+        mutatedGameState.playerOne!,
+        mutatedGameState.playerTwo!.dice!,
+        mutatedGameState.aiDifficulty!
+      )
+
+      await sleep(getRandomValue(500, 1000))
+
+      await play(
+        {
+          column: nextMove.columnIndex,
+          value: nextMove.nextDice,
+          roomKey: request.roomKey,
+          playerId: mutatedGameState.playerTwo!.id,
+          GAME_STATE_STORE: request.GAME_STATE_STORE
+        },
+        cloudflareEnvironment,
+        context
+      )
+    }
+
+    context.waitUntil(aiPlay())
+  }
+
+  return status(200)
 }

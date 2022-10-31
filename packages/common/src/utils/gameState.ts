@@ -6,6 +6,13 @@ import { getRandomDice, getRandomValue } from './random'
 import { getName, getNameFromPlayer } from './name'
 import { getColumnScore } from './score'
 
+function addLog(gameState: GameState, log: string) {
+  gameState.logs.push({
+    timestamp: Date.now(),
+    content: log
+  })
+}
+
 export function initializePlayers(
   gameState: GameState,
   playerId: string,
@@ -55,13 +62,6 @@ export function initializePlayers(
   return gameState
 }
 
-export function addLog(gameState: GameState, log: string) {
-  gameState.logs.push({
-    timestamp: Date.now(),
-    content: log
-  })
-}
-
 export function mutateGameState(
   play: Play,
   playerId: string,
@@ -98,10 +98,7 @@ export function mutateGameState(
   return copiedGameState
 }
 
-export function getPlayers(
-  playerId: string,
-  gameState: GameState
-): [Player, Player] {
+function getPlayers(playerId: string, gameState: GameState): [Player, Player] {
   if (playerId === gameState.playerOne?.id) {
     return [gameState.playerOne, gameState.playerTwo!]
   } else if (playerId === gameState.playerTwo?.id) {
@@ -134,7 +131,9 @@ function getColumn(columnIndex: number) {
 function removeFromPlayerTwoColumns(play: Play, playerTwo: Player) {
   playerTwo.columns = playerTwo.columns.map((column, colIndex) => {
     if (colIndex === play.column) {
-      return column.filter((dice) => dice !== play.value)
+      return column.filter((dice) => {
+        return dice !== play.value
+      })
     }
     return column
   })

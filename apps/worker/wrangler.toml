@@ -1,7 +1,7 @@
 name = "knuclebones-worker"
 main = "dist/index.mjs"
 compatibility_date = "2022-09-08"
-usage_model = "bundled"
+usage_model = "unbound"
 workers_dev = false
 
 durable_objects.bindings = [

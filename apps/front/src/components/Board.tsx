@@ -30,7 +30,6 @@ export function Board({
   scorePerColumn = [0, 0, 0],
   columns = [[], [], []],
   displayName,
-  scoresForAi,
   canPlay = false,
   onColumnClick,
   updateDisplayName,
@@ -73,10 +72,7 @@ export function Board({
           <div className='grid w-full grid-cols-3'>
             {scorePerColumn.map((score, index) => (
               <p className='text-center' key={index}>
-                {score}{' '}
-                {scoresForAi !== undefined &&
-                  scoresForAi[index] !== null &&
-                  `(${scoresForAi[index]})`}
+                {score}
               </p>
             ))}
           </div>
