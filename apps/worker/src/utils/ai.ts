@@ -3,7 +3,7 @@ import {
   Difficulty,
   GameState,
   getColumnScore,
-  getRandomValue,
+  getRandomIntInclusive,
   Player
 } from '@knucklebones/common'
 import { play } from '../endpoints'
@@ -44,7 +44,7 @@ export function makeAiPlay(
       gameState.aiDifficulty!
     )
 
-    await sleep(getRandomValue(500, 1000))
+    await sleep(getRandomIntInclusive(500, 1000))
 
     await play(
       {

@@ -1,7 +1,8 @@
-export function getRandomValue(min = 0, max = 1) {
+export function getRandomIntInclusive(min: number, max: number) {
   min = Math.ceil(min)
   max = Math.floor(max)
-  return Math.floor(Math.random() * (max - min) + min) // The maximum is exclusive and the minimum is inclusive
+  // The maximum is inclusive and the minimum is inclusive
+  return Math.floor(Math.random() * (max - min + 1) + min)
 }
 
 export function coinflip() {
@@ -9,5 +10,5 @@ export function coinflip() {
 }
 
 export function getRandomDice() {
-  return getRandomValue(1, 6)
+  return getRandomIntInclusive(1, 6)
 }
