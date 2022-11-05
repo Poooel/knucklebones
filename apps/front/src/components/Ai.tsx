@@ -3,21 +3,21 @@ import { WrenchScrewdriverIcon } from '@heroicons/react/24/outline'
 import { IconButton } from './IconButton'
 import { Toolbar } from './Toolbar'
 import { init } from '../utils/api'
-import { useParams } from 'react-router-dom'
 
-interface Params {
+interface AiProps {
   roomKey: string
 }
 
-export function Ai() {
-  const { roomKey } = useParams<keyof Params>() as Params
+const aiPlayerId = 'beep-boop'
+const aiPlayerType = 'ai'
 
+export function Ai({ roomKey }: AiProps) {
   return (
     <Toolbar>
       <IconButton
         icon={<WrenchScrewdriverIcon />}
         onClick={() => {
-          void init(roomKey, 'beep-boop', 'ai', false)
+          void init(roomKey, aiPlayerId, aiPlayerType, false)
         }}
       />
     </Toolbar>

@@ -1,35 +1,76 @@
-import { countDiceInColumn, getColumnScore, Player } from '@knucklebones/common'
+import {
+  countDiceInColumn,
+  Difficulty,
+  GameState,
+  getColumnScore,
+  getRandomIntInclusive,
+  Player
+} from '@knucklebones/common'
+import { play } from '../endpoints'
+import { CloudflareEnvironment } from '../types/cloudflareEnvironment'
+import { BaseRequestWithProps } from '../types/itty'
 import { getMaxBy, getMinBy } from './array'
+import { sleep } from './sleep'
 
 interface Move {
   gain: number
   risk: number
   score: number
-  columnIndex: number
-  nextDice: number
+  column: number
+  dice: number
 }
 
 const WORST_MOVE: Move = {
   gain: Number.MIN_SAFE_INTEGER,
   risk: Number.MAX_SAFE_INTEGER,
   score: Number.MIN_SAFE_INTEGER,
-  columnIndex: -1,
-  nextDice: -1
+  column: -1,
+  dice: -1
 }
-
-type Difficulty = 'easy' | 'normal' | 'hard'
 
 type Strategy = 'defensive' | 'offensive'
 
+export function makeAiPlay(
+  gameState: GameState,
+  request: BaseRequestWithProps,
+  cloudflareEnvironment: CloudflareEnvironment,
+  context: ExecutionContext
+) {
+  const aiPlay = async () => {
+    const nextMove = getNextMove(
+      gameState.playerTwo!,
+      gameState.playerOne!,
+      gameState.playerTwo!.dice!,
+      gameState.aiDifficulty!
+    )
+
+    await sleep(getRandomIntInclusive(500, 1000))
+
+    await play(
+      {
+        column: nextMove.column,
+        value: nextMove.dice,
+        roomKey: request.roomKey,
+        playerId: gameState.playerTwo!.id,
+        GAME_STATE_STORE: request.GAME_STATE_STORE
+      },
+      cloudflareEnvironment,
+      context
+    )
+  }
+
+  context.waitUntil(aiPlay())
+}
+
 export function getNextMove(
-  playerOne: Player,
-  playerTwo: Player,
-  nextDice: number,
+  ai: Player,
+  human: Player,
+  dice: number,
   difficulty: Difficulty
 ) {
-  const scoredMoves = evaluateMoves(playerOne, playerTwo, nextDice)
+  const scoredMoves = evaluateMoves(ai, human, dice)
 
-  if (playerOne.score > playerTwo.score) {
+  if (ai.score > human.score) {
     return getBestMove(scoredMoves, 'defensive')
   } else {
     return getBestMove(scoredMoves, 'offensive')
@@ -54,17 +95,12 @@ function getBestMove(scoredMoves: Move[], strategy: Strategy): Move {
   }
 }
 
-function evaluateMoves(playerOne: Player, playerTwo: Player, nextDice: number) {
+function evaluateMoves(ai: Player, human: Player, dice: number) {
   const scoredMoves: Move[] = []
 
-  playerOne.columns.forEach((_, columnIndex) => {
-    if (playerOne.columns[columnIndex].length !== 3) {
-      const scoredMove = evaluateMoveScoreInColumn(
-        playerOne,
-        playerTwo,
-        columnIndex,
-        nextDice
-      )
+  ai.columns.forEach((_, columnIndex) => {
+    if (ai.columns[columnIndex].length !== 3) {
+      const scoredMove = evaluateMoveScoreInColumn(ai, human, columnIndex, dice)
       scoredMoves.push(scoredMove)
     } else {
       scoredMoves.push(WORST_MOVE)
@@ -75,68 +111,62 @@ function evaluateMoves(playerOne: Player, playerTwo: Player, nextDice: number) {
 }
 
 function evaluateMoveScoreInColumn(
-  playerOne: Player,
-  playerTwo: Player,
-  columnIndex: number,
-  nextDice: number
+  ai: Player,
+  human: Player,
+  column: number,
+  dice: number
 ) {
-  const gain = computeGain(playerOne, playerTwo, columnIndex, nextDice)
-  const risk = computeRisk(playerOne, playerTwo, columnIndex)
+  const gain = computeGain(ai, human, column, dice)
+  const risk = computeRisk(ai, human, column)
   const score = gain - risk
 
-  return { gain, risk, score, columnIndex, nextDice }
+  return { gain, risk, score, column, dice }
 }
 
-function computeGain(
-  playerOne: Player,
-  playerTwo: Player,
-  columnIndex: number,
-  nextDice: number
-) {
-  const playerOneColumn = playerOne.columns[columnIndex]
-  const playerOneNewColumn = playerOneColumn.concat(nextDice)
+function computeGain(ai: Player, human: Player, column: number, dice: number) {
+  const aiColumn = ai.columns[column]
 
-  const playerOneScore = getColumnScore(playerOneColumn)
-  const playerOneNewScore = getColumnScore(playerOneNewColumn)
+  if (aiColumn.length === 3) {
+    return 0
+  }
 
-  const playerOneScoreDifference = playerOneNewScore - playerOneScore
+  const aiNewColumn = aiColumn.concat(dice)
 
-  const playerTwoCurrentColumn = playerTwo.columns[columnIndex]
-  const playerTwoNewColumn = playerTwoCurrentColumn.filter(
-    (dice) => dice !== nextDice
+  const aiScore = getColumnScore(aiColumn)
+  const aiNewScore = getColumnScore(aiNewColumn)
+
+  const aiScoreDifference = aiNewScore - aiScore
+
+  const humanColumn = human.columns[column]
+  const humanNewColumn = humanColumn.filter(
+    (diceToRemove) => diceToRemove !== dice
   )
 
-  const playerTwoCurrentScore = getColumnScore(playerTwoCurrentColumn)
-  const playerTwoNewScore = getColumnScore(playerTwoNewColumn)
+  const humanScore = getColumnScore(humanColumn)
+  const humanNewScore = getColumnScore(humanNewColumn)
 
-  const playerTwoScoreDifference = playerTwoCurrentScore - playerTwoNewScore
+  const humanScoreDifference = humanScore - humanNewScore
 
-  const openSlots = 2 - playerOne.columns[columnIndex].length
+  const openSlots = 2 - aiColumn.length
 
-  return playerOneScoreDifference + playerTwoScoreDifference + openSlots
+  return aiScoreDifference + humanScoreDifference + openSlots
 }
 
-function computeRisk(
-  playerOne: Player,
-  playerTwo: Player,
-  columnIndex: number
-) {
-  const riskFromPlayerOneColumn = findMaxInMapValues(
-    countDiceInColumn(playerOne.columns[columnIndex])
+function computeRisk(ai: Player, human: Player, column: number) {
+  const riskFromDiceInAiColumn = getMaxInMapValues(
+    countDiceInColumn(ai.columns[column])
   )
-  const riskFromPlayerTwoColumn = 3 - playerTwo.columns[columnIndex].length
-  const riskFromScoreDifference = compareScores(
-    playerOne,
-    playerTwo,
-    columnIndex
-  )
+  const riskFromOpenSlotsInHumanColumn = 3 - human.columns[column].length
+  const riskFromScoreDifference = compareScores(ai, human, column)
 
   return (
-    riskFromPlayerOneColumn + riskFromPlayerTwoColumn + riskFromScoreDifference
+    riskFromDiceInAiColumn +
+    riskFromOpenSlotsInHumanColumn +
+    riskFromScoreDifference
   )
 }
 
-function findMaxInMapValues(map: Map<number, number>) {
+function getMaxInMapValues(map: Map<number, number>) {
   let max = 0
 
   map.forEach((value) => {
@@ -148,17 +178,13 @@ function findMaxInMapValues(map: Map<number, number>) {
   return max
 }
 
-function compareScores(
-  playerOne: Player,
-  playerTwo: Player,
-  columnIndex: number
-) {
-  const playerOneScore = getColumnScore(playerOne.columns[columnIndex])
-  const playerTwoScore = getColumnScore(playerTwo.columns[columnIndex])
+function compareScores(ai: Player, human: Player, column: number) {
+  const aiScore = getColumnScore(ai.columns[column])
+  const humanScore = getColumnScore(human.columns[column])
 
-  if (playerOneScore > playerTwoScore) {
+  if (aiScore > humanScore) {
     return 1
-  } else if (playerOneScore < playerTwoScore) {
+  } else if (aiScore < humanScore) {
     return -1
   } else {
     return 0

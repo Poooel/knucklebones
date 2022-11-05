@@ -1,16 +1,9 @@
-import {
-  Difficulty,
-  getRandomValue,
-  initializePlayers,
-  PlayerType
-} from '@knucklebones/common'
+import { Difficulty, initializePlayers, PlayerType } from '@knucklebones/common'
 import { error, status } from 'itty-router-extras'
 import { CloudflareEnvironment } from '../types/cloudflareEnvironment'
 import { BaseRequestWithProps } from '../types/itty'
-import { getNextMove } from '../utils/ai'
+import { makeAiPlay } from '../utils/ai'
 import { getGameState, saveAndPropagate } from '../utils/endpoints'
-import { sleep } from '../utils/sleep'
-import { play } from './play'
 
 interface InitRequest extends BaseRequestWithProps {
   playerType: PlayerType
@@ -50,30 +43,12 @@ export async function init(
         initializedGameState.nextPlayer!.id ===
         initializedGameState.playerTwo!.id
       ) {
-        const aiPlay = async () => {
-          const nextMove = getNextMove(
-            initializedGameState.playerTwo!,
-            initializedGameState.playerOne!,
-            initializedGameState.playerTwo!.dice!,
-            initializedGameState.aiDifficulty!
-          )
-
-          await sleep(getRandomValue(500, 1000))
-
-          await play(
-            {
-              column: nextMove.columnIndex,
-              value: nextMove.nextDice,
-              roomKey: request.roomKey,
-              playerId: initializedGameState.playerTwo!.id,
-              GAME_STATE_STORE: request.GAME_STATE_STORE
-            },
-            cloudflareEnvironment,
-            context
-          )
-        }
-
-        context.waitUntil(aiPlay())
+        makeAiPlay(
+          initializedGameState,
+          request,
+          cloudflareEnvironment,
+          context
+        )
       }
 
       break
