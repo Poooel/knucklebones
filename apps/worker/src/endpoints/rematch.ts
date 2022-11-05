@@ -6,12 +6,13 @@ import {
 import { error, status } from 'itty-router-extras'
 import { CloudflareEnvironment } from '../types/cloudflareEnvironment'
 import { BaseRequestWithProps } from '../types/itty'
-import { getNextMove } from '../utils/ai'
+import { getNextMove, makeAiPlay } from '../utils/ai'
 import { getGameState, saveAndPropagate } from '../utils/endpoints'
 
 export async function rematch(
   request: BaseRequestWithProps,
-  cloudflareEnvironment: CloudflareEnvironment
+  cloudflareEnvironment: CloudflareEnvironment,
+  context: ExecutionContext
 ) {
   const gameState = await getGameState(request)
 
@@ -45,23 +46,7 @@ export async function rematch(
       mutatedGameState.aiDifficulty = gameState.aiDifficulty
 
       if (mutatedGameState.nextPlayer!.id === mutatedGameState.playerTwo!.id) {
-        const nextMove = getNextMove(
-          mutatedGameState.playerTwo!,
-          mutatedGameState.playerOne!,
-          mutatedGameState.playerTwo!.dice!,
-          mutatedGameState.aiDifficulty!
-        )
-
-        const playObject = {
-          column: Number(nextMove.columnIndex),
-          value: Number(nextMove.nextDice)
-        }
-
-        mutatedGameState = mutateGameState(
-          playObject,
-          mutatedGameState.playerTwo!.id,
-          mutatedGameState
-        )
+        makeAiPlay(mutatedGameState, request, cloudflareEnvironment, context)
       }
     }
   }

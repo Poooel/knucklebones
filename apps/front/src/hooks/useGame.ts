@@ -112,6 +112,7 @@ export function useGame() {
     clearErrorMessage,
     sendRematch,
     updateDisplayName,
-    playerId
+    playerId,
+    roomKey
   }
 }

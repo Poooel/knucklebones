@@ -23,7 +23,7 @@ export async function saveAndPropagate(
   return json(gameState)
 }
 
-export async function broadcast(
+async function broadcast(
   gameState: GameState,
   roomKey: string,
   cloudflareEnvironment: CloudflareEnvironment

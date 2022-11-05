@@ -131,9 +131,7 @@ function getColumn(columnIndex: number) {
 function removeFromPlayerTwoColumns(play: Play, playerTwo: Player) {
   playerTwo.columns = playerTwo.columns.map((column, colIndex) => {
     if (colIndex === play.column) {
-      return column.filter((dice) => {
-        return dice !== play.value
-      })
+      return column.filter((dice) => dice !== play.value)
     }
     return column
   })
