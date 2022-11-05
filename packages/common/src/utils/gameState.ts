@@ -45,17 +45,22 @@ export function initializePlayers(
     )
 
     const isPlayerOneStarting = coinflip()
+    const nextDice = getRandomDice()
+
     if (isPlayerOneStarting) {
       gameState.nextPlayer = gameState.playerOne
-      gameState.playerOne.dice = getRandomDice()
+      gameState.playerOne.dice = nextDice
     } else {
       gameState.nextPlayer = gameState.playerTwo
-      gameState.playerTwo.dice = getRandomDice()
+      gameState.playerTwo.dice = nextDice
     }
+
     gameState.gameOutcome = 'ongoing'
     addLog(
       gameState,
-      `${getNameFromPlayer(gameState.nextPlayer)} is going to play first`
+      `${getNameFromPlayer(
+        gameState.nextPlayer
+      )} is going to play first with a ${nextDice}`
     )
   }
 
