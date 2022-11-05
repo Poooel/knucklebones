@@ -2,7 +2,7 @@ import { GameState } from '../types/gameState'
 import { Play } from '../types/play'
 import { emptyPlayerState, Player } from '../types/player'
 import { GameOutcome } from '../types/gameOutcome'
-import { getRandomDice, getRandomValue } from './random'
+import { coinflip, getRandomDice } from './random'
 import { getName, getNameFromPlayer } from './name'
 import { getColumnScore } from './score'
 
@@ -44,7 +44,7 @@ export function initializePlayers(
       `${getName(playerId, displayName)} has connected to the game`
     )
 
-    const isPlayerOneStarting = getRandomValue() > 0.5
+    const isPlayerOneStarting = coinflip()
     if (isPlayerOneStarting) {
       gameState.nextPlayer = gameState.playerOne
       gameState.playerOne.dice = getRandomDice()
