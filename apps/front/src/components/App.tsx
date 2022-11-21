@@ -21,6 +21,13 @@ export function App() {
     }
   }, [])
 
+  React.useEffect(() => {
+    // Initialize the `--vh` variable for the `h-95` custom class on mobile
+    // Fixes inconsistent browsers implementation regarding `vh`/`svh`
+    const vh = window.innerHeight / 100
+    document.documentElement.style.setProperty('--vh', `${vh}px`)
+  }, [])
+
   return (
     <>
       <ToolbarContainer />
