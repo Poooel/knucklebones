@@ -1,4 +1,5 @@
 export interface Play {
+  dice: number
   column: number
-  value: number
+  author: string
 }

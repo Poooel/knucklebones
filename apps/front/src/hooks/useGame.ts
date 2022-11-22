@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { GameState, mutateGameState, Player } from '@knucklebones/common'
+import { GameState, IGameState, IPlayer } from '@knucklebones/common'
 import { displayName, init, play, rematch } from '../utils/api'
 import useWebSocket, { ReadyState } from 'react-use-websocket'
 import { useParams } from 'react-router-dom'
@@ -10,12 +10,15 @@ interface Params {
 
 function attributePlayers(
   playerId: string,
-  gameState: GameState
-): [Player | undefined, Player | undefined] {
-  if (gameState.playerOne?.id === playerId) {
+  gameState: IGameState
+): [IPlayer?, IPlayer?] {
+  if (gameState === null) {
+    return []
+  } else if (gameState.playerOne?.id === playerId) {
     return [gameState.playerOne, gameState.playerTwo]
+  } else {
+    return [gameState.playerTwo, gameState.playerOne]
   }
-  return [gameState.playerTwo, gameState.playerOne]
 }
 
 function getWebSocketUrl(roomKey: string) {
@@ -31,7 +34,7 @@ function getWebSocketUrl(roomKey: string) {
 }
 
 export function useGame() {
-  const [gameState, setGameState] = React.useState<GameState | null>(null)
+  const [gameState, setGameState] = React.useState<IGameState | null>(null)
   const [isLoading, setIsLoading] = React.useState(true)
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
   const { roomKey } = useParams<keyof Params>() as Params
@@ -42,7 +45,7 @@ export function useGame() {
   React.useEffect(() => {
     if (lastJsonMessage !== null) {
       // @ts-expect-error
-      const gameState = lastJsonMessage as GameState
+      const gameState = lastJsonMessage as IGameState
       setGameState(gameState)
       setIsLoading(false)
       setErrorMessage(null)
@@ -58,9 +61,7 @@ export function useGame() {
   }, [roomKey, playerId, readyState])
 
   const [playerOne, playerTwo] =
-    gameState !== null && playerId !== undefined
-      ? attributePlayers(playerId, gameState)
-      : []
+    gameState !== null ? attributePlayers(playerId, gameState) : []
 
   async function sendPlay(column: number) {
     const dice = playerOne?.dice
@@ -69,16 +70,19 @@ export function useGame() {
 
       const body = {
         column,
-        value: dice
+        dice,
+        author: playerId
       }
 
       const previousGameState = gameState
 
-      const mutatedGameState = mutateGameState(body, playerId, gameState!)
+      const realGameState = GameState.fromJson(gameState!)
+      realGameState.play(body)
+      const mutatedGameState = realGameState.toJson()
 
       setGameState(mutatedGameState)
 
-      await play(roomKey, playerId, body).catch((error) => {
+      await play(roomKey, body).catch((error) => {
         setErrorMessage(error.message)
         setGameState(previousGameState)
         setIsLoading(false)

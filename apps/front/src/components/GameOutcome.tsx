@@ -1,29 +1,29 @@
 import * as React from 'react'
 import { Link } from 'react-router-dom'
-import { GameState, getNameFromPlayer, Player } from '@knucklebones/common'
+import { IGameState, IPlayer, Player } from '@knucklebones/common'
 
-interface OutcomeProps extends GameState {
+interface OutcomeProps extends IGameState {
   playerId: string
   onRematch(): void
 }
 
-function getWinnerName(playerId: string, player: Player) {
-  return playerId === player.id ? 'You' : getNameFromPlayer(player)
+function getWinnerName(playerId: string, player: IPlayer) {
+  return playerId === player.id ? 'You' : Player.fromJson(player).getName()
 }
 
 const getWinMessage = (
   playerId: string,
-  { gameOutcome, playerOne, playerTwo }: GameState
+  { outcome, playerOne, playerTwo }: IGameState
 ) => {
-  if (gameOutcome === 'player-one-win') {
-    const winnerName = getWinnerName(playerId, playerOne!)
-    return `${winnerName} won with ${playerOne!.score} points!`
+  if (outcome === 'player-one-win') {
+    const winnerName = getWinnerName(playerId, playerOne)
+    return `${winnerName} won with ${playerOne.score} points!`
   }
-  if (gameOutcome === 'player-two-win') {
-    const winnerName = getWinnerName(playerId, playerTwo!)
-    return `${winnerName} won with ${playerTwo!.score} points!`
+  if (outcome === 'player-two-win') {
+    const winnerName = getWinnerName(playerId, playerTwo)
+    return `${winnerName} won with ${playerTwo.score} points!`
   }
-  if (gameOutcome === 'tie') {
+  if (outcome === 'tie') {
     return 'This is a tie! Nobody wins!'
   }
 }
@@ -33,17 +33,17 @@ export function GameOutcome({
   onRematch,
   ...gameState
 }: OutcomeProps) {
-  const { gameOutcome } = gameState
-  const hasVotedRematch = !gameState.rematchVote.includes(playerId)
+  const { outcome } = gameState
+  const hasVotedRematch = gameState.rematchVote === playerId
 
-  if (gameOutcome === 'ongoing' || gameOutcome === 'not-started') {
+  if (outcome === 'ongoing' || outcome === 'not-started') {
     return <p className='text-slate-900 dark:text-slate-200'>VS</p>
   }
 
   const playerTwoId =
     playerId === gameState.playerOne?.id
-      ? getNameFromPlayer(gameState.playerTwo)
-      : getNameFromPlayer(gameState.playerOne)
+      ? Player.fromJson(gameState.playerTwo).getName()
+      : Player.fromJson(gameState.playerOne).getName()
 
   return (
     <div className='grid justify-items-center gap-2 font-semibold text-slate-900 dark:text-slate-50'>
@@ -63,10 +63,11 @@ export function GameOutcome({
           Rematch
         </button>
       </div>
-      {!hasVotedRematch ? (
+      {hasVotedRematch ? (
         <p>Waiting for {playerTwoId}...</p>
       ) : (
-        gameState.rematchVote.length === 1 && (
+        gameState.rematchVote !== undefined &&
+        gameState.rematchVote !== playerId && (
           <p>{playerTwoId} wants to rematch!</p>
         )
       )}

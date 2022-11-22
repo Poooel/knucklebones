@@ -5,7 +5,7 @@ import {
   XMarkIcon
 } from '@heroicons/react/24/outline'
 import { IconButton } from './IconButton'
-import { getName, isEmptyOrBlank } from '@knucklebones/common'
+import { isEmptyOrBlank } from '@knucklebones/common'
 
 interface NameProps {
   playerId?: string
@@ -13,6 +13,16 @@ interface NameProps {
   isPlayerOne: boolean
   updateDisplayName?(displayName: string): void
   isEditable: boolean
+}
+
+function getName(playerId?: string, displayName?: string) {
+  if (playerId === undefined) {
+    return undefined
+  } else if (displayName === undefined || isEmptyOrBlank(displayName)) {
+    return playerId
+  } else {
+    return displayName
+  }
 }
 
 export function Name({
@@ -50,7 +60,7 @@ export function Name({
   function onDisplayNameSubmit() {
     setIsBeingEdited(false)
 
-    if (isEmptyOrBlank(name!)) {
+    if (isEmptyOrBlank(name)) {
       // If the name is empty, we want to remove the display name from local storage
       localStorage.removeItem('displayName')
 

@@ -1,12 +1,12 @@
 import * as React from 'react'
 import { clsx } from 'clsx'
-import { Player, countDiceInColumn } from '@knucklebones/common'
+import { IPlayer, countDiceInColumn } from '@knucklebones/common'
 import { Dice } from './Dice'
 import { Column } from './Column'
 import { Cell } from './Cell'
 import { Name } from './Name'
 
-interface BoardProps extends Partial<Player> {
+interface BoardProps extends Partial<IPlayer> {
   isPlayerOne: boolean
   canPlay: boolean
   onColumnClick?(colIndex: number): void
