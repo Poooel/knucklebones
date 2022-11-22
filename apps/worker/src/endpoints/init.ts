@@ -33,9 +33,8 @@ export async function init(
       request.query?.difficulty
     )
 
-    if (lobby.addPlayer(player)) {
-      await saveLobby(lobby, request)
-    }
+    lobby.addPlayer(player)
+    await saveLobby(lobby, request)
 
     if (lobby.isReady()) {
       const gameState = lobby.toGameState()

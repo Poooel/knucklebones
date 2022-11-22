@@ -60,7 +60,7 @@ export function Name({
   function onDisplayNameSubmit() {
     setIsBeingEdited(false)
 
-    if (isEmptyOrBlank(name)) {
+    if (isEmptyOrBlank(name!)) {
       // If the name is empty, we want to remove the display name from local storage
       localStorage.removeItem('displayName')
 
