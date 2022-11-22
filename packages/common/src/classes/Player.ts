@@ -79,20 +79,22 @@ export class Player {
   static fromJson(player: IPlayer) {
     return new Player(
       player.id,
+      player.displayName,
+      player.difficulty,
       player.dice,
-      player.columns,
-      player.displayName
+      player.columns
     )
   }
 
   toJson(): IPlayer {
     return {
       id: this.id,
+      displayName: this.displayName,
+      difficulty: this.difficulty,
       dice: this.dice,
       columns: this.columns,
       score: this.getScore(),
-      scorePerColumn: this.getScorePerColumn(),
-      displayName: this.displayName
+      scorePerColumn: this.getScorePerColumn()
     }
   }
 }

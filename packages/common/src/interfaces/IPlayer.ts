@@ -1,3 +1,5 @@
+import { Difficulty } from '../types'
+
 export interface IPlayer {
   id: string
   dice?: number
@@ -5,4 +7,5 @@ export interface IPlayer {
   score: number
   scorePerColumn: number[]
   displayName?: string
+  difficulty?: Difficulty
 }
