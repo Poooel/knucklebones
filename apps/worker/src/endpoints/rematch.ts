@@ -1,12 +1,8 @@
-import {
-  emptyGameState,
-  initializePlayers,
-  mutateGameState
-} from '@knucklebones/common'
+import { GameState, Player } from '@knucklebones/common'
 import { error, status } from 'itty-router-extras'
 import { CloudflareEnvironment } from '../types/cloudflareEnvironment'
 import { BaseRequestWithProps } from '../types/itty'
-import { getNextMove, makeAiPlay } from '../utils/ai'
+import { makeAiPlay } from '../utils/ai'
 import { getGameState, saveAndPropagate } from '../utils/endpoints'
 
 export async function rematch(
@@ -16,42 +12,31 @@ export async function rematch(
 ) {
   const gameState = await getGameState(request)
 
-  let mutatedGameState = gameState
-
-  if (
-    mutatedGameState.gameOutcome === 'ongoing' ||
-    mutatedGameState.gameOutcome === 'not-started'
-  ) {
+  if (gameState.outcome === 'ongoing' || gameState.outcome === 'not-started') {
     return error(400, "The game is still ongoing. Can't rematch.")
   }
 
-  if (!mutatedGameState.rematchVote.includes(request.playerId)) {
-    mutatedGameState.rematchVote.push(request.playerId)
-  }
+  if (gameState.rematchVote === undefined) {
+    gameState.rematchVote = request.playerId
+    await saveAndPropagate(gameState, request, cloudflareEnvironment)
+  } else {
+    const newGameState = new GameState(
+      new Player(gameState.playerOne.id, gameState.playerOne.displayName),
+      new Player(
+        gameState.playerTwo.id,
+        gameState.playerTwo.displayName,
+        gameState.playerTwo.difficulty
+      )
+    )
+    await saveAndPropagate(newGameState, request, cloudflareEnvironment)
 
-  const { playerOne, playerTwo } = mutatedGameState
-
-  if (
-    (mutatedGameState.rematchVote.includes(playerOne!.id) &&
-      mutatedGameState.rematchVote.includes(playerTwo!.id)) ||
-    (mutatedGameState.rematchVote.includes(playerOne!.id) &&
-      mutatedGameState.playingAgainstAi)
-  ) {
-    mutatedGameState = emptyGameState
-    initializePlayers(mutatedGameState, playerOne!.id, playerOne?.displayName)
-    initializePlayers(mutatedGameState, playerTwo!.id, playerTwo?.displayName)
-
-    if (gameState.playingAgainstAi) {
-      mutatedGameState.playingAgainstAi = true
-      mutatedGameState.aiDifficulty = gameState.aiDifficulty
-
-      if (mutatedGameState.nextPlayer!.id === mutatedGameState.playerTwo!.id) {
-        makeAiPlay(mutatedGameState, request, cloudflareEnvironment, context)
-      }
+    if (
+      newGameState.playerTwo.isAi() &&
+      newGameState.nextPlayer.equals(newGameState.playerTwo)
+    ) {
+      makeAiPlay(newGameState, request, cloudflareEnvironment, context)
     }
   }
-
-  await saveAndPropagate(mutatedGameState, request, cloudflareEnvironment)
 
   return status(200)
 }
