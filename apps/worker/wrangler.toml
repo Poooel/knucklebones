@@ -5,8 +5,8 @@ usage_model = "unbound"
 workers_dev = false
 
 durable_objects.bindings = [
-  { name = "GAME_STATE_STORE", class_name = "GameStateStore" },
-  { name = "WEB_SOCKET_STORE", class_name = "WebSocketStore" }
+  { name = "GAME_STATE_DURABLE_OBJECT", class_name = "GameStateDurableObject" },
+  { name = "WEB_SOCKET_DURABLE_OBJECT", class_name = "WebSocketDurableObject" }
 ]
 
 [build]
@@ -14,24 +14,20 @@ command = "yarn build"
 
 [[migrations]]
 tag = "v1"
-new_classes = ["GameStateStore"]
-
-[[migrations]]
-tag = "v2"
-new_classes = ["WebSocketStore"]
+new_classes = ["GameStateDurableObject", "WebSocketDurableObject"]
 
 [env.staging]
 name = "knucklebones-worker-staging"
 route = { pattern = "staging.api.knucklebones.io", custom_domain = true, zone_name = "knucklebones.io" }
 durable_objects.bindings = [
-  { name = "GAME_STATE_STORE", class_name = "GameStateStore" },
-  { name = "WEB_SOCKET_STORE", class_name = "WebSocketStore" }
+  { name = "GAME_STATE_DURABLE_OBJECT", class_name = "GameStateDurableObject" },
+  { name = "WEB_SOCKET_DURABLE_OBJECT", class_name = "WebSocketDurableObject" }
 ]
 
 [env.production]
 name = "knucklebones-worker-production"
 route = { pattern = "api.knucklebones.io", custom_domain = true, zone_name = "knucklebones.io" }
 durable_objects.bindings = [
-  { name = "GAME_STATE_STORE", class_name = "GameStateStore" },
-  { name = "WEB_SOCKET_STORE", class_name = "WebSocketStore" }
+  { name = "GAME_STATE_DURABLE_OBJECT", class_name = "GameStateDurableObject" },
+  { name = "WEB_SOCKET_DURABLE_OBJECT", class_name = "WebSocketDurableObject" }
 ]

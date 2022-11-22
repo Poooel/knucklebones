@@ -24,8 +24,8 @@ export async function rematch(roomKey: string, playerId: string) {
   return await sendApiRequest(path, 'POST')
 }
 
-export async function play(roomKey: string, playerId: string, play: Play) {
-  const path = `/${roomKey}/${playerId}/play/${play.column}/${play.value}`
+export async function play(roomKey: string, play: Play) {
+  const path = `/${roomKey}/${play.author}/play/${play.column}/${play.dice}`
   return await sendApiRequest(path, 'POST')
 }
 

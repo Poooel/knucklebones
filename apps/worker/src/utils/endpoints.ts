@@ -1,14 +1,39 @@
-import { GameState } from '@knucklebones/common'
-import { json } from 'itty-router-extras'
+import { GameState, IGameState, Lobby } from '@knucklebones/common'
 import { CloudflareEnvironment } from '../types/cloudflareEnvironment'
 import { BaseRequestWithProps } from '../types/itty'
 
 export async function getGameState(
   request: BaseRequestWithProps
 ): Promise<GameState> {
-  const gameStateStore = request.GAME_STATE_STORE.get(request.roomKey)
-  const gameStateObject = await gameStateStore.toJSON()
-  return gameStateObject.gameState
+  const gameStateDurableObject = request.GAME_STATE_DURABLE_OBJECT.get(
+    request.roomKey
+  )
+  const iGameState = await gameStateDurableObject.getGameState()
+  return GameState.fromJson(iGameState)
+}
+
+export async function getLobby(request: BaseRequestWithProps): Promise<Lobby> {
+  const gameStateDurableObject = request.GAME_STATE_DURABLE_OBJECT.get(
+    request.roomKey
+  )
+  const iLobby = await gameStateDurableObject.getLobby()
+  return Lobby.fromJson(iLobby)
+}
+
+export async function saveLobby(lobby: Lobby, request: BaseRequestWithProps) {
+  const roomKey = request.roomKey
+  const gameStateDurableObject = request.GAME_STATE_DURABLE_OBJECT.get(roomKey)
+  const iLobby = lobby.toJson()
+
+  await gameStateDurableObject.saveLobby(iLobby)
+}
+
+export async function isGameStateInitialized(
+  request: BaseRequestWithProps
+): Promise<boolean> {
+  const roomKey = request.roomKey
+  const gameStateDurableObject = request.GAME_STATE_DURABLE_OBJECT.get(roomKey)
+  return await gameStateDurableObject.isGameStateInitialized()
 }
 
 export async function saveAndPropagate(
@@ -17,19 +42,20 @@ export async function saveAndPropagate(
   cloudflareEnvironment: CloudflareEnvironment
 ) {
   const roomKey = request.roomKey
-  const gameStateStore = request.GAME_STATE_STORE.get(roomKey)
-  await gameStateStore.save(gameState)
-  await broadcast(gameState, roomKey, cloudflareEnvironment)
-  return json(gameState)
+  const gameStateDurableObject = request.GAME_STATE_DURABLE_OBJECT.get(roomKey)
+  const iGameState = gameState.toJson()
+
+  await gameStateDurableObject.saveGameState(iGameState)
+  await broadcast(iGameState, roomKey, cloudflareEnvironment)
 }
 
 async function broadcast(
-  gameState: GameState,
+  gameState: IGameState,
   roomKey: string,
   cloudflareEnvironment: CloudflareEnvironment
 ) {
-  const id = cloudflareEnvironment.WEB_SOCKET_STORE.idFromName(roomKey)
-  const webSocketStore = cloudflareEnvironment.WEB_SOCKET_STORE.get(id)
+  const id = cloudflareEnvironment.WEB_SOCKET_DURABLE_OBJECT.idFromName(roomKey)
+  const webSocketStore = cloudflareEnvironment.WEB_SOCKET_DURABLE_OBJECT.get(id)
 
   return await webSocketStore.fetch('https://dummy-url/broadcast', {
     method: 'POST',

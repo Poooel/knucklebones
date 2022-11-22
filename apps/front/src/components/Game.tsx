@@ -33,11 +33,11 @@ export function Game() {
     return <Loading />
   }
 
-  const { gameOutcome, nextPlayer } = gameState
+  const { outcome, nextPlayer } = gameState
 
   const isSpectator = playerId !== playerOne?.id && playerId !== playerTwo?.id
 
-  const canPlay = !isLoading && gameOutcome === 'ongoing' && !isSpectator
+  const canPlay = !isLoading && outcome === 'ongoing' && !isSpectator
   const canPlayerOnePlay = canPlay && nextPlayer?.id === playerOne?.id
   const canPlayerTwoPlay = canPlay && nextPlayer?.id === playerTwo?.id
 
@@ -77,7 +77,7 @@ export function Game() {
           className='animate-bounce lg:hidden'
         />
       </div>
-      <QRCode dismissModal={gameOutcome === 'ongoing'} />
+      <QRCode dismissModal={outcome === 'ongoing'} />
       {!canPlay && <Ai roomKey={roomKey} />}
     </div>
   )
