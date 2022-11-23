@@ -5,7 +5,7 @@ interface Session {
   quit: boolean
 }
 
-export class WebSocketStore {
+export class WebSocketDurableObject {
   sessions: Session[]
   state: DurableObjectState
   cloudflareEnvironment: CloudflareEnvironment

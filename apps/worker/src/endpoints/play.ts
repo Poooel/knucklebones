@@ -1,13 +1,16 @@
-import { mutateGameState } from '@knucklebones/common'
 import { status } from 'itty-router-extras'
 import { CloudflareEnvironment } from '../types/cloudflareEnvironment'
 import { BaseRequestWithProps } from '../types/itty'
 import { makeAiPlay } from '../utils/ai'
-import { getGameState, saveAndPropagate } from '../utils/endpoints'
+import {
+  broadcastGameState,
+  getGameState,
+  saveGameState
+} from '../utils/endpoints'
 
 interface PlayRequest extends BaseRequestWithProps {
+  dice: number
   column: number
-  value: number
 }
 
 export async function play(
@@ -17,23 +20,22 @@ export async function play(
 ) {
   const gameState = await getGameState(request)
 
-  const playObject = {
+  const play = {
+    dice: Number(request.dice),
     column: Number(request.column),
-    value: Number(request.value)
+    author: request.playerId
   }
-  const mutatedGameState = mutateGameState(
-    playObject,
-    request.playerId,
-    gameState
-  )
 
-  await saveAndPropagate(mutatedGameState, request, cloudflareEnvironment)
+  gameState.applyPlay(play)
+
+  await saveGameState(gameState, request)
+  await broadcastGameState(gameState, request, cloudflareEnvironment)
 
   if (
-    mutatedGameState.playingAgainstAi &&
-    mutatedGameState.nextPlayer!.id === mutatedGameState.playerTwo!.id
+    gameState.playerTwo.isAi() &&
+    gameState.nextPlayer.equals(gameState.playerTwo)
   ) {
-    makeAiPlay(mutatedGameState, request, cloudflareEnvironment, context)
+    makeAiPlay(gameState, request, cloudflareEnvironment, context)
   }
 
   return status(200)

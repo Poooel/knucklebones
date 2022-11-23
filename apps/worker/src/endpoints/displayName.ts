@@ -1,7 +1,11 @@
 import { error, status } from 'itty-router-extras'
 import { CloudflareEnvironment } from '../types/cloudflareEnvironment'
 import { BaseRequestWithProps } from '../types/itty'
-import { getGameState, saveAndPropagate } from '../utils/endpoints'
+import {
+  broadcastGameState,
+  getGameState,
+  saveGameState
+} from '../utils/endpoints'
 
 interface DisplayNameRequest extends BaseRequestWithProps {
   displayName: string
@@ -21,7 +25,8 @@ export async function displayName(
     return error(400, 'Unexpected playerId received.')
   }
 
-  await saveAndPropagate(gameState, request, cloudflareEnvironment)
+  await saveGameState(gameState, request)
+  await broadcastGameState(gameState, request, cloudflareEnvironment)
 
   return status(200)
 }

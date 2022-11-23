@@ -7,7 +7,7 @@ import { GameOutcome } from './GameOutcome'
 import { Loading } from './Loading'
 import { WarningToast } from './WarningToast'
 import { IconButton } from './IconButton'
-import { QRCode } from './QRCode'
+import { QRCodeModal } from './QRCodeModal'
 import { Ai } from './Ai'
 
 function scrollToTop() {
@@ -25,35 +25,45 @@ export function Game() {
     clearErrorMessage,
     sendRematch,
     updateDisplayName,
-    playerId,
-    roomKey
+    playerId
   } = useGame()
 
-  if (gameState === null || playerOne === undefined) {
-    return <Loading />
+  if (gameState === null) {
+    return (
+      <>
+        <Loading />
+        <Ai />
+      </>
+    )
   }
 
-  const { gameOutcome, nextPlayer } = gameState
+  const { outcome, nextPlayer } = gameState
 
   const isSpectator = playerId !== playerOne?.id && playerId !== playerTwo?.id
 
-  const canPlay = !isLoading && gameOutcome === 'ongoing' && !isSpectator
+  const canPlay = !isLoading && outcome === 'ongoing' && !isSpectator
   const canPlayerOnePlay = canPlay && nextPlayer?.id === playerOne?.id
   const canPlayerTwoPlay = canPlay && nextPlayer?.id === playerTwo?.id
 
   return (
     <div className='lg:grid-cols-3-central grid grid-cols-1'>
       <div className='h-95 flex flex-col items-center justify-evenly lg:h-screen'>
-        <Board {...playerTwo} isPlayerOne={false} canPlay={canPlayerTwoPlay} />
+        <Board
+          {...playerTwo!}
+          isPlayerOne={false}
+          canPlay={canPlayerTwoPlay}
+          outcome={outcome}
+        />
         <GameOutcome
           {...gameState}
-          playerId={playerOne.id}
+          playerId={playerOne!.id}
           onRematch={() => {
             void sendRematch()
           }}
+          isSpectator={isSpectator}
         />
         <Board
-          {...playerOne}
+          {...playerOne!}
           isPlayerOne
           onColumnClick={canPlayerOnePlay ? sendPlay : undefined}
           canPlay={canPlayerOnePlay}
@@ -61,6 +71,7 @@ export function Game() {
             void updateDisplayName(displayName)
           }}
           isDisplayNameEditable={!isSpectator}
+          outcome={outcome}
         />
         <WarningToast message={errorMessage} onDismiss={clearErrorMessage} />
       </div>
@@ -77,8 +88,7 @@ export function Game() {
           className='animate-bounce lg:hidden'
         />
       </div>
-      <QRCode dismissModal={gameOutcome === 'ongoing'} />
-      {!canPlay && <Ai roomKey={roomKey} />}
+      <QRCodeModal />
     </div>
   )
 }

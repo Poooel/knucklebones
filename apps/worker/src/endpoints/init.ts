@@ -1,12 +1,18 @@
-import { Difficulty, initializePlayers, PlayerType } from '@knucklebones/common'
-import { error, status } from 'itty-router-extras'
+import { Difficulty, Player } from '@knucklebones/common'
+import { status } from 'itty-router-extras'
 import { CloudflareEnvironment } from '../types/cloudflareEnvironment'
 import { BaseRequestWithProps } from '../types/itty'
 import { makeAiPlay } from '../utils/ai'
-import { getGameState, saveAndPropagate } from '../utils/endpoints'
+import {
+  broadcastGameState,
+  getGameState,
+  getLobby,
+  isGameStateInitialized,
+  saveGameState,
+  saveLobby
+} from '../utils/endpoints'
 
 interface InitRequest extends BaseRequestWithProps {
-  playerType: PlayerType
   query?: { displayName: string; difficulty: Difficulty }
 }
 
@@ -15,55 +21,39 @@ export async function init(
   cloudflareEnvironment: CloudflareEnvironment,
   context: ExecutionContext
 ) {
-  const gameState = await getGameState(request)
+  if (await isGameStateInitialized(request)) {
+    const gameState = await getGameState(request)
 
-  switch (request.playerType) {
-    case 'ai': {
-      if (gameState.playerOne === undefined) {
-        return error(400, 'AI can only be player two')
-      }
-
-      const initializedGameState = initializePlayers(
-        gameState,
-        request.playerId,
-        `AI (${request.query!.difficulty})`
-      )
-
-      initializedGameState.playingAgainstAi = true
-      initializedGameState.aiDifficulty = request.query!.difficulty
-
-      await saveAndPropagate(
-        initializedGameState,
-        request,
-        cloudflareEnvironment
-      )
-
-      // ai is going to play first after game is initialized
-      if (
-        initializedGameState.nextPlayer!.id ===
-        initializedGameState.playerTwo!.id
-      ) {
-        makeAiPlay(
-          initializedGameState,
-          request,
-          cloudflareEnvironment,
-          context
-        )
-      }
-
-      break
+    if (gameState.addSpectator(request.playerId)) {
+      await saveGameState(gameState, request)
     }
-    case 'human': {
-      const initializedGameState = initializePlayers(
-        gameState,
-        request.playerId,
-        request.query?.displayName
-      )
-      await saveAndPropagate(
-        initializedGameState,
-        request,
-        cloudflareEnvironment
-      )
+
+    await broadcastGameState(gameState, request, cloudflareEnvironment)
+  } else {
+    const lobby = await getLobby(request)
+
+    const player = new Player(
+      request.playerId,
+      request.query?.displayName,
+      request.query?.difficulty
+    )
+
+    if (lobby.addPlayer(player)) {
+      await saveLobby(lobby, request)
+    }
+
+    if (lobby.isReady()) {
+      const gameState = lobby.toGameState()
+
+      await saveGameState(gameState, request)
+      await broadcastGameState(gameState, request, cloudflareEnvironment)
+
+      if (
+        gameState.playerTwo.isAi() &&
+        gameState.nextPlayer.equals(gameState.playerTwo)
+      ) {
+        makeAiPlay(gameState, request, cloudflareEnvironment, context)
+      }
     }
   }
 
