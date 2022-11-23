@@ -28,7 +28,7 @@ export function Game() {
     playerId
   } = useGame()
 
-  if (gameState === null || playerOne === undefined) {
+  if (gameState === null) {
     return (
       <>
         <Loading />
@@ -49,21 +49,21 @@ export function Game() {
     <div className='lg:grid-cols-3-central grid grid-cols-1'>
       <div className='h-95 flex flex-col items-center justify-evenly lg:h-screen'>
         <Board
-          {...playerTwo}
+          {...playerTwo!}
           isPlayerOne={false}
           canPlay={canPlayerTwoPlay}
           outcome={outcome}
         />
         <GameOutcome
           {...gameState}
-          playerId={playerOne.id}
+          playerId={playerOne!.id}
           onRematch={() => {
             void sendRematch()
           }}
           isSpectator={isSpectator}
         />
         <Board
-          {...playerOne}
+          {...playerOne!}
           isPlayerOne
           onColumnClick={canPlayerOnePlay ? sendPlay : undefined}
           canPlay={canPlayerOnePlay}

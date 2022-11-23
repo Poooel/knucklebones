@@ -8,7 +8,7 @@ export function Loading() {
         Waiting for game to start
       </p>
       <div className='text-slate-900 dark:text-slate-200'>
-        <QRCode value={window.location.href} />
+        <QRCode />
       </div>
     </div>
   )

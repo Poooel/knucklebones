@@ -8,25 +8,19 @@ export class Player {
   difficulty?: Difficulty
   dice?: number
   columns: number[][]
-  _score: number
-  _scorePerColumn: number[]
 
   constructor(
     id: string,
     displayName?: string,
     difficulty?: Difficulty,
     dice?: number,
-    columns?: number[][],
-    score?: number,
-    scorePerColumn?: number[]
+    columns?: number[][]
   ) {
     this.id = id
     this.displayName = displayName
     this.difficulty = difficulty
     this.dice = dice
     this.columns = columns ?? [[], [], []]
-    this._score = score ?? 0
-    this._scorePerColumn = scorePerColumn ?? [0, 0, 0]
 
     if (this.difficulty !== undefined) {
       this.displayName = `AI (${this.difficulty})`
@@ -92,9 +86,7 @@ export class Player {
       player.displayName,
       player.difficulty,
       player.dice,
-      player.columns,
-      player.score,
-      player.scorePerColumn
+      player.columns
     )
   }
 

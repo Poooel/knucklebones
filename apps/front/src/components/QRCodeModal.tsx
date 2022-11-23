@@ -49,8 +49,8 @@ export function QRCodeModal({ dismissModal }: QRCodeModalProps) {
                 leaveFrom='opacity-100 translate-y-0'
                 leaveTo='opacity-0 translate-y-4'
               >
-                <Dialog.Panel className='relative transform overflow-hidden rounded-lg bg-slate-50 text-left text-slate-900 shadow-xl transition-all dark:bg-slate-900 dark:text-slate-200'>
-                  <QRCode value={window.location.href} />
+                <Dialog.Panel className='relative transform overflow-hidden rounded-lg bg-slate-50 text-left shadow-xl transition-all dark:bg-slate-900'>
+                  <QRCode />
                 </Dialog.Panel>
               </Transition.Child>
             </div>

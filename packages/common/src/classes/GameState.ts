@@ -26,11 +26,12 @@ export class GameState {
     this.playerTwo = playerTwo
     this.logs = logs ?? []
     this.spectators = spectators ?? []
+    this.rematchVote = rematchVote
 
     // Only assign outcome if we have one
     // otherwise it will be assigned in the initialize() method
     if (outcome !== undefined) {
-      this.outcome = outcome ?? 'ongoing'
+      this.outcome = outcome
     }
 
     // Only assign next player if we have one
@@ -38,9 +39,6 @@ export class GameState {
     if (nextPlayer !== undefined) {
       this.nextPlayer = nextPlayer
     }
-
-    this.rematchVote = rematchVote
-    this.spectators = spectators ?? []
   }
 
   initialize() {

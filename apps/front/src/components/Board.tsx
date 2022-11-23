@@ -6,7 +6,7 @@ import { Column } from './Column'
 import { Cell } from './Cell'
 import { Name } from './Name'
 
-interface BoardProps extends Partial<IPlayer> {
+interface BoardProps extends IPlayer {
   isPlayerOne: boolean
   canPlay: boolean
   onColumnClick?(colIndex: number): void

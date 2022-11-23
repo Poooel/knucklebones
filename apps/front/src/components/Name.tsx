@@ -8,18 +8,15 @@ import { IconButton } from './IconButton'
 import { isEmptyOrBlank } from '@knucklebones/common'
 
 interface NameProps {
-  playerId?: string
+  playerId: string
   displayName?: string
   isPlayerOne: boolean
   updateDisplayName?(displayName: string): void
   isEditable: boolean
 }
 
-function getName(playerId?: string, displayName?: string) {
-  // TODO
-  if (playerId === undefined) {
-    return undefined
-  } else if (displayName === undefined || isEmptyOrBlank(displayName)) {
+function getName(playerId: string, displayName?: string) {
+  if (displayName === undefined || isEmptyOrBlank(displayName)) {
     return playerId
   } else {
     return displayName
@@ -61,7 +58,7 @@ export function Name({
   function onDisplayNameSubmit() {
     setIsBeingEdited(false)
 
-    if (isEmptyOrBlank(name!)) {
+    if (isEmptyOrBlank(name)) {
       // If the name is empty, we want to remove the display name from local storage
       localStorage.removeItem('displayName')
 
@@ -81,14 +78,14 @@ export function Name({
           // If the name displayed was the playerId, and the new name
           // is different from the playerId the player is trying to set a
           // displayName, so set it in local storage and send it to the backend
-          localStorage.setItem('displayName', name!)
-          updateDisplayName!(name!)
+          localStorage.setItem('displayName', name)
+          updateDisplayName!(name)
         }
       } else {
         if (name !== displayName) {
           // Same case as above, but the player is trying to update their displayName
-          localStorage.setItem('displayName', name!)
-          updateDisplayName!(name!)
+          localStorage.setItem('displayName', name)
+          updateDisplayName!(name)
         }
       }
     }

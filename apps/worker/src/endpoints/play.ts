@@ -26,8 +26,6 @@ export async function play(
     author: request.playerId
   }
 
-  console.log('Received play: ', play)
-
   gameState.applyPlay(play)
 
   await saveGameState(gameState, request)

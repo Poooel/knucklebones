@@ -3,11 +3,7 @@ import { LinkIcon } from '@heroicons/react/24/outline'
 import { QRCodeSVG } from 'qrcode.react'
 import { useClipboard } from 'use-clipboard-copy'
 
-interface QRCodeProps {
-  value: string
-}
-
-export function QRCode({ value }: QRCodeProps) {
+export function QRCode() {
   const { copy, copied } = useClipboard({ copiedTimeout: 750 })
 
   return (
@@ -17,11 +13,11 @@ export function QRCode({ value }: QRCodeProps) {
       </h3>
       <div className='flex flex-col items-center justify-center gap-6'>
         <div className='rounded-lg border-2 border-slate-200 bg-slate-50 p-2 dark:border-0'>
-          <QRCodeSVG value={value} />
+          <QRCodeSVG value={window.location.href} />
         </div>
         <button
           className='flex flex-row items-center gap-2 rounded-md border-2 border-slate-200 bg-transparent py-2 px-4 transition-colors duration-100 enabled:hover:bg-black/10 disabled:opacity-50 dark:border-slate-700 enabled:dark:hover:bg-white/10'
-          onClick={() => copy(value)}
+          onClick={() => copy(window.location.href)}
         >
           {copied ? (
             <span>Copied!</span>

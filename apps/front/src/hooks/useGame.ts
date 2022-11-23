@@ -6,7 +6,7 @@ import { useRoomKey } from './useRoomKey'
 
 function attributePlayers(
   playerId: string,
-  gameState: IGameState
+  gameState: IGameState | null
 ): [IPlayer?, IPlayer?] {
   if (gameState === null) {
     return []
@@ -42,7 +42,6 @@ export function useGame() {
     if (lastJsonMessage !== null) {
       // @ts-expect-error
       const gameState = lastJsonMessage as IGameState
-      console.log('Received new gameState: ', gameState)
       setGameState(gameState)
       setIsLoading(false)
       setErrorMessage(null)
@@ -57,8 +56,7 @@ export function useGame() {
     }
   }, [roomKey, playerId, readyState])
 
-  const [playerOne, playerTwo] =
-    gameState !== null ? attributePlayers(playerId, gameState) : []
+  const [playerOne, playerTwo] = attributePlayers(playerId, gameState)
 
   async function sendPlay(column: number) {
     const dice = playerOne?.dice

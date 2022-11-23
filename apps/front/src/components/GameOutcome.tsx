@@ -68,17 +68,14 @@ export function GameOutcome({
         </div>
       )}
 
-      {!isSpectator ? (
-        hasVotedRematch ? (
+      {!isSpectator &&
+        (hasVotedRematch ? (
           <p>Waiting for {playerTwoId}...</p>
         ) : (
           gameState.rematchVote !== undefined && ( // It means the other player has voted for rematch
             <p>{playerTwoId} wants to rematch!</p>
           )
-        )
-      ) : (
-        <div />
-      )}
+        ))}
     </div>
   )
 }
