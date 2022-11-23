@@ -9,4 +9,5 @@ export interface IGameState {
   outcome: Outcome
   nextPlayer: IPlayer
   rematchVote?: string
+  spectators: string[]
 }

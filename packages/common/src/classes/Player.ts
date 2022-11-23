@@ -8,24 +8,44 @@ export class Player {
   difficulty?: Difficulty
   dice?: number
   columns: number[][]
+  _score: number
+  _scorePerColumn: number[]
 
   constructor(
     id: string,
     displayName?: string,
     difficulty?: Difficulty,
     dice?: number,
-    columns?: number[][]
+    columns?: number[][],
+    score?: number,
+    scorePerColumn?: number[]
   ) {
     this.id = id
     this.displayName = displayName
     this.difficulty = difficulty
     this.dice = dice
     this.columns = columns ?? [[], [], []]
+    this._score = score ?? 0
+    this._scorePerColumn = scorePerColumn ?? [0, 0, 0]
+
+    if (this.difficulty !== undefined) {
+      this.displayName = `AI (${this.difficulty})`
+    }
+  }
+
+  get score(): number {
+    return sum(this.scorePerColumn)
+  }
+
+  get scorePerColumn(): number[] {
+    return this.columns.map((column) => {
+      return getColumnScore(column)
+    })
   }
 
   addDice(dice: number, column: number) {
-    if (column > 2) {
-      throw new Error('Unknown column. Value must be between 0 and 2.')
+    if (column < 0 || column > 2) {
+      throw new Error('Invalid column. Value must be between 0 and 2.')
     }
 
     if (this.columns[column].length >= 3) {
@@ -36,8 +56,8 @@ export class Player {
   }
 
   removeDice(dice: number, column: number) {
-    if (column > 2) {
-      throw new Error('Unknown column. Value must be between 0 and 2.')
+    if (column < 0 || column > 2) {
+      throw new Error('Invalid column. Value must be between 0 and 2.')
     }
 
     this.columns[column] = this.columns[column].filter(
@@ -62,16 +82,6 @@ export class Player {
     }
   }
 
-  getScore(): number {
-    return sum(this.getScorePerColumn())
-  }
-
-  private getScorePerColumn(): number[] {
-    return this.columns.map((column) => {
-      return getColumnScore(column)
-    })
-  }
-
   isAi(): boolean {
     return this.difficulty !== undefined
   }
@@ -82,7 +92,9 @@ export class Player {
       player.displayName,
       player.difficulty,
       player.dice,
-      player.columns
+      player.columns,
+      player.score,
+      player.scorePerColumn
     )
   }
 
@@ -93,8 +105,8 @@ export class Player {
       difficulty: this.difficulty,
       dice: this.dice,
       columns: this.columns,
-      score: this.getScore(),
-      scorePerColumn: this.getScorePerColumn()
+      score: this.score,
+      scorePerColumn: this.scorePerColumn
     }
   }
 }

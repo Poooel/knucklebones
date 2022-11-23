@@ -4,10 +4,11 @@ import { CloudflareEnvironment } from '../types/cloudflareEnvironment'
 import { BaseRequestWithProps } from '../types/itty'
 import { makeAiPlay } from '../utils/ai'
 import {
+  broadcastGameState,
   getGameState,
   getLobby,
   isGameStateInitialized,
-  saveAndPropagate,
+  saveGameState,
   saveLobby
 } from '../utils/endpoints'
 
@@ -22,8 +23,12 @@ export async function init(
 ) {
   if (await isGameStateInitialized(request)) {
     const gameState = await getGameState(request)
-    gameState.addSpectator(request.playerId)
-    await saveAndPropagate(gameState, request, cloudflareEnvironment)
+
+    if (gameState.addSpectator(request.playerId)) {
+      await saveGameState(gameState, request)
+    }
+
+    await broadcastGameState(gameState, request, cloudflareEnvironment)
   } else {
     const lobby = await getLobby(request)
 
@@ -33,13 +38,15 @@ export async function init(
       request.query?.difficulty
     )
 
-    lobby.addPlayer(player)
-    await saveLobby(lobby, request)
+    if (lobby.addPlayer(player)) {
+      await saveLobby(lobby, request)
+    }
 
     if (lobby.isReady()) {
       const gameState = lobby.toGameState()
 
-      await saveAndPropagate(gameState, request, cloudflareEnvironment)
+      await saveGameState(gameState, request)
+      await broadcastGameState(gameState, request, cloudflareEnvironment)
 
       if (
         gameState.playerTwo.isAi() &&

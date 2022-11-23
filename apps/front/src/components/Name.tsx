@@ -16,6 +16,7 @@ interface NameProps {
 }
 
 function getName(playerId?: string, displayName?: string) {
+  // TODO
   if (playerId === undefined) {
     return undefined
   } else if (displayName === undefined || isEmptyOrBlank(displayName)) {

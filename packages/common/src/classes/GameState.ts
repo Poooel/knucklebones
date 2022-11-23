@@ -24,25 +24,26 @@ export class GameState {
   ) {
     this.playerOne = playerOne
     this.playerTwo = playerTwo
-
     this.logs = logs ?? []
+    this.spectators = spectators ?? []
 
+    // Only assign outcome if we have one
+    // otherwise it will be assigned in the initialize() method
     if (outcome !== undefined) {
-      this.outcome = outcome
+      this.outcome = outcome ?? 'ongoing'
     }
 
+    // Only assign next player if we have one
+    // otherwise it will be assigned in the initialize() method
     if (nextPlayer !== undefined) {
       this.nextPlayer = nextPlayer
     }
 
     this.rematchVote = rematchVote
-
     this.spectators = spectators ?? []
-
-    this.initialize()
   }
 
-  private initialize() {
+  initialize() {
     this.outcome = 'ongoing'
 
     const isPlayerOneStarting = coinflip()
@@ -58,18 +59,18 @@ export class GameState {
     this.addToLogs(
       `${this.nextPlayer.getName()} is going first with a ${
         this.nextPlayer.dice
-      }`
+      }.`
     )
   }
 
-  play(play: Play) {
+  applyPlay(play: Play) {
     const [playerOne, playerTwo] = this.getPlayers(play.author)
 
     playerOne.addDice(play.dice, play.column)
     this.addToLogs(
       `${playerOne.getName()} added a ${play.dice} in the ${this.getColumnName(
         play.column
-      )} column`
+      )} column.`
     )
 
     playerTwo.removeDice(play.dice, play.column)
@@ -81,14 +82,17 @@ export class GameState {
     }
   }
 
-  addSpectator(spectatorId: string) {
+  addSpectator(spectatorId: string): boolean {
     if (
       this.playerOne.id !== spectatorId &&
       this.playerTwo.id !== spectatorId &&
       !this.spectators.includes(spectatorId)
     ) {
       this.spectators.push(spectatorId)
+      return true
     }
+
+    return false
   }
 
   private getColumnName(column: number) {
@@ -107,7 +111,7 @@ export class GameState {
     if (playAuthor === this.playerOne.id) {
       return [this.playerOne, this.playerTwo]
     } else if (playAuthor === this.playerTwo.id) {
-      return [this.playerOne, this.playerTwo]
+      return [this.playerTwo, this.playerOne]
     } else {
       throw new Error('Unexpected author for move.')
     }
@@ -119,14 +123,16 @@ export class GameState {
     playerOne.dice = undefined
     playerTwo.dice = getRandomDice()
 
+    this.nextPlayer = playerTwo
+
     this.addToLogs(
-      `${playerTwo.getName()} is playing next with a ${playerTwo.dice}`
+      `${playerTwo.getName()} is playing next with a ${playerTwo.dice}.`
     )
   }
 
   private whoWins() {
-    const playerOneScore = this.playerOne.getScore()
-    const playerTwoScore = this.playerTwo.getScore()
+    const playerOneScore = this.playerOne.score
+    const playerTwoScore = this.playerTwo.score
 
     if (playerOneScore > playerTwoScore) {
       this.addToLogs(
@@ -157,7 +163,8 @@ export class GameState {
       gameState.logs.map((iLog) => Log.fromJson(iLog)),
       gameState.outcome,
       Player.fromJson(gameState.nextPlayer),
-      gameState.rematchVote
+      gameState.rematchVote,
+      gameState.spectators
     )
   }
 
@@ -168,7 +175,8 @@ export class GameState {
       logs: this.logs.map((log) => log.toJson()),
       outcome: this.outcome,
       nextPlayer: this.nextPlayer.toJson(),
-      rematchVote: this.rematchVote
+      rematchVote: this.rematchVote,
+      spectators: this.spectators
     }
   }
 }

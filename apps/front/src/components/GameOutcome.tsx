@@ -36,7 +36,7 @@ export function GameOutcome({
   const { outcome } = gameState
   const hasVotedRematch = gameState.rematchVote === playerId
 
-  if (outcome === 'ongoing' || outcome === 'not-started') {
+  if (outcome === 'ongoing') {
     return <p className='text-slate-900 dark:text-slate-200'>VS</p>
   }
 
@@ -58,7 +58,7 @@ export function GameOutcome({
         <button
           className='rounded-md border-2 border-slate-200 bg-transparent py-1 px-2 transition-colors duration-100 enabled:hover:bg-black/10 disabled:opacity-50 dark:border-slate-700 enabled:dark:hover:bg-white/10'
           onClick={onRematch}
-          disabled={!hasVotedRematch}
+          disabled={hasVotedRematch}
         >
           Rematch
         </button>
@@ -66,8 +66,7 @@ export function GameOutcome({
       {hasVotedRematch ? (
         <p>Waiting for {playerTwoId}...</p>
       ) : (
-        gameState.rematchVote !== undefined &&
-        gameState.rematchVote !== playerId && (
+        gameState.rematchVote !== undefined && ( // It means the other player has voted for rematch
           <p>{playerTwoId} wants to rematch!</p>
         )
       )}

@@ -5,16 +5,22 @@ export type Method = 'GET' | 'POST'
 export async function init(
   roomKey: string,
   playerId: string,
-  playerType: PlayerType = 'human',
-  includeDisplayName: boolean = true
+  playerType: PlayerType
 ) {
-  let queryParams = '?difficulty=hard'
+  const urlSearchParams = new URLSearchParams()
 
-  if (includeDisplayName && 'displayName' in localStorage) {
-    queryParams = queryParams.concat(`&displayName=${localStorage.displayName}`)
+  if (playerType === 'ai') {
+    urlSearchParams.append('difficulty', 'hard')
+  } else if ('displayName' in localStorage) {
+    urlSearchParams.append('displayName', localStorage.displayName)
   }
 
-  const path = `/${roomKey}/${playerId}/init/${playerType}${queryParams}`
+  const urlSearchParamsString = urlSearchParams.toString()
+
+  const queryParamsString =
+    urlSearchParamsString.length > 0 ? '?' + urlSearchParamsString : ''
+
+  const path = `/${roomKey}/${playerId}/init${queryParamsString}`
 
   return await sendApiRequest(path, 'POST')
 }

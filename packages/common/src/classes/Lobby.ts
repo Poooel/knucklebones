@@ -11,14 +11,14 @@ export class Lobby {
 
   addPlayer(player: Player): boolean {
     if (this.players.length >= 2) {
-      throw new Error('Too many players in the lobby.')
+      return false
     }
 
     if (
       this.players.find((presentPlayer) => presentPlayer.equals(player)) !==
       undefined
     ) {
-      throw new Error('Same player has already joined the lobby.')
+      return false
     }
 
     this.players.push(player)
@@ -30,7 +30,9 @@ export class Lobby {
   }
 
   toGameState(): GameState {
-    return new GameState(this.players[0], this.players[1])
+    const gameState = new GameState(this.players[0], this.players[1])
+    gameState.initialize()
+    return gameState
   }
 
   static fromJson(iLobby: ILobby): Lobby {

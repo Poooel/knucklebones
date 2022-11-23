@@ -29,7 +29,7 @@ export class Ai {
   suggestNextPlay() {
     const weightedPlays = this.weighPossiblePlays()
 
-    if (this.ai.getScore() > this.human.getScore()) {
+    if (this.ai.score > this.human.score) {
       return this.getRecommendedPlay(weightedPlays, 'defensive')
     } else {
       return this.getRecommendedPlay(weightedPlays, 'offensive')

@@ -14,9 +14,9 @@ const { preflight, corsify } = createCors({})
 router
   .all('*', withDurables({ parse: true }), preflight)
 
-  .post('/:roomKey/:playerId/init/', withParams, init)
-  .post('/:roomKey/:playerId/play/:column/:value', withParams, play)
-  .post('/:roomKey/:playerId/rematch/', withParams, rematch)
+  .post('/:roomKey/:playerId/init', withParams, init)
+  .post('/:roomKey/:playerId/play/:column/:dice', withParams, play)
+  .post('/:roomKey/:playerId/rematch', withParams, rematch)
   .post('/:roomKey/:playerId/displayName/:displayName', withParams, displayName)
 
   .all('*', () => missing('Are you sure about that?'))

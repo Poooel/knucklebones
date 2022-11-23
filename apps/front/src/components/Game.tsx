@@ -25,12 +25,16 @@ export function Game() {
     clearErrorMessage,
     sendRematch,
     updateDisplayName,
-    playerId,
-    roomKey
+    playerId
   } = useGame()
 
   if (gameState === null || playerOne === undefined) {
-    return <Loading />
+    return (
+      <>
+        <Ai />
+        <Loading />
+      </>
+    )
   }
 
   const { outcome, nextPlayer } = gameState
@@ -78,7 +82,6 @@ export function Game() {
         />
       </div>
       <QRCode dismissModal={outcome === 'ongoing'} />
-      {!canPlay && <Ai roomKey={roomKey} />}
     </div>
   )
 }

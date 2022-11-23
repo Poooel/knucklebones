@@ -3,7 +3,11 @@ import { error, status } from 'itty-router-extras'
 import { CloudflareEnvironment } from '../types/cloudflareEnvironment'
 import { BaseRequestWithProps } from '../types/itty'
 import { makeAiPlay } from '../utils/ai'
-import { getGameState, saveAndPropagate } from '../utils/endpoints'
+import {
+  broadcastGameState,
+  getGameState,
+  saveGameState
+} from '../utils/endpoints'
 
 export async function rematch(
   request: BaseRequestWithProps,
@@ -12,14 +16,15 @@ export async function rematch(
 ) {
   const gameState = await getGameState(request)
 
-  if (gameState.outcome === 'ongoing' || gameState.outcome === 'not-started') {
+  if (gameState.outcome === 'ongoing') {
     return error(400, "The game is still ongoing. Can't rematch.")
   }
 
-  if (gameState.rematchVote === undefined) {
-    gameState.rematchVote = request.playerId
-    await saveAndPropagate(gameState, request, cloudflareEnvironment)
-  } else {
+  if (
+    (gameState.rematchVote === undefined && gameState.playerTwo.isAi()) || // Player one vote for rematch and player two is AI
+    (gameState.rematchVote !== undefined && // A player already voted for rematch and the other player is voting as well
+      gameState.rematchVote !== request.playerId)
+  ) {
     const newGameState = new GameState(
       new Player(gameState.playerOne.id, gameState.playerOne.displayName),
       new Player(
@@ -28,7 +33,10 @@ export async function rematch(
         gameState.playerTwo.difficulty
       )
     )
-    await saveAndPropagate(newGameState, request, cloudflareEnvironment)
+    newGameState.initialize()
+
+    await saveGameState(newGameState, request)
+    await broadcastGameState(newGameState, request, cloudflareEnvironment)
 
     if (
       newGameState.playerTwo.isAi() &&
@@ -36,6 +44,10 @@ export async function rematch(
     ) {
       makeAiPlay(newGameState, request, cloudflareEnvironment, context)
     }
+  } else if (gameState.rematchVote === undefined) {
+    gameState.rematchVote = request.playerId
+    await saveGameState(gameState, request)
+    await broadcastGameState(gameState, request, cloudflareEnvironment)
   }
 
   return status(200)

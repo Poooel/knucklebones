@@ -2,11 +2,7 @@ import * as React from 'react'
 import { GameState, IGameState, IPlayer } from '@knucklebones/common'
 import { displayName, init, play, rematch } from '../utils/api'
 import useWebSocket, { ReadyState } from 'react-use-websocket'
-import { useParams } from 'react-router-dom'
-
-interface Params {
-  roomKey: string
-}
+import { useRoomKey } from './useRoomKey'
 
 function attributePlayers(
   playerId: string,
@@ -37,7 +33,7 @@ export function useGame() {
   const [gameState, setGameState] = React.useState<IGameState | null>(null)
   const [isLoading, setIsLoading] = React.useState(true)
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
-  const { roomKey } = useParams<keyof Params>() as Params
+  const roomKey = useRoomKey()
   const playerId = localStorage.getItem('playerId')!
 
   const { lastJsonMessage, readyState } = useWebSocket(getWebSocketUrl(roomKey))
@@ -46,6 +42,7 @@ export function useGame() {
     if (lastJsonMessage !== null) {
       // @ts-expect-error
       const gameState = lastJsonMessage as IGameState
+      console.log('Received new gameState: ', gameState)
       setGameState(gameState)
       setIsLoading(false)
       setErrorMessage(null)
@@ -54,7 +51,7 @@ export function useGame() {
 
   React.useEffect(() => {
     if (readyState === ReadyState.OPEN) {
-      init(roomKey, playerId).catch((error) => {
+      init(roomKey, playerId, 'human').catch((error) => {
         setErrorMessage(error.message)
       })
     }
@@ -77,7 +74,7 @@ export function useGame() {
       const previousGameState = gameState
 
       const realGameState = GameState.fromJson(gameState!)
-      realGameState.play(body)
+      realGameState.applyPlay(body)
       const mutatedGameState = realGameState.toJson()
 
       setGameState(mutatedGameState)

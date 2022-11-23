@@ -2,7 +2,11 @@ import { status } from 'itty-router-extras'
 import { CloudflareEnvironment } from '../types/cloudflareEnvironment'
 import { BaseRequestWithProps } from '../types/itty'
 import { makeAiPlay } from '../utils/ai'
-import { getGameState, saveAndPropagate } from '../utils/endpoints'
+import {
+  broadcastGameState,
+  getGameState,
+  saveGameState
+} from '../utils/endpoints'
 
 interface PlayRequest extends BaseRequestWithProps {
   dice: number
@@ -22,9 +26,12 @@ export async function play(
     author: request.playerId
   }
 
-  gameState.play(play)
+  console.log('Received play: ', play)
 
-  await saveAndPropagate(gameState, request, cloudflareEnvironment)
+  gameState.applyPlay(play)
+
+  await saveGameState(gameState, request)
+  await broadcastGameState(gameState, request, cloudflareEnvironment)
 
   if (
     gameState.playerTwo.isAi() &&
