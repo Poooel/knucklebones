@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { clsx } from 'clsx'
-import { IPlayer, countDiceInColumn } from '@knucklebones/common'
+import { IPlayer, countDiceInColumn, Outcome } from '@knucklebones/common'
 import { Dice } from './Dice'
 import { Column } from './Column'
 import { Cell } from './Cell'
@@ -12,6 +12,7 @@ interface BoardProps extends Partial<IPlayer> {
   onColumnClick?(colIndex: number): void
   updateDisplayName?(displayName: string): void
   isDisplayNameEditable?: boolean
+  outcome: Outcome
 }
 
 const MAX_COLUMNS = 3
@@ -33,7 +34,8 @@ export function Board({
   canPlay = false,
   onColumnClick,
   updateDisplayName,
-  isDisplayNameEditable = false
+  isDisplayNameEditable = false,
+  outcome
 }: BoardProps) {
   return (
     <div
@@ -61,7 +63,7 @@ export function Board({
         })}
       >
         <div className='my-4'>
-          <Dice value={canPlay ? dice : undefined} />
+          <Dice value={outcome === 'ongoing' ? dice : undefined} />
         </div>
         <div
           className={clsx('flex items-center gap-1 md:gap-4', {

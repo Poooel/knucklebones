@@ -34,6 +34,7 @@ export async function rematch(
       )
     )
     newGameState.initialize()
+    newGameState.spectators = gameState.spectators
 
     await saveGameState(newGameState, request)
     await broadcastGameState(newGameState, request, cloudflareEnvironment)

@@ -5,6 +5,7 @@ import { IGameState, IPlayer, Player } from '@knucklebones/common'
 interface OutcomeProps extends IGameState {
   playerId: string
   onRematch(): void
+  isSpectator: boolean
 }
 
 function getWinnerName(playerId: string, player: IPlayer) {
@@ -31,10 +32,11 @@ const getWinMessage = (
 export function GameOutcome({
   playerId,
   onRematch,
+  isSpectator,
   ...gameState
 }: OutcomeProps) {
   const { outcome } = gameState
-  const hasVotedRematch = gameState.rematchVote === playerId
+  const hasVotedRematch = isSpectator || gameState.rematchVote === playerId
 
   if (outcome === 'ongoing') {
     return <p className='text-slate-900 dark:text-slate-200'>VS</p>
@@ -48,27 +50,34 @@ export function GameOutcome({
   return (
     <div className='grid justify-items-center gap-2 font-semibold text-slate-900 dark:text-slate-50'>
       <p>{getWinMessage(playerId, gameState)}</p>
-      <div className='flex gap-4'>
-        <Link
-          className='rounded-md border-2 border-slate-200 bg-transparent py-1 px-2 transition-colors duration-100 hover:bg-black/10 dark:border-slate-700 dark:hover:bg-white/10'
-          to={'/'}
-        >
-          Replay
-        </Link>
-        <button
-          className='rounded-md border-2 border-slate-200 bg-transparent py-1 px-2 transition-colors duration-100 enabled:hover:bg-black/10 disabled:opacity-50 dark:border-slate-700 enabled:dark:hover:bg-white/10'
-          onClick={onRematch}
-          disabled={hasVotedRematch}
-        >
-          Rematch
-        </button>
-      </div>
-      {hasVotedRematch ? (
-        <p>Waiting for {playerTwoId}...</p>
-      ) : (
-        gameState.rematchVote !== undefined && ( // It means the other player has voted for rematch
-          <p>{playerTwoId} wants to rematch!</p>
+      {!isSpectator && (
+        <div className='flex gap-4'>
+          <Link
+            className='rounded-md border-2 border-slate-200 bg-transparent py-1 px-2 transition-colors duration-100 hover:bg-black/10 dark:border-slate-700 dark:hover:bg-white/10'
+            to={'/'}
+          >
+            Replay
+          </Link>
+          <button
+            className='rounded-md border-2 border-slate-200 bg-transparent py-1 px-2 transition-colors duration-100 enabled:hover:bg-black/10 disabled:opacity-50 dark:border-slate-700 enabled:dark:hover:bg-white/10'
+            onClick={onRematch}
+            disabled={hasVotedRematch}
+          >
+            Rematch
+          </button>
+        </div>
+      )}
+
+      {!isSpectator ? (
+        hasVotedRematch ? (
+          <p>Waiting for {playerTwoId}...</p>
+        ) : (
+          gameState.rematchVote !== undefined && ( // It means the other player has voted for rematch
+            <p>{playerTwoId} wants to rematch!</p>
+          )
         )
+      ) : (
+        <div />
       )}
     </div>
   )
