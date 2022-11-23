@@ -17,10 +17,6 @@ export class GameStateStore extends createDurable({ autoPersist: true }) {
   save(gameState: GameState) {
     this.gameState = gameState
   }
-
-  getState() {
-    return this.gameState
-  }
 }
 
 export interface GameStateStoreProps {

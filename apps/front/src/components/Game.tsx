@@ -8,6 +8,7 @@ import { Loading } from './Loading'
 import { WarningToast } from './WarningToast'
 import { IconButton } from './IconButton'
 import { QRCode } from './QRCode'
+import { Ai } from './Ai'
 
 function scrollToTop() {
   window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -24,7 +25,8 @@ export function Game() {
     clearErrorMessage,
     sendRematch,
     updateDisplayName,
-    playerId
+    playerId,
+    roomKey
   } = useGame()
 
   if (gameState === null || playerOne === undefined) {
@@ -76,6 +78,7 @@ export function Game() {
         />
       </div>
       <QRCode dismissModal={gameOutcome === 'ongoing'} />
+      {!canPlay && <Ai roomKey={roomKey} />}
     </div>
   )
 }

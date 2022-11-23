@@ -1,10 +1,17 @@
 import { GameState } from '../types/gameState'
-import { countDiceInColumn } from '../utils/count'
 import { Play } from '../types/play'
 import { emptyPlayerState, Player } from '../types/player'
 import { GameOutcome } from '../types/gameOutcome'
-import { getRandomDice, getRandomValue } from './random'
+import { coinflip, getRandomDice } from './random'
 import { getName, getNameFromPlayer } from './name'
+import { getColumnScore } from './score'
+
+function addLog(gameState: GameState, log: string) {
+  gameState.logs.push({
+    timestamp: Date.now(),
+    content: log
+  })
+}
 
 export function initializePlayers(
   gameState: GameState,
@@ -37,29 +44,27 @@ export function initializePlayers(
       `${getName(playerId, displayName)} has connected to the game`
     )
 
-    const isPlayerOneStarting = getRandomValue() > 0.5
+    const isPlayerOneStarting = coinflip()
+    const nextDice = getRandomDice()
+
     if (isPlayerOneStarting) {
       gameState.nextPlayer = gameState.playerOne
-      gameState.playerOne.dice = getRandomDice()
+      gameState.playerOne.dice = nextDice
     } else {
       gameState.nextPlayer = gameState.playerTwo
-      gameState.playerTwo.dice = getRandomDice()
+      gameState.playerTwo.dice = nextDice
     }
+
     gameState.gameOutcome = 'ongoing'
     addLog(
       gameState,
-      `${getNameFromPlayer(gameState.nextPlayer)} is going to play first`
+      `${getNameFromPlayer(
+        gameState.nextPlayer
+      )} is going to play first with a ${nextDice}`
     )
   }
 
   return gameState
-}
-
-export function addLog(gameState: GameState, log: string) {
-  gameState.logs.push({
-    timestamp: Date.now(),
-    content: log
-  })
 }
 
 export function mutateGameState(
@@ -148,23 +153,12 @@ function updateScores(gameState: GameState) {
 
 function updateScore(player: Player) {
   const scorePerColumn = player.columns.map((column) => {
-    const countedDice = countDiceInColumn(column)
-    return getColumnScore(countedDice)
+    return getColumnScore(column)
   })
   const score = scorePerColumn.reduce((acc, total) => acc + total, 0)
 
   player.scorePerColumn = scorePerColumn
   player.score = score
-}
-
-function getColumnScore(countedDice: Map<number, number>) {
-  return [...countedDice.entries()].reduce((acc, [dice, count]) => {
-    return acc + getDiceScore(dice, count)
-  }, 0)
-}
-
-function getDiceScore(dice: number, count: number) {
-  return dice * Math.pow(count, 2)
 }
 
 function computeGameOutcome(

@@ -1,9 +1,4 @@
-import {
-  ThrowableRouter,
-  missing,
-  withParams,
-  withContent
-} from 'itty-router-extras'
+import { ThrowableRouter, missing, withParams } from 'itty-router-extras'
 import { withDurables } from 'itty-durable'
 import { createCors } from 'itty-cors'
 import { displayName, init, play, rematch, webSocket } from '../endpoints'
@@ -13,27 +8,32 @@ export { GameStateStore } from '../durable-objects/gameStateStore'
 export { WebSocketStore } from '../durable-objects/webSocketStore'
 
 const router = ThrowableRouter()
-// @ts-expect-error
+
 const { preflight, corsify } = createCors({})
 
 router
-  .all('*', withDurables({ parse: true }))
-  .options('*', preflight)
+  .all('*', withDurables({ parse: true }), preflight)
 
-  .get('/:roomKey/:playerId/init', withParams, init)
-  .post('/:roomKey/:playerId/play', withParams, withContent, play)
+  .post('/:roomKey/:playerId/init/:playerType', withParams, init)
+  .post('/:roomKey/:playerId/play/:column/:value', withParams, play)
   .post('/:roomKey/:playerId/rematch/', withParams, rematch)
-  .post('/:roomKey/:playerId/displayName', withParams, withContent, displayName)
+  .post('/:roomKey/:playerId/displayName/:displayName', withParams, displayName)
 
   .all('*', () => missing('Are you sure about that?'))
 
 export default {
-  async fetch(request: Request, cloudflareEnvironment: CloudflareEnvironment) {
+  async fetch(
+    request: Request,
+    cloudflareEnvironment: CloudflareEnvironment,
+    context: ExecutionContext
+  ) {
     if (isWebSocketEndpointCalled(request)) {
       return await webSocket(request, cloudflareEnvironment)
     }
 
-    return await router.handle(request, cloudflareEnvironment).then(corsify)
+    return await router
+      .handle(request, cloudflareEnvironment, context)
+      .then(corsify)
   }
 }
 

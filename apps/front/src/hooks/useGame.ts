@@ -51,14 +51,7 @@ export function useGame() {
 
   React.useEffect(() => {
     if (readyState === ReadyState.OPEN) {
-      const fetchGameState = async () => {
-        const gameState = await init(roomKey, playerId)
-        setGameState(gameState)
-        setIsLoading(false)
-        setErrorMessage(null)
-      }
-
-      fetchGameState().catch((error) => {
+      init(roomKey, playerId).catch((error) => {
         setErrorMessage(error.message)
       })
     }
@@ -119,6 +112,7 @@ export function useGame() {
     clearErrorMessage,
     sendRematch,
     updateDisplayName,
-    playerId
+    playerId,
+    roomKey
   }
 }
