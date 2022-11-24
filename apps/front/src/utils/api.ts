@@ -1,6 +1,6 @@
 import { Play, PlayerType } from '@knucklebones/common'
 
-export type Method = 'GET' | 'POST'
+export type Method = 'GET' | 'POST' | 'DELETE'
 
 export async function init(
   roomKey: string,
@@ -42,6 +42,11 @@ export async function displayName(
 ) {
   const path = `/${roomKey}/${playerId}/displayName/${displayName}`
   return await sendApiRequest(path, 'POST')
+}
+
+export async function deleteDisplayName(roomKey: string, playerId: string) {
+  const path = `/${roomKey}/${playerId}/displayName`
+  return await sendApiRequest(path, 'DELETE')
 }
 
 async function sendApiRequest(path: string, method: Method, body?: any) {

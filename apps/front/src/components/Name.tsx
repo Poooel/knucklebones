@@ -100,15 +100,6 @@ export function Name({
     setIsBeingEdited(true)
   }
 
-  // Only ever true when the player is not connected
-  if (name === undefined) {
-    return (
-      <p className='animate-pulse text-slate-900 dark:text-slate-200'>
-        Waiting for another player to join...
-      </p>
-    )
-  }
-
   if (isBeingEdited) {
     return (
       <div className='flex items-center gap-2'>

@@ -1,6 +1,18 @@
 import * as React from 'react'
-import { GameState, IGameState, IPlayer } from '@knucklebones/common'
-import { displayName, init, play, rematch } from '../utils/api'
+import { useLocation } from 'react-router-dom'
+import {
+  GameState,
+  IGameState,
+  IPlayer,
+  isEmptyOrBlank
+} from '@knucklebones/common'
+import {
+  deleteDisplayName,
+  displayName,
+  init,
+  play,
+  rematch
+} from '../utils/api'
 import useWebSocket, { ReadyState } from 'react-use-websocket'
 import { useRoomKey } from './useRoomKey'
 
@@ -35,6 +47,7 @@ export function useGame() {
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
   const roomKey = useRoomKey()
   const playerId = localStorage.getItem('playerId')!
+  const { state } = useLocation()
 
   const { lastJsonMessage, readyState } = useWebSocket(getWebSocketUrl(roomKey))
 
@@ -50,11 +63,17 @@ export function useGame() {
 
   React.useEffect(() => {
     if (readyState === ReadyState.OPEN) {
-      init(roomKey, playerId, 'human').catch((error) => {
-        setErrorMessage(error.message)
-      })
+      init(roomKey, playerId, 'human')
+        .then(() => {
+          if (state?.playerType === 'ai') {
+            return init(roomKey, 'beep-boop', 'ai')
+          }
+        })
+        .catch((error) => {
+          setErrorMessage(error.message)
+        })
     }
-  }, [roomKey, playerId, readyState])
+  }, [roomKey, playerId, readyState, state])
 
   const [playerOne, playerTwo] = attributePlayers(playerId, gameState)
 
@@ -96,9 +115,15 @@ export function useGame() {
   }
 
   async function updateDisplayName(newDisplayName: string) {
-    await displayName(roomKey, playerId, newDisplayName).catch((error) => {
-      setErrorMessage(error.message)
-    })
+    if (isEmptyOrBlank(newDisplayName)) {
+      await deleteDisplayName(roomKey, playerId).catch((error) => {
+        setErrorMessage(error.message)
+      })
+    } else {
+      await displayName(roomKey, playerId, newDisplayName).catch((error) => {
+        setErrorMessage(error.message)
+      })
+    }
   }
 
   return {
