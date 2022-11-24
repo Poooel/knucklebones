@@ -15,10 +15,10 @@ export function Button({
     <button
       {...props}
       className={clsx(
-        'rounded-md border-2 border-slate-300 bg-slate-200 p-4 font-medium enabled:hover:bg-slate-200/70 disabled:opacity-50 dark:border-slate-600 dark:bg-slate-700 enabled:dark:hover:bg-slate-700/70',
+        'rounded-md border-2 border-slate-300 bg-slate-200 font-medium enabled:hover:bg-slate-200/70 disabled:opacity-50 dark:border-slate-600 dark:bg-slate-700 enabled:dark:hover:bg-slate-700/70',
         {
           'p-2 text-base': variant === 'default',
-          'p-4 text-4xl': variant === 'large'
+          'p-2 text-2xl md:p-4 md:text-4xl': variant === 'large'
         },
         props.className
       )}
