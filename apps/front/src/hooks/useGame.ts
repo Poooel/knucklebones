@@ -1,6 +1,17 @@
 import * as React from 'react'
-import { GameState, IGameState, IPlayer } from '@knucklebones/common'
-import { displayName, init, play, rematch } from '../utils/api'
+import {
+  GameState,
+  IGameState,
+  IPlayer,
+  isEmptyOrBlank
+} from '@knucklebones/common'
+import {
+  deleteDisplayName,
+  displayName,
+  init,
+  play,
+  rematch
+} from '../utils/api'
 import useWebSocket, { ReadyState } from 'react-use-websocket'
 import { useRoomKey } from './useRoomKey'
 
@@ -96,9 +107,15 @@ export function useGame() {
   }
 
   async function updateDisplayName(newDisplayName: string) {
-    await displayName(roomKey, playerId, newDisplayName).catch((error) => {
-      setErrorMessage(error.message)
-    })
+    if (isEmptyOrBlank(newDisplayName)) {
+      await deleteDisplayName(roomKey, playerId).catch((error) => {
+        setErrorMessage(error.message)
+      })
+    } else {
+      await displayName(roomKey, playerId, newDisplayName).catch((error) => {
+        setErrorMessage(error.message)
+      })
+    }
   }
 
   return {
