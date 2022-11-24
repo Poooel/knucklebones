@@ -5,8 +5,8 @@
 @font-face {
   font-family: 'Hubot Sans';
   src:
-    url('Hubot-Sans.woff2') format('woff2 supports variations'),
-    url('Hubot-Sans.woff2') format('woff2-variations');
+    url('/Hubot-Sans.woff2') format('woff2 supports variations'),
+    url('/Hubot-Sans.woff2') format('woff2-variations');
   font-weight: 200 900;
   font-stretch: 75% 125%;
 }
@@ -14,8 +14,8 @@
 @font-face {
   font-family: 'Mona Sans';
   src:
-    url('Mona-Sans.woff2') format('woff2 supports variations'),
-    url('Mona-Sans.woff2') format('woff2-variations');
+    url('/Mona-Sans.woff2') format('woff2 supports variations'),
+    url('/Mona-Sans.woff2') format('woff2-variations');
   font-weight: 200 900;
   font-stretch: 75% 125%;
 }
@@ -26,7 +26,8 @@
 }
 
 @layer base {
-  html {
+  html, button, input {
     font-family: 'Hubot Sans', system-ui, sans-serif;
+    font-feature-settings: "ss01", "ss04", "tnum";
   }
 }

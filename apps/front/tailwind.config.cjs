@@ -6,6 +6,9 @@ module.exports = {
     extend: {
       gridTemplateColumns: {
         '3-central': '1fr auto 1fr'
+      },
+      fontFamily: {
+        mona: ['"Mona Sans"']
       }
     }
   },
