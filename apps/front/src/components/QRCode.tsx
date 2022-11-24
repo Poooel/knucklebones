@@ -7,8 +7,8 @@ export function QRCode() {
   const { copy, copied } = useClipboard({ copiedTimeout: 750 })
 
   return (
-    <div className='flex flex-col gap-4 p-4'>
-      <h3 className='text-center text-lg font-medium leading-6'>
+    <div className='flex flex-col gap-4 p-4 text-slate-900 transition-all dark:text-slate-200'>
+      <h3 className='text-center text-xl font-medium'>
         Scan the QR Code to share the room with other players:
       </h3>
       <div className='flex flex-col items-center justify-center gap-6'>
@@ -16,7 +16,7 @@ export function QRCode() {
           <QRCodeSVG value={window.location.href} />
         </div>
         <button
-          className='flex flex-row items-center gap-2 rounded-md border-2 border-slate-200 bg-transparent py-2 px-4 transition-colors duration-100 enabled:hover:bg-black/10 disabled:opacity-50 dark:border-slate-700 enabled:dark:hover:bg-white/10'
+          className='flex flex-row items-center gap-2 rounded-md border-2 border-slate-200 bg-transparent py-2 px-4 text-lg enabled:hover:bg-black/10 disabled:opacity-50 dark:border-slate-700 enabled:dark:hover:bg-white/10'
           onClick={() => copy(window.location.href)}
         >
           {copied ? (

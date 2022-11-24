@@ -6,3 +6,9 @@
   height: 95vh; /* Fallback */
   height: calc(95 * var(--vh));
 }
+
+@layer base {
+  html {
+    font-family: 'Hubot-Sans', system-ui, sans-serif;
+  }
+}
