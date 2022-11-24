@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { useLocation } from 'react-router-dom'
 import {
   GameState,
   IGameState,
@@ -46,6 +47,7 @@ export function useGame() {
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
   const roomKey = useRoomKey()
   const playerId = localStorage.getItem('playerId')!
+  const { state } = useLocation()
 
   const { lastJsonMessage, readyState } = useWebSocket(getWebSocketUrl(roomKey))
 
@@ -61,11 +63,17 @@ export function useGame() {
 
   React.useEffect(() => {
     if (readyState === ReadyState.OPEN) {
-      init(roomKey, playerId, 'human').catch((error) => {
-        setErrorMessage(error.message)
-      })
+      init(roomKey, playerId, 'human')
+        .then(() => {
+          if (state?.playerType === 'ai') {
+            return init(roomKey, 'beep-boop', 'ai')
+          }
+        })
+        .catch((error) => {
+          setErrorMessage(error.message)
+        })
     }
-  }, [roomKey, playerId, readyState])
+  }, [roomKey, playerId, readyState, state])
 
   const [playerOne, playerTwo] = attributePlayers(playerId, gameState)
 

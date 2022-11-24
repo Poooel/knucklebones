@@ -1,8 +1,7 @@
 import * as React from 'react'
 import { useNavigate } from 'react-router-dom'
-import KnucklebonesLogo from '../svgs/logo.svg'
 import { v4 as uuidv4 } from 'uuid'
-import { init } from '../utils/api'
+import KnucklebonesLogo from '../svgs/logo.svg'
 import { Button } from './Button'
 
 export function HomePage() {
@@ -33,10 +32,7 @@ export function HomePage() {
           className='tracking-tight'
           onClick={() => {
             const roomKey = uuidv4()
-            navigate(`/room/${roomKey}`)
-            setTimeout(() => {
-              void init(roomKey, 'beep-boop', 'ai')
-            }, 20)
+            navigate(`/room/${roomKey}`, { state: { playerType: 'ai' } })
           }}
         >
           Play against an AI
