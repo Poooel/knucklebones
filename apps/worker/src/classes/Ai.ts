@@ -1,9 +1,11 @@
 import {
   countDiceInColumn,
+  Difficulty,
   getColumnScore,
   getMaxBy,
   getMinBy,
-  Player
+  Player,
+  sortBy
 } from '@knucklebones/common'
 
 interface WeightedPlay {
@@ -19,11 +21,13 @@ export class Ai {
   human: Player
   ai: Player
   dice: number
+  difficulty: Difficulty
 
-  constructor(human: Player, ai: Player, dice: number) {
+  constructor(human: Player, ai: Player, dice: number, difficulty: Difficulty) {
     this.human = human
     this.ai = ai
     this.dice = dice
+    this.difficulty = difficulty
   }
 
   suggestNextPlay() {
@@ -40,7 +44,19 @@ export class Ai {
     weightedPlays: WeightedPlay[],
     strategy: Strategy
   ): WeightedPlay {
-    const recommendedPlay = getMaxBy(weightedPlays, 'score')
+    let recommendedPlay: WeightedPlay
+
+    switch (this.difficulty) {
+      case 'easy':
+        recommendedPlay = sortBy(weightedPlays, 'score', 'ascending')[0]
+        break
+      case 'medium':
+        recommendedPlay = sortBy(weightedPlays, 'score', 'ascending')[1]
+        break
+      case 'hard':
+        recommendedPlay = sortBy(weightedPlays, 'score', 'descending')[0]
+        break
+    }
 
     const duplicatePlays = weightedPlays.filter(
       (value) => value.score === recommendedPlay.score

@@ -66,7 +66,7 @@ export function useGame() {
       init(roomKey, playerId, 'human')
         .then(() => {
           if (state?.playerType === 'ai') {
-            return init(roomKey, 'beep-boop', 'ai')
+            return init(roomKey, 'beep-boop', 'ai', state?.difficulty)
           }
         })
         .catch((error) => {
