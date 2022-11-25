@@ -1,4 +1,5 @@
 import { Transition } from '@headlessui/react'
+import { capitalize } from '@knucklebones/common'
 import * as React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'
@@ -49,39 +50,22 @@ export function HomePage() {
         leaveTo='opacity-0 translate-y-8'
       >
         <div className='flex flex-row gap-4'>
-          <Button
-            variant='medium'
-            className='tracking-tight'
-            onClick={() =>
-              navigate(`/room/${uuidv4()}`, {
-                state: { playerType: 'ai', difficulty: 'easy' }
-              })
-            }
-          >
-            Easy
-          </Button>
-          <Button
-            variant='medium'
-            className='tracking-tight'
-            onClick={() =>
-              navigate(`/room/${uuidv4()}`, {
-                state: { playerType: 'ai', difficulty: 'medium' }
-              })
-            }
-          >
-            Medium
-          </Button>
-          <Button
-            variant='medium'
-            className='tracking-tight'
-            onClick={() =>
-              navigate(`/room/${uuidv4()}`, {
-                state: { playerType: 'ai', difficulty: 'hard' }
-              })
-            }
-          >
-            Hard
-          </Button>
+          {['easy', 'medium', 'hard'].map((difficulty) => {
+            return (
+              <Button
+                key={difficulty}
+                variant='medium'
+                className='tracking-tight'
+                onClick={() =>
+                  navigate(`/room/${uuidv4()}`, {
+                    state: { playerType: 'ai', difficulty }
+                  })
+                }
+              >
+                {capitalize(difficulty)}
+              </Button>
+            )
+          })}
         </div>
       </Transition>
     </div>
