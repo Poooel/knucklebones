@@ -1,16 +1,17 @@
-import { Play, PlayerType } from '@knucklebones/common'
+import { Difficulty, Play, PlayerType } from '@knucklebones/common'
 
 export type Method = 'GET' | 'POST' | 'DELETE'
 
 export async function init(
   roomKey: string,
   playerId: string,
-  playerType: PlayerType
+  playerType: PlayerType,
+  difficulty?: Difficulty
 ) {
   const urlSearchParams = new URLSearchParams()
 
-  if (playerType === 'ai') {
-    urlSearchParams.append('difficulty', 'hard')
+  if (playerType === 'ai' && difficulty !== undefined) {
+    urlSearchParams.append('difficulty', difficulty)
   } else if ('displayName' in localStorage) {
     urlSearchParams.append('displayName', localStorage.displayName)
   }

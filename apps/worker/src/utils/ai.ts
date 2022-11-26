@@ -14,7 +14,8 @@ export function makeAiPlay(
     const ai = new Ai(
       gameState.playerOne,
       gameState.playerTwo,
-      gameState.nextPlayer.dice!
+      gameState.nextPlayer.dice!,
+      gameState.nextPlayer.difficulty!
     )
 
     const nextMove = ai.suggestNextPlay()
