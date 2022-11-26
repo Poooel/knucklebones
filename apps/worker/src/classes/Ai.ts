@@ -44,17 +44,19 @@ export class Ai {
     weightedPlays: WeightedPlay[],
     strategy: Strategy
   ): WeightedPlay {
+    const [easy, medium, hard] = sortBy(weightedPlays, 'score', 'ascending')
+
     let recommendedPlay: WeightedPlay
 
     switch (this.difficulty) {
       case 'easy':
-        recommendedPlay = sortBy(weightedPlays, 'score', 'ascending')[0]
+        recommendedPlay = easy
         break
       case 'medium':
-        recommendedPlay = sortBy(weightedPlays, 'score', 'ascending')[1]
+        recommendedPlay = medium
         break
       case 'hard':
-        recommendedPlay = sortBy(weightedPlays, 'score', 'descending')[0]
+        recommendedPlay = hard
         break
     }
 
