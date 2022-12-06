@@ -1,21 +1,26 @@
-import clsx from 'clsx'
 import * as React from 'react'
+import clsx from 'clsx'
+import { Box, PolymorphicComponentProps } from 'react-polymorphic-box'
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  children: React.ReactNode
+interface ButtonProps {
   variant?: 'default' | 'large' | 'medium'
 }
+type PolymorphedButtonProps<E extends React.ElementType> =
+  PolymorphicComponentProps<E, ButtonProps>
 
-export function Button({
+const defaultElement = 'button'
+
+export function Button<E extends React.ElementType = typeof defaultElement>({
   children,
   variant = 'default',
   ...props
-}: ButtonProps) {
+}: PolymorphedButtonProps<E>) {
   return (
-    <button
+    <Box
+      as={defaultElement}
       {...props}
       className={clsx(
-        'rounded-md border-2 border-slate-300 bg-slate-200 font-medium enabled:hover:bg-slate-200/70 disabled:opacity-50 dark:border-slate-600 dark:bg-slate-700 enabled:dark:hover:bg-slate-700/70',
+        'rounded-md border-2 border-slate-300 bg-slate-200 text-center font-medium enabled:hover:bg-slate-200/70 disabled:opacity-50 dark:border-slate-600 dark:bg-slate-700 enabled:dark:hover:bg-slate-700/70',
         {
           'p-2 text-base': variant === 'default',
           'p-2 text-2xl md:p-4 md:text-4xl': variant === 'large',
@@ -25,6 +30,6 @@ export function Button({
       )}
     >
       {children}
-    </button>
+    </Box>
   )
 }

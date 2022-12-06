@@ -1,13 +1,14 @@
 import * as React from 'react'
 import { ArrowUpIcon } from '@heroicons/react/24/solid'
 import { useGame } from '../hooks/useGame'
-import { Board } from './Board'
+import { PlayerBoard } from './Board'
 import { Logs } from './Logs'
 import { GameOutcome } from './GameOutcome'
 import { Loading } from './Loading'
 import { WarningToast } from './WarningToast'
 import { IconButton } from './IconButton'
 import { QRCodeModal } from './QRCodeModal'
+import { HowToPlayModal } from './HowToPlay'
 
 function scrollToTop() {
   window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -42,7 +43,7 @@ export function Game() {
   return (
     <div className='lg:grid-cols-3-central grid grid-cols-1'>
       <div className='h-95 flex flex-col items-center justify-evenly lg:h-screen'>
-        <Board
+        <PlayerBoard
           {...playerTwo!}
           isPlayerOne={false}
           canPlay={canPlayerTwoPlay}
@@ -56,7 +57,7 @@ export function Game() {
           }}
           isSpectator={isSpectator}
         />
-        <Board
+        <PlayerBoard
           {...playerOne!}
           isPlayerOne
           onColumnClick={canPlayerOnePlay ? sendPlay : undefined}
@@ -83,6 +84,7 @@ export function Game() {
         />
       </div>
       <QRCodeModal />
+      <HowToPlayModal />
     </div>
   )
 }
