@@ -16,13 +16,18 @@ interface CountedDiceProps {
 
 function CountedDice({ value, count }: CountedDiceProps) {
   if (count === 1) {
-    return <Dice value={value} count={count} variant='mini' />
+    return <Dice value={value} count={count} variant='small' />
   }
   return (
-    <p className='flex flex-row items-center'>
-      <span>({count ** 2} x</span>
-      <Dice value={value} count={count} variant='mini' className='mx-1' />
-      <span>)</span>
+    <p className='flex flex-row items-center gap-1'>
+      <span>((</span>
+      {Array.from({ length: count }).map((_, i) => (
+        <>
+          <Dice value={value} count={count} variant='small' key={i} />
+          {i + 1 < count && <span>+</span>}
+        </>
+      ))}
+      <span>) x {count})</span>
     </p>
   )
 }

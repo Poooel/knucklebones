@@ -2,30 +2,30 @@ import * as React from 'react'
 import { clsx } from 'clsx'
 import { Transition } from '@headlessui/react'
 
-type DiceVariant = 'base' | 'mini'
-interface ClassName {
-  className?: string
-}
-
-interface DiceProps extends ClassName {
+type DiceVariant = 'base' | 'small'
+interface DiceProps {
   value: number
   count?: number
   variant?: DiceVariant
+  className?: string
+}
+interface DotProps {
+  className?: string
 }
 
 const baseClassName =
   'aspect-square h-12 portrait:md:h-16 landscape:md:h-12 landscape:lg:h-16'
-const miniClassName = 'aspect-square h-6'
+const smallClassName = 'aspect-square h-6'
 
 const VariantContext = React.createContext<DiceVariant>('base')
 
-function DicePlaceholder({ className }: ClassName) {
+function DicePlaceholder({ className }: DotProps) {
   const variant = React.useContext(VariantContext)
   return (
     <div
       className={clsx(className, {
         [baseClassName]: variant === 'base',
-        [miniClassName]: variant === 'mini'
+        [smallClassName]: variant === 'small'
       })}
     ></div>
   )
@@ -47,7 +47,7 @@ function DiceContainer({ children }: React.PropsWithChildren) {
   )
 }
 
-function Dot({ className }: ClassName) {
+function Dot({ className }: DotProps) {
   const variant = React.useContext(VariantContext)
   return (
     <div
@@ -56,7 +56,7 @@ function Dot({ className }: ClassName) {
         className,
         {
           'h-2 lg:h-3': variant === 'base',
-          'h-1': variant === 'mini'
+          'h-1': variant === 'small'
         }
       )}
     ></div>
@@ -154,7 +154,7 @@ function SimpleDice({ value, className, count = 1 }: DiceProps) {
         {
           [baseClassName]: variant === 'base',
           shadow: variant === 'base',
-          [miniClassName]: variant === 'mini'
+          [smallClassName]: variant === 'small'
         }
       )}
     >
