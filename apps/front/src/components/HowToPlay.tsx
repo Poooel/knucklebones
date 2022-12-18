@@ -46,16 +46,16 @@ function ScoreExample() {
           You score even more points when stacking the same dice in a column
         </ExplanationText>
         <div className='flex flex-row items-center gap-1'>
-          <Dice value={1} count={1} variant='small' /> <span> = x 1</span>
+          <Dice value={1} count={1} variant='small' /> <span> ➝ x 1 = 1</span>
         </div>
         <div className='flex flex-row items-center gap-1'>
           <Dice value={2} count={2} variant='small' />{' '}
-          <Dice value={2} count={2} variant='small' /> <span> = x 2</span>
+          <Dice value={2} count={2} variant='small' /> <span> ➝ x 2 = 8</span>
         </div>
         <div className='flex flex-row items-center gap-1'>
           <Dice value={3} count={3} variant='small' />{' '}
           <Dice value={3} count={3} variant='small' />{' '}
-          <Dice value={3} count={3} variant='small' /> <span> = x 3</span>
+          <Dice value={3} count={3} variant='small' /> <span> ➝ x 3 = 27</span>
         </div>
       </div>
     </div>
@@ -70,7 +70,7 @@ function RemovalExample() {
           canPlay={false}
           columns={PLAYER_TWO_REMOVE_EXAMPLE_COLUMNS}
           isPlayerOne={false}
-          diceClassName='opacity-50'
+          diceClassName='opacity-75 animate-pulse'
         />
         <Board
           canPlay={false}
