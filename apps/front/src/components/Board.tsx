@@ -136,7 +136,6 @@ export function PlayerBoard({
             columns={columns}
             onColumnClick={onColumnClick}
           />
-
         </div>
         <div className='my-4'>
           <p>Total: {score}</p>

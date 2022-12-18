@@ -6,6 +6,7 @@ import { IconButton } from './IconButton'
 import { Modal } from './Modal'
 import { Board } from './Board'
 import { Dice } from './Dice'
+import { ColumnScore } from './ColumnScore'
 
 const SCORE_EXAMPLE_COLUMNS = [[1], [2, 2], [3, 3, 3]]
 const PLAYER_ONE_REMOVE_EXAMPLE_COLUMNS = [[], [], [6]]
@@ -45,18 +46,9 @@ function ScoreExample() {
         <ExplanationText>
           You score even more points when stacking the same dice in a column
         </ExplanationText>
-        <div className='flex flex-row items-center gap-1'>
-          <Dice value={1} count={1} variant='small' /> <span> ➝ x 1 = 1</span>
-        </div>
-        <div className='flex flex-row items-center gap-1'>
-          <Dice value={2} count={2} variant='small' />{' '}
-          <Dice value={2} count={2} variant='small' /> <span> ➝ x 2 = 8</span>
-        </div>
-        <div className='flex flex-row items-center gap-1'>
-          <Dice value={3} count={3} variant='small' />{' '}
-          <Dice value={3} count={3} variant='small' />{' '}
-          <Dice value={3} count={3} variant='small' /> <span> ➝ x 3 = 27</span>
-        </div>
+        <ColumnScore dice={[3]} score={3} showScore />
+        <ColumnScore dice={[3, 3]} score={12} showScore />
+        <ColumnScore dice={[3, 3, 3]} score={27} showScore />
       </div>
     </div>
   )
