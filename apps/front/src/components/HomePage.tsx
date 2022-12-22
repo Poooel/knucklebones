@@ -43,11 +43,11 @@ export function HomePage() {
           show={showAiDifficulty}
           className='flex flex-row justify-center gap-4'
           enter='transition ease-in-out duration-300 transform'
-          enterFrom='opacity-0 translate-y-8'
+          enterFrom='opacity-0 -translate-y-8'
           enterTo='opacity-100 translate-y-0'
           leave='transition ease-in-out duration-300 transform'
           leaveFrom='opacity-100 translate-y-0'
-          leaveTo='opacity-0 translate-y-8'
+          leaveTo='opacity-0 -translate-y-8'
         >
           {['easy', 'medium', 'hard'].map((difficulty) => {
             return (

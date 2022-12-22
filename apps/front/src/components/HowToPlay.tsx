@@ -5,7 +5,6 @@ import { Toolbar } from './Toolbar'
 import { IconButton } from './IconButton'
 import { Modal } from './Modal'
 import { Board } from './Board'
-import { Dice } from './Dice'
 import { ColumnScore } from './ColumnScore'
 
 const SCORE_EXAMPLE_COLUMNS = [[1], [2, 2], [3, 3, 3]]
@@ -95,7 +94,7 @@ function HowToPlay() {
         <div className='flex flex-1 flex-row justify-center'>
           <ScoreExample />
         </div>
-        <Separator className='h-full border-r' />
+        <Separator className='lg:h-full lg:border-r' />
         <div className='flex flex-1 flex-row justify-center'>
           <RemovalExample />
         </div>

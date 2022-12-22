@@ -20,7 +20,7 @@ export function Button<E extends React.ElementType = typeof defaultElement>({
       as={defaultElement}
       {...props}
       className={clsx(
-        'rounded-md border-2 border-slate-300 bg-slate-200 text-center font-medium enabled:hover:bg-slate-200/70 disabled:opacity-50 dark:border-slate-600 dark:bg-slate-700 enabled:dark:hover:bg-slate-700/70',
+        'rounded-md border-2 border-slate-300 bg-slate-200 text-center font-medium hover:bg-slate-200/70 disabled:opacity-50 disabled:hover:bg-slate-200 dark:border-slate-600 dark:bg-slate-700 dark:hover:bg-slate-700/70 disabled:dark:hover:bg-slate-700',
         {
           'p-2 text-base': variant === 'default',
           'p-2 text-2xl md:p-4 md:text-4xl': variant === 'large',
