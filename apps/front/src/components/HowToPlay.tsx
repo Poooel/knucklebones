@@ -7,7 +7,7 @@ import { Modal } from './Modal'
 import { Board } from './Board'
 import { ColumnScore } from './ColumnScore'
 
-const SCORE_EXAMPLE_COLUMNS = [[1], [2, 2], [3, 3, 3]]
+const SCORE_EXAMPLE_COLUMNS = [[3], [3, 3], [3, 3, 3]]
 const PLAYER_ONE_REMOVE_EXAMPLE_COLUMNS = [[], [], [6]]
 const PLAYER_TWO_REMOVE_EXAMPLE_COLUMNS = [[], [], [6, 6]]
 
