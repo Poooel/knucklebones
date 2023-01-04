@@ -44,7 +44,9 @@ export class Ai {
     weightedPlays: WeightedPlay[],
     strategy: Strategy
   ): WeightedPlay {
-    const [easy, medium, hard] = sortBy(weightedPlays, 'score', 'ascending')
+    const sortedWeightedPlays = sortBy(weightedPlays, 'score', 'ascending')
+    // Defaults when there's not enough plays (e.g. column is full)
+    const [easy, medium = easy, hard = medium] = sortedWeightedPlays
 
     let recommendedPlay: WeightedPlay
 
