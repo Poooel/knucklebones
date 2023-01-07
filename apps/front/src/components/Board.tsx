@@ -5,7 +5,7 @@ import { Dice } from './Dice'
 import { Column } from './Column'
 import { Cell } from './Cell'
 import { Name } from './Name'
-import { ColumnScore } from './ColumnScore'
+import { ColumnScoreTooltip  } from './ColumnScore'
 
 interface BoardProps extends IPlayer {
   isPlayerOne: boolean
@@ -43,7 +43,6 @@ export function Board({
       className={clsx('flex items-center gap-1 md:gap-4', {
         'flex-col': isPlayerOne,
         'flex-col-reverse': !isPlayerOne,
-        'opacity-75': !canPlay,
         'font-semibold': canPlay
       })}
     >
@@ -71,7 +70,7 @@ export function Board({
         >
           <div className='grid w-full grid-cols-3'>
             {scorePerColumn.map((score, index) => (
-              <ColumnScore
+              <ColumnScoreTooltip 
                 score={score}
                 dice={columns[index]}
                 isPlayerOne={isPlayerOne}
@@ -79,7 +78,9 @@ export function Board({
               />
             ))}
           </div>
-          <div className='grid aspect-square grid-cols-3 divide-x-2 divide-slate-300 rounded-lg bg-transparent shadow-lg shadow-slate-300 dark:divide-slate-800 dark:shadow-slate-800'>
+          <div className={clsx('grid aspect-square grid-cols-3 divide-x-2 divide-slate-300 rounded-lg bg-transparent shadow-lg shadow-slate-300 dark:divide-slate-800 dark:shadow-slate-800', {
+            'opacity-75': !canPlay
+          })}>
             {COLUMNS_PLACEHOLDER.map((_, colIndex) => {
               const column = columns[colIndex]
               const countedDice = countDiceInColumn(column)

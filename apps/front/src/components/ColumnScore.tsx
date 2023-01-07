@@ -19,32 +19,61 @@ function CountedDice({ value, count }: CountedDiceProps) {
     return <Dice value={value} count={count} variant='small' />
   }
   return (
+    // TODO: div (dice) shouldn't be in p
     <p className='flex flex-row items-center gap-1'>
-      <span>((</span>
+      <span>(</span>
       {Array.from({ length: count }).map((_, i) => (
-        <>
-          <Dice value={value} count={count} variant='small' key={i} />
+        <React.Fragment key={i}>
+          <Dice value={value} count={count} variant='small' />
           {i + 1 < count && <span>+</span>}
-        </>
+        </React.Fragment>
       ))}
-      <span>) x {count})</span>
+      <span>) x {count}</span>
     </p>
   )
 }
 
 interface ColumnScoreProps {
-  isPlayerOne: boolean
   dice: number[]
   score: number
+  showScore?: boolean
 }
 
-export function ColumnScore({ dice, score, isPlayerOne }: ColumnScoreProps) {
+export function ColumnScore({
+  dice,
+  score,
+  showScore = false
+}: ColumnScoreProps) {
+  const countedDice = countDiceInColumn(dice)
+
+  return (
+    <div className='flex flex-row items-center gap-2 font-normal'>
+      {[...countedDice.entries()].map(([value, count], index) => (
+        <React.Fragment key={index}>
+          <CountedDice value={value} count={count} />
+          {index + 1 < countedDice.size && <span>+</span>}
+        </React.Fragment>
+      ))}
+      {showScore && <span> = {score}</span>}
+    </div>
+  )
+}
+
+interface ColumnScoreTooltipProps extends ColumnScoreProps {
+  isPlayerOne: boolean
+}
+
+export function ColumnScoreTooltip({
+  dice,
+  score,
+  isPlayerOne
+}: ColumnScoreTooltipProps) {
   const [showTooltip, setShowTooltip] = React.useState(false)
   const { x, y, reference, floating, strategy, context } = useFloating({
     placement: isPlayerOne ? 'top' : 'bottom',
     open: showTooltip,
     onOpenChange(open) {
-      if (score > 0) {
+      if (score > 0 || !open) {
         setShowTooltip(open)
       }
     }
@@ -55,14 +84,12 @@ export function ColumnScore({ dice, score, isPlayerOne }: ColumnScoreProps) {
     useDismiss(context)
   ])
 
-  const countedDice = countDiceInColumn(dice)
-
   return (
     <>
       <p ref={reference} className='text-center' {...getReferenceProps()}>
         {score}
       </p>
-      {showTooltip && (
+      {showTooltip && score > 0 && (
         <div
           ref={floating}
           style={{
@@ -73,14 +100,7 @@ export function ColumnScore({ dice, score, isPlayerOne }: ColumnScoreProps) {
           className='w-max rounded bg-slate-200 p-2 text-slate-900 shadow shadow-slate-300 dark:bg-slate-700 dark:text-slate-50 dark:shadow-slate-800'
           {...getFloatingProps()}
         >
-          <div className='flex flex-row items-center gap-2'>
-            {[...countedDice.entries()].map(([value, count], index) => (
-              <React.Fragment key={index}>
-                <CountedDice value={value} count={count} />
-                {index + 1 < countedDice.size && <span>+</span>}
-              </React.Fragment>
-            ))}
-          </div>
+          <ColumnScore dice={dice} score={score} />
         </div>
       )}
     </>
