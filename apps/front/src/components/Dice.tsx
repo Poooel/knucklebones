@@ -187,7 +187,7 @@ export function Dice({
     <VariantContext.Provider value={variant}>
       <Transition
         show={Boolean(value)}
-        className='transition duration-100 ease-in-out'
+        className={clsx('transition duration-100 ease-in-out', className)}
         enterFrom='opacity-0 scale-75'
         enterTo='opacity-100 scale-100'
         leaveFrom='opacity-100 scale-100'

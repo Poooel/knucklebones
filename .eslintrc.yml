@@ -20,9 +20,6 @@ plugins:
   - prettier
 rules:
   prettier/prettier: error
-  # max-len:
-  #   - error
-  #   - code: 80
   space-before-function-paren: off
   "@typescript-eslint/space-before-function-paren":
     - error
@@ -35,3 +32,4 @@ rules:
     - method
   "@typescript-eslint/no-non-null-assertion": off
   "@typescript-eslint/restrict-template-expressions": off
+  "react/no-unescaped-entities": off

@@ -8,7 +8,7 @@ export function QRCode() {
   const { copy, copied } = useClipboard({ copiedTimeout: 750 })
 
   return (
-    <div className='flex flex-col gap-4 p-4'>
+    <div className='flex flex-col gap-4'>
       <h3 className='text-center text-xl font-medium'>
         Scan the QR Code to share the room with other players
       </h3>
