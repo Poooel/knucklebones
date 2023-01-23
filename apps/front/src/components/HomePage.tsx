@@ -76,30 +76,30 @@ export function HomePage() {
         >
           How to play
         </Button>
-        <div className='absolute bottom-0 flex flex-col gap-2 p-2'>
-          <Disclaimer />
-          <div className='flex flex-row justify-center gap-4'>
-            <a
-              className='text-slate-900 transition-all hover:text-slate-900/80 dark:text-slate-200 dark:hover:text-slate-50/80'
-              href='https://github.com/Poooel/knucklebones'
-              target='_blank'
-              rel='noreferrer'
-            >
-              <div className='aspect-square h-6'>
-                <CodeBracketIcon />
-              </div>
-            </a>
-            <a
-              className='text-slate-900 transition-all hover:text-slate-900/80 dark:text-slate-200 dark:hover:text-slate-50/80'
-              href='mailto:contact@knucklebones.io'
-              target='_blank'
-              rel='noreferrer'
-            >
-              <div className='aspect-square h-6'>
-                <EnvelopeIcon />
-              </div>
-            </a>
-          </div>
+      </div>
+      <div className='absolute bottom-0 flex flex-col gap-2 p-2'>
+        <Disclaimer />
+        <div className='flex flex-row justify-center gap-4'>
+          <a
+            className='text-slate-900 transition-all hover:text-slate-900/80 dark:text-slate-200 dark:hover:text-slate-50/80'
+            href='https://github.com/Poooel/knucklebones'
+            target='_blank'
+            rel='noreferrer'
+          >
+            <div className='aspect-square h-6'>
+              <CodeBracketIcon />
+            </div>
+          </a>
+          <a
+            className='text-slate-900 transition-all hover:text-slate-900/80 dark:text-slate-200 dark:hover:text-slate-50/80'
+            href='mailto:contact@knucklebones.io'
+            target='_blank'
+            rel='noreferrer'
+          >
+            <div className='aspect-square h-6'>
+              <EnvelopeIcon />
+            </div>
+          </a>
         </div>
       </div>
     </div>
