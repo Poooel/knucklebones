@@ -1,8 +1,8 @@
+import * as React from 'react'
+import { useNavigate, Link } from 'react-router-dom'
+import { v4 as uuidv4 } from 'uuid'
 import { Transition } from '@headlessui/react'
 import { capitalize } from '@knucklebones/common'
-import * as React from 'react'
-import { useNavigate } from 'react-router-dom'
-import { v4 as uuidv4 } from 'uuid'
 import KnucklebonesLogo from '../svgs/logo.svg'
 import { Button } from './Button'
 import { Disclaimer } from './Disclaimer'
@@ -42,17 +42,16 @@ export function HomePage() {
         >
           Play against an AI
         </Button>
-      </div>
-      <Transition
-        show={showAiDifficulty}
-        enter='transition ease-in-out duration-300 transform'
-        enterFrom='opacity-0 translate-y-8'
-        enterTo='opacity-100 translate-y-0'
-        leave='transition ease-in-out duration-300 transform'
-        leaveFrom='opacity-100 translate-y-0'
-        leaveTo='opacity-0 translate-y-8'
-      >
-        <div className='flex flex-row gap-4'>
+        <Transition
+          show={showAiDifficulty}
+          className='flex flex-row justify-center gap-4'
+          enter='transition ease-in-out duration-300 transform'
+          enterFrom='opacity-0 -translate-y-8'
+          enterTo='opacity-100 translate-y-0'
+          leave='transition ease-in-out duration-300 transform'
+          leaveFrom='opacity-100 translate-y-0'
+          leaveTo='opacity-0 -translate-y-8'
+        >
           {['easy', 'medium', 'hard'].map((difficulty) => {
             return (
               <Button
@@ -71,6 +70,14 @@ export function HomePage() {
           })}
         </div>
       </Transition>
+      <Button
+        as={Link}
+        variant='large'
+        className='tracking-tight'
+        to='/how-to-play'
+      >
+        How to play
+      </Button>
       <div className='absolute bottom-0 flex flex-col gap-2 p-2'>
         <Disclaimer />
         <div className='flex flex-row justify-center gap-4'>
