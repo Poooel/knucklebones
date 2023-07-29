@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { BrowserRouter } from 'react-router-dom'
-import { randomName } from '../utils/randomName'
+import { randomName } from '../utils/name'
 import { Container } from './Container'
 import { Router } from './Router'
 import { Theme } from './Theme'

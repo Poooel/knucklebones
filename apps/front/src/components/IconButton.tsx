@@ -3,7 +3,7 @@ import clsx from 'clsx'
 
 interface IconButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  icon: JSX.Element
+  icon: React.ReactNode
 }
 
 export function IconButton({ icon, ...props }: IconButtonProps) {

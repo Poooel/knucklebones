@@ -1,17 +1,23 @@
 import * as React from 'react'
-import { LinkIcon } from '@heroicons/react/24/outline'
 import { QRCodeSVG } from 'qrcode.react'
 import { useClipboard } from 'use-clipboard-copy'
+import { QrCodeIcon, LinkIcon } from '@heroicons/react/24/outline'
+import { Modal } from './Modal'
 import { Button } from './Button'
+import { ToolbarModal } from './ToolbarModal'
 
-export function QRCode() {
+const TITLE = 'Scan the QR Code to share the room with other players'
+
+interface QRCodeBaseProps {
+  title: React.ReactNode
+}
+
+function QRCodeBase({ title }: QRCodeBaseProps) {
   const { copy, copied } = useClipboard({ copiedTimeout: 750 })
 
   return (
-    <div className='flex flex-col gap-4'>
-      <h3 className='text-center text-xl font-medium'>
-        Scan the QR Code to share the room with other players
-      </h3>
+    <>
+      {title}
       <div className='flex flex-col items-center justify-center gap-6'>
         <div className='rounded-lg border-2 border-slate-200 bg-slate-50 p-2 dark:border-0'>
           <QRCodeSVG value={window.location.href} />
@@ -30,6 +36,22 @@ export function QRCode() {
           )}
         </Button>
       </div>
-    </div>
+    </>
+  )
+}
+
+export function QRCode() {
+  return (
+    <QRCodeBase
+      title={<h3 className='text-center text-xl font-medium'>{TITLE}</h3>}
+    />
+  )
+}
+
+export function QRCodeModal() {
+  return (
+    <ToolbarModal icon={<QrCodeIcon />}>
+      <QRCodeBase title={<Modal.Title>{TITLE}</Modal.Title>} />
+    </ToolbarModal>
   )
 }

@@ -19,6 +19,7 @@
     "react-dom": "^18.2.0",
     "react-polymorphic-box": "^3.0.3",
     "react-router-dom": "6",
+    "react-use": "^17.4.0",
     "react-use-websocket": "^4.2.0",
     "unique-names-generator": "^4.7.1",
     "use-clipboard-copy": "^0.2.0",

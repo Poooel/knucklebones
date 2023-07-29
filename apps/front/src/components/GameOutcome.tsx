@@ -1,7 +1,11 @@
 import * as React from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { IGameState, IPlayer, Player } from '@knucklebones/common'
+import { Link } from 'react-router-dom'
+import { IGameState, IPlayer } from '@knucklebones/common'
 import { Button } from './Button'
+import { useMedia } from 'react-use'
+import { PlayIcon } from '@heroicons/react/24/outline'
+import { getName } from '../utils/name'
+import { ToolbarModal } from './ToolbarModal'
 
 interface OutcomeProps extends IGameState {
   playerId: string
@@ -10,7 +14,7 @@ interface OutcomeProps extends IGameState {
 }
 
 function getWinnerName(playerId: string, player: IPlayer) {
-  return playerId === player.id ? 'You' : Player.fromJson(player).getName()
+  return playerId === player.id ? 'You' : getName(player)
 }
 
 const getWinMessage = (
@@ -37,24 +41,26 @@ export function GameOutcome({
   ...gameState
 }: OutcomeProps) {
   const { outcome } = gameState
-  const navigate = useNavigate()
   const hasVotedRematch = isSpectator || gameState.rematchVote === playerId
+  const isDesktop = useMedia('(min-width: 768px)')
 
   if (outcome === 'ongoing') {
-    return <p>VS</p>
+    return <p className='hidden md:block'>VS</p>
   }
 
   const playerTwoId =
     playerId === gameState.playerOne?.id
-      ? Player.fromJson(gameState.playerTwo).getName()
-      : Player.fromJson(gameState.playerOne).getName()
+      ? getName(gameState.playerTwo)
+      : getName(gameState.playerOne)
 
-  return (
+  const content = (
     <div className='grid justify-items-center gap-2 font-semibold'>
       <p>{getWinMessage(playerId, gameState)}</p>
       {!isSpectator && (
         <div className='flex gap-4'>
-          <Button onClick={() => navigate('/')}>Replay</Button>
+          <Button as={Link} to='/'>
+            Replay
+          </Button>
           <Button onClick={onRematch} disabled={hasVotedRematch}>
             Rematch
           </Button>
@@ -71,4 +77,17 @@ export function GameOutcome({
         ))}
     </div>
   )
+
+  if (isDesktop) {
+    return content
+  } else {
+    return (
+      // Prevents from rendering an empty div in the flex parent, which adds more gap
+      <div className='hidden'>
+        <ToolbarModal icon={<PlayIcon />} isInitiallyOpen>
+          {content}
+        </ToolbarModal>
+      </div>
+    )
+  }
 }

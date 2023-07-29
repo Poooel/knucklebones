@@ -1,10 +1,20 @@
 import * as React from 'react'
 import { Dialog, Transition } from '@headlessui/react'
+import { XMarkIcon } from '@heroicons/react/24/outline'
+import { IconButton } from './IconButton'
 
 interface ModalProps {
   isOpen: boolean
   className?: string
   onClose(): void
+}
+
+function ModalTitle({ children }: React.PropsWithChildren) {
+  return (
+    <Dialog.Title className='mb-4 text-center text-xl font-medium'>
+      {children}
+    </Dialog.Title>
+  )
 }
 
 export function Modal({
@@ -37,6 +47,11 @@ export function Modal({
               leaveTo='opacity-0 translate-y-4'
             >
               <Dialog.Panel className='relative transform overflow-hidden rounded-lg bg-slate-50 p-8 text-left text-slate-900 shadow-xl transition-all dark:bg-slate-900 dark:text-slate-200'>
+                <IconButton
+                  onClick={onClose}
+                  icon={<XMarkIcon />}
+                  className='absolute top-0 right-0 p-2'
+                />
                 {children}
               </Dialog.Panel>
             </Transition.Child>
@@ -46,3 +61,5 @@ export function Modal({
     </Transition.Root>
   )
 }
+
+Modal.Title = ModalTitle

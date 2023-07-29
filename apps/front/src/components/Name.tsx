@@ -6,36 +6,28 @@ import {
 } from '@heroicons/react/24/outline'
 import { IconButton } from './IconButton'
 import { isEmptyOrBlank } from '@knucklebones/common'
+import { MAX_NAME_LENGTH, PlayerNameProps, getName } from '../utils/name'
 
-interface NameProps {
-  playerId: string
-  displayName?: string
+interface NameProps extends PlayerNameProps {
   isPlayerOne: boolean
   updateDisplayName?(displayName: string): void
   isEditable: boolean
 }
 
-function getName(playerId: string, displayName?: string) {
-  if (displayName === undefined || isEmptyOrBlank(displayName)) {
-    return playerId
-  } else {
-    return displayName
-  }
-}
-
 export function Name({
-  playerId,
-  displayName,
   isPlayerOne,
   updateDisplayName,
-  isEditable
+  isEditable,
+  ...player
 }: NameProps) {
+  const computedName = getName(player)
+  const { id, displayName } = player
   const [isBeingEdited, setIsBeingEdited] = React.useState(false)
-  const [name, setName] = React.useState(getName(playerId, displayName))
+  const [name, setName] = React.useState(computedName)
 
   React.useEffect(() => {
-    setName(getName(playerId, displayName))
-  }, [playerId, displayName])
+    setName(computedName)
+  }, [computedName])
 
   function handleOnKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === 'Enter') {
@@ -47,7 +39,7 @@ export function Name({
 
   function handleOnChange(e: React.ChangeEvent<HTMLInputElement>) {
     // Avoid players using ridiculously long names
-    setName(e.target.value.substring(0, 32))
+    setName(e.target.value.substring(0, MAX_NAME_LENGTH))
   }
 
   function handleOnFocus(e: React.FocusEvent<HTMLInputElement, Element>) {
@@ -62,21 +54,21 @@ export function Name({
       // If the name is empty, we want to remove the display name from local storage
       localStorage.removeItem('displayName')
 
-      if (getName(playerId, displayName) === playerId) {
-        // If the name displayed was equal to playerId, and the name is now empty
-        // default back to playerId as we don't want an empty name
-        setName(playerId)
+      if (computedName === id) {
+        // If the name displayed was equal to id, and the name is now empty
+        // default back to id as we don't want an empty name
+        setName(id)
       } else {
-        // If the name displayed was not the playerId (so it was the displayName)
+        // If the name displayed was not the id (so it was the displayName)
         // and the name is now empty, send an empty displayName to the backend
         // as the player is trying to remove their displayName
         updateDisplayName!('')
       }
     } else {
-      if (getName(playerId, displayName) === playerId) {
-        if (name !== playerId) {
-          // If the name displayed was the playerId, and the new name
-          // is different from the playerId the player is trying to set a
+      if (computedName === id) {
+        if (name !== id) {
+          // If the name displayed was the id, and the new name
+          // is different from the id the player is trying to set a
           // displayName, so set it in local storage and send it to the backend
           localStorage.setItem('displayName', name)
           updateDisplayName!(name)
@@ -93,7 +85,7 @@ export function Name({
 
   function onDisplayNameCancel() {
     setIsBeingEdited(false)
-    setName(getName(playerId, displayName))
+    setName(computedName)
   }
 
   function onEditClick() {
