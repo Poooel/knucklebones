@@ -1,35 +1,32 @@
 import * as React from 'react'
 import { Link } from 'react-router-dom'
-import { IGameState, IPlayer } from '@knucklebones/common'
+import { IGameState } from '@knucklebones/common'
 import { Button } from './Button'
 import { useMedia } from 'react-use'
 import { PlayIcon } from '@heroicons/react/24/outline'
 import { getName } from '../utils/name'
 import { ToolbarModal } from './ToolbarModal'
+import { PlayerSide } from '../utils/playerSide'
 
 interface OutcomeProps extends IGameState {
   playerId: string
   onRematch(): void
-  isSpectator: boolean
-}
-
-function getWinnerName(playerId: string, player: IPlayer) {
-  return playerId === player.id ? 'You' : getName(player)
+  playerSide: PlayerSide
 }
 
 const getWinMessage = (
-  playerId: string,
+  playerSide: PlayerSide,
   { outcome, playerOne, playerTwo }: IGameState
 ) => {
-  if (outcome === 'player-one-win') {
-    const winnerName = getWinnerName(playerId, playerOne)
-    return `${winnerName} won with ${playerOne.score} points!`
+  if (
+    (outcome === 'player-one-win' && playerSide === 'player-one') ||
+    (outcome === 'player-two-win' && playerSide === 'player-two')
+  ) {
+    return `You won with ${playerOne.score} points!`
   }
-  if (outcome === 'player-two-win') {
-    const winnerName = getWinnerName(playerId, playerTwo)
-    return `${winnerName} won with ${playerTwo.score} points!`
-  }
-  if (outcome === 'tie') {
+  if (outcome !== 'tie') {
+    return `${getName(playerTwo)} won with ${playerTwo.score} points!`
+  } else {
     return 'This is a tie! Nobody wins!'
   }
 }
@@ -37,10 +34,11 @@ const getWinMessage = (
 export function GameOutcome({
   playerId,
   onRematch,
-  isSpectator,
+  playerSide,
   ...gameState
 }: OutcomeProps) {
   const { outcome } = gameState
+  const isSpectator = playerSide === 'spectator'
   const hasVotedRematch = isSpectator || gameState.rematchVote === playerId
   const isDesktop = useMedia('(min-width: 768px)')
 
@@ -48,14 +46,11 @@ export function GameOutcome({
     return <p className='hidden md:block'>VS</p>
   }
 
-  const playerTwoId =
-    playerId === gameState.playerOne?.id
-      ? getName(gameState.playerTwo)
-      : getName(gameState.playerOne)
+  const playerTwoName = getName(gameState.playerTwo)
 
   const content = (
     <div className='grid justify-items-center gap-2 font-semibold'>
-      <p>{getWinMessage(playerId, gameState)}</p>
+      <p>{getWinMessage(playerSide, gameState)}</p>
       {!isSpectator && (
         <div className='flex gap-4'>
           <Button as={Link} to='/'>
@@ -69,10 +64,10 @@ export function GameOutcome({
 
       {!isSpectator &&
         (hasVotedRematch ? (
-          <p>Waiting for {playerTwoId}...</p>
+          <p>Waiting for {playerTwoName}...</p>
         ) : (
           gameState.rematchVote !== undefined && ( // It means the other player has voted for rematch
-            <p>{playerTwoId} wants to rematch!</p>
+            <p>{playerTwoName} wants to rematch!</p>
           )
         ))}
     </div>

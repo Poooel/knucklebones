@@ -33,8 +33,7 @@ export async function rematch(
         gameState.playerTwo.difficulty
       )
     )
-    newGameState.initialize()
-    newGameState.spectators = gameState.spectators
+    newGameState.initialize(gameState)
 
     await saveGameState(newGameState, request)
     await broadcastGameState(newGameState, request, cloudflareEnvironment)

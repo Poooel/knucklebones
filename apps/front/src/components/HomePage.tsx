@@ -26,14 +26,14 @@ export function HomePage() {
       </div>
       <div className='flex flex-col gap-8'>
         <Button
-          variant='large'
+          size='large'
           className='tracking-tight'
           onClick={() => navigate(`/room/${uuidv4()}`)}
         >
           Play against a friend
         </Button>
         <Button
-          variant='large'
+          size='large'
           className='tracking-tight'
           onClick={() => {
             setShowAiDifficulty(!showAiDifficulty)
@@ -55,7 +55,7 @@ export function HomePage() {
             return (
               <Button
                 key={difficulty}
-                variant='medium'
+                size='medium'
                 className='tracking-tight'
                 onClick={() =>
                   navigate(`/room/${uuidv4()}`, {
@@ -70,7 +70,7 @@ export function HomePage() {
         </Transition>
         <Button
           as={Link}
-          variant='large'
+          size='large'
           className='tracking-tight'
           to='/how-to-play'
         >

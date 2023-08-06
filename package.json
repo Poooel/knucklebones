@@ -10,7 +10,7 @@
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",
-    "lint": "eslint packages,apps --ext ts,tsx"
+    "lint": "eslint packages apps --ext ts,tsx"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^3.14.1",

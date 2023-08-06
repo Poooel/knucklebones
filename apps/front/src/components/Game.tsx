@@ -7,6 +7,7 @@ import { WarningToast } from './WarningToast'
 import { QRCodeModal } from './QRCode'
 import { HowToPlayModal } from './HowToPlay'
 import { LogsModal } from './Logs'
+import { OutcomeHistory } from './OutcomeHistory'
 
 export function Game() {
   const {
@@ -19,7 +20,7 @@ export function Game() {
     clearErrorMessage,
     sendRematch,
     updateDisplayName,
-    playerId
+    playerSide
   } = useGame()
 
   if (gameState === null) {
@@ -28,8 +29,7 @@ export function Game() {
 
   const { outcome, nextPlayer } = gameState
 
-  const isSpectator = playerId !== playerOne?.id && playerId !== playerTwo?.id
-
+  const isSpectator = playerSide === 'spectator'
   const canPlay = !isLoading && outcome === 'ongoing' && !isSpectator
   const canPlayerOnePlay = canPlay && nextPlayer?.id === playerOne?.id
   const canPlayerTwoPlay = canPlay && nextPlayer?.id === playerTwo?.id
@@ -45,11 +45,14 @@ export function Game() {
         />
         <GameOutcome
           {...gameState}
+          // Could replace `gameState`'s players to make this easier?
+          playerOne={playerOne!}
+          playerTwo={playerTwo!}
           playerId={playerOne!.id}
           onRematch={() => {
             void sendRematch()
           }}
-          isSpectator={isSpectator}
+          playerSide={playerSide}
         />
         <PlayerBoard
           {...playerOne!}
@@ -64,6 +67,12 @@ export function Game() {
         />
         <WarningToast message={errorMessage} onDismiss={clearErrorMessage} />
       </div>
+      <OutcomeHistory
+        playerSide={playerSide}
+        {...gameState}
+        playerOne={playerOne!}
+        playerTwo={playerTwo!}
+      />
       <LogsModal logs={gameState.logs} />
       <QRCodeModal />
       <HowToPlayModal />
