@@ -15,14 +15,15 @@ import {
 } from '../utils/api'
 import useWebSocket, { ReadyState } from 'react-use-websocket'
 import { useRoomKey } from './useRoomKey'
+import { PlayerSide, getPlayerSide } from '../utils/playerSide'
 
 function attributePlayers(
-  playerId: string,
+  playerSide: PlayerSide,
   gameState: IGameState | null
 ): [IPlayer?, IPlayer?] {
   if (gameState === null) {
     return []
-  } else if (gameState.playerOne?.id === playerId) {
+  } else if (playerSide === 'player-one') {
     return [gameState.playerOne, gameState.playerTwo]
   } else {
     return [gameState.playerTwo, gameState.playerOne]
@@ -46,14 +47,18 @@ export function useGame() {
   const [isLoading, setIsLoading] = React.useState(true)
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
   const roomKey = useRoomKey()
-  const playerId = localStorage.getItem('playerId')!
   const { state } = useLocation()
-
   const { lastJsonMessage, readyState } = useWebSocket(getWebSocketUrl(roomKey))
+
+  const playerId = localStorage.getItem('playerId')!
+  const playerSide =
+    gameState !== null ? getPlayerSide(playerId, gameState) : 'spectator'
+  const [playerOne, playerTwo] = attributePlayers(playerSide, gameState)
 
   React.useEffect(() => {
     if (lastJsonMessage !== null) {
       // @ts-expect-error
+      // Can use Zod to parse the message safely
       const gameState = lastJsonMessage as IGameState
       setGameState(gameState)
       setIsLoading(false)
@@ -64,9 +69,9 @@ export function useGame() {
   React.useEffect(() => {
     if (readyState === ReadyState.OPEN) {
       init(roomKey, playerId, 'human')
-        .then(() => {
+        .then(async () => {
           if (state?.playerType === 'ai') {
-            return init(roomKey, 'beep-boop', 'ai', state?.difficulty)
+            return await init(roomKey, 'beep-boop', 'ai', state?.difficulty)
           }
         })
         .catch((error) => {
@@ -74,8 +79,6 @@ export function useGame() {
         })
     }
   }, [roomKey, playerId, readyState, state])
-
-  const [playerOne, playerTwo] = attributePlayers(playerId, gameState)
 
   async function sendPlay(column: number) {
     const dice = playerOne?.dice
@@ -137,6 +140,7 @@ export function useGame() {
     sendRematch,
     updateDisplayName,
     playerId,
-    roomKey
+    roomKey,
+    playerSide
   }
 }

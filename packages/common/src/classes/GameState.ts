@@ -1,5 +1,5 @@
 import { IGameState } from '../interfaces'
-import { Outcome, Play } from '../types'
+import { Outcome, Play, OutcomeHistory } from '../types'
 import { coinflip, getRandomDice } from '../utils'
 import { Log } from './Log'
 import { Player } from './Player'
@@ -12,6 +12,7 @@ export class GameState {
   nextPlayer!: Player
   rematchVote?: string
   spectators: string[]
+  outcomeHistory: OutcomeHistory
 
   constructor(
     playerOne: Player,
@@ -20,13 +21,15 @@ export class GameState {
     outcome?: Outcome,
     nextPlayer?: Player,
     rematchVote?: string,
-    spectators?: string[]
+    spectators?: string[],
+    outcomeHistory?: OutcomeHistory
   ) {
     this.playerOne = playerOne
     this.playerTwo = playerTwo
     this.logs = logs ?? []
     this.spectators = spectators ?? []
     this.rematchVote = rematchVote
+    this.outcomeHistory = outcomeHistory ?? []
 
     // Only assign outcome if we have one
     // otherwise it will be assigned in the initialize() method
@@ -41,7 +44,7 @@ export class GameState {
     }
   }
 
-  initialize() {
+  initialize(previousGameState?: GameState) {
     this.outcome = 'ongoing'
 
     const isPlayerOneStarting = coinflip()
@@ -52,6 +55,11 @@ export class GameState {
     } else {
       this.nextPlayer = this.playerTwo
       this.playerTwo.dice = getRandomDice()
+    }
+
+    if (previousGameState !== undefined) {
+      this.outcomeHistory = previousGameState.outcomeHistory
+      this.spectators = previousGameState.spectators
     }
 
     this.addToLogs(
@@ -148,6 +156,7 @@ export class GameState {
       )
       this.outcome = 'tie'
     }
+    this.outcomeHistory.push(this.outcome)
   }
 
   private addToLogs(logLine: string) {
@@ -162,7 +171,8 @@ export class GameState {
       gameState.outcome,
       Player.fromJson(gameState.nextPlayer),
       gameState.rematchVote,
-      gameState.spectators
+      gameState.spectators,
+      gameState.outcomeHistory
     )
   }
 
@@ -174,7 +184,8 @@ export class GameState {
       outcome: this.outcome,
       nextPlayer: this.nextPlayer.toJson(),
       rematchVote: this.rematchVote,
-      spectators: this.spectators
+      spectators: this.spectators,
+      outcomeHistory: this.outcomeHistory
     }
   }
 }
