@@ -14,7 +14,7 @@ export function ToolbarModal({
   children,
   renderTrigger = ({ onClick }) => <IconButton icon={icon} onClick={onClick} />,
   isInitiallyOpen = false,
-  ...toolbatProps
+  ...toolbarProps
 }: React.PropsWithChildren<ToolbarModalProps>) {
   const [isModalOpen, setIsModalOpen] = React.useState(isInitiallyOpen)
 
@@ -24,7 +24,7 @@ export function ToolbarModal({
 
   return (
     <>
-      <Toolbar {...toolbatProps}>
+      <Toolbar {...toolbarProps}>
         {renderTrigger({ onClick: openModal })}
       </Toolbar>
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
