@@ -156,7 +156,10 @@ export class GameState {
       )
       this.outcome = 'tie'
     }
-    this.outcomeHistory.push(this.outcome)
+    this.outcomeHistory.push({
+      playerOneScore,
+      playerTwoScore
+    })
   }
 
   private addToLogs(logLine: string) {
