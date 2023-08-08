@@ -6,23 +6,44 @@ import {
   OutcomeHistory as OutcomeHistoryType,
   OutcomeHistoryEntry
 } from '@knucklebones/common'
+import { getName } from '../utils/name'
 import { PlayerSide } from '../utils/playerSide'
 import { Button } from './Button'
-import { ToolbarModal } from './ToolbarModal'
 import { Modal } from './Modal'
 import { Text } from './Text'
-import { getName } from '../utils/name'
+import { ToolbarModal } from './ToolbarModal'
 
 interface PlayerOutcome {
   wins: number
   score: number
 }
-interface DetailedHistoryEntry {
+interface GameOutcome {
   playerOne: PlayerOutcome
   playerTwo: PlayerOutcome
   outcome: Outcome
 }
-type DetailedHistory = DetailedHistoryEntry[]
+type DetailedHistory = GameOutcome[]
+
+// There's some kind of logic to be re-used from `GameOutcome`
+// Ideally, we'd stop using `player-one` and `player-two` and return player's id
+// directly
+function getLeadMessage(
+  { playerOne, playerTwo }: GameOutcome,
+  playerSide: PlayerSide,
+  playerTwoName: string
+) {
+  if (
+    (playerSide === 'player-one' && playerOne.wins > playerTwo.wins) ||
+    (playerSide === 'player-two' && playerTwo.wins > playerOne.wins)
+  ) {
+    return `You're taking the lead!`
+  }
+  if (playerOne.wins !== playerTwo.wins) {
+    return `${playerTwoName} is taking the lead!`
+  } else {
+    return 'This is a tie!'
+  }
+}
 
 function getOutcome({
   playerOneScore,
@@ -66,7 +87,7 @@ function getHistory(outcomeHistory: OutcomeHistoryType) {
   }, [])
 }
 
-type ScoreDisplayProps = DetailedHistoryEntry & {
+type ScoreDisplayProps = GameOutcome & {
   playerSide: PlayerSide
 }
 
@@ -147,25 +168,29 @@ function HistoryDetail({
         gridTemplateColumns: 'minmax(0, 1fr) max-content minmax(0, 1fr)'
       }}
     >
-      {detailedHistory.map(({ playerOne, playerTwo, outcome }, index) => (
-        <React.Fragment key={`${playerOne.wins}-${playerTwo.wins}-${outcome}`}>
-          <PlayerHistoryDetail
-            {...playerOne}
-            playerName={playerOneName}
-            didWin={outcome === 'player-one-win'}
-          />
-          <Text>-</Text>
-          <PlayerHistoryDetail
-            {...playerTwo}
-            playerName={playerTwoName}
-            didWin={outcome === 'player-two-win'}
-            isRightSide
-          />
-          {index < detailedHistory.length - 1 && (
-            <div className='col-span-3 h-4 w-0.5 place-self-center bg-slate-300'></div>
-          )}
-        </React.Fragment>
-      ))}
+      {[...detailedHistory]
+        .reverse()
+        .map(({ playerOne, playerTwo, outcome }, index) => (
+          <React.Fragment
+            key={`${playerOne.wins}-${playerTwo.wins}-${outcome}`}
+          >
+            <PlayerHistoryDetail
+              {...playerOne}
+              playerName={playerOneName}
+              didWin={outcome === 'player-one-win'}
+            />
+            <Text>-</Text>
+            <PlayerHistoryDetail
+              {...playerTwo}
+              playerName={playerTwoName}
+              didWin={outcome === 'player-two-win'}
+              isRightSide
+            />
+            {index < detailedHistory.length - 1 && (
+              <div className='col-span-3 h-4 w-0.5 place-self-center bg-slate-300'></div>
+            )}
+          </React.Fragment>
+        ))}
     </div>
   )
 }
@@ -175,6 +200,8 @@ interface OutcomeHistoryProps
   playerSide: PlayerSide
 }
 
+// TODO: Look into `ts-pattern` to make some logic simpler to read (perhaps)
+// TODO: Split the files within a OutcomeHistory folder
 export function OutcomeHistory({
   outcomeHistory,
   playerSide,
@@ -203,11 +230,16 @@ export function OutcomeHistory({
       )}
     >
       <Modal.Title>History</Modal.Title>
-      <HistoryDetail
-        detailedHistory={detailedHistory}
-        playerOneName={playerOneName}
-        playerTwoName={playerTwoName}
-      />
+      <div className='grid grid-cols-1 gap-2'>
+        <Text className='text-center'>
+          {getLeadMessage(lasGameOutcome, playerSide, playerTwoName)}
+        </Text>
+        <HistoryDetail
+          detailedHistory={detailedHistory}
+          playerOneName={playerOneName}
+          playerTwoName={playerTwoName}
+        />
+      </div>
     </ToolbarModal>
   )
 }
