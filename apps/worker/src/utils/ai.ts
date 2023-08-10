@@ -20,7 +20,9 @@ export function makeAiPlay(
 
     const nextMove = ai.suggestNextPlay()
 
-    await sleep(getRandomIntInclusive(500, 1000))
+    const [min, max] =
+      process.env.NODE_ENV === 'development' ? [100, 200] : [500, 1000]
+    await sleep(getRandomIntInclusive(min, max))
 
     await play(
       {
