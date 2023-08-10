@@ -1,11 +1,6 @@
 import * as React from 'react'
 import { useLocation } from 'react-router-dom'
-import {
-  GameState,
-  IGameState,
-  IPlayer,
-  isEmptyOrBlank
-} from '@knucklebones/common'
+import { GameState, IGameState, isEmptyOrBlank } from '@knucklebones/common'
 import {
   deleteDisplayName,
   displayName,
@@ -15,19 +10,21 @@ import {
 } from '../utils/api'
 import useWebSocket, { ReadyState } from 'react-use-websocket'
 import { useRoomKey } from './useRoomKey'
-import { PlayerSide, getPlayerSide } from '../utils/playerSide'
+import { PlayerSide, augmentPlayer, getPlayerSide } from '../utils/player'
 
-function attributePlayers(
+export type GameContext = NonNullable<ReturnType<typeof useGame>>
+
+function preparePlayers(
   playerSide: PlayerSide,
-  gameState: IGameState | null
-): [IPlayer?, IPlayer?] {
-  if (gameState === null) {
-    return []
-  } else if (playerSide === 'player-one') {
-    return [gameState.playerOne, gameState.playerTwo]
-  } else {
-    return [gameState.playerTwo, gameState.playerOne]
+  { playerOne, playerTwo }: IGameState
+) {
+  if (playerSide === 'player-two') {
+    return [augmentPlayer(playerTwo, true), augmentPlayer(playerOne, false)]
   }
+  return [
+    augmentPlayer(playerOne, playerSide !== 'spectator'),
+    augmentPlayer(playerTwo, false)
+  ]
 }
 
 function getWebSocketUrl(roomKey: string) {
@@ -50,10 +47,15 @@ export function useGame() {
   const { state } = useLocation()
   const { lastJsonMessage, readyState } = useWebSocket(getWebSocketUrl(roomKey))
 
+  const isGameStateReady = gameState !== null
+
   const playerId = localStorage.getItem('playerId')!
-  const playerSide =
-    gameState !== null ? getPlayerSide(playerId, gameState) : 'spectator'
-  const [playerOne, playerTwo] = attributePlayers(playerSide, gameState)
+  const playerSide = isGameStateReady
+    ? getPlayerSide(playerId, gameState)
+    : 'spectator'
+  const [playerOne, playerTwo] = isGameStateReady
+    ? preparePlayers(playerSide, gameState)
+    : []
 
   React.useEffect(() => {
     if (lastJsonMessage !== null) {
@@ -129,8 +131,13 @@ export function useGame() {
     }
   }
 
+  // Easy way to do a type guard
+  if (!isGameStateReady) {
+    return null
+  }
+
   return {
-    gameState,
+    ...gameState,
     isLoading,
     playerOne,
     playerTwo,
@@ -140,7 +147,6 @@ export function useGame() {
     sendRematch,
     updateDisplayName,
     playerId,
-    roomKey,
     playerSide
   }
 }

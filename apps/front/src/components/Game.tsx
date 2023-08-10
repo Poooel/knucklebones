@@ -10,8 +10,18 @@ import { LogsModal } from './Logs'
 import { OutcomeHistory } from './OutcomeHistory'
 
 export function Game() {
+  const gameStore = useGame()
+
+  if (gameStore === null) {
+    return <Loading />
+  }
+
   const {
-    gameState,
+    outcome,
+    rematchVote,
+    outcomeHistory,
+    logs,
+    nextPlayer,
     playerOne,
     playerTwo,
     isLoading,
@@ -21,13 +31,7 @@ export function Game() {
     sendRematch,
     updateDisplayName,
     playerSide
-  } = useGame()
-
-  if (gameState === null) {
-    return <Loading />
-  }
-
-  const { outcome, nextPlayer } = gameState
+  } = gameStore
 
   const isSpectator = playerSide === 'spectator'
   const canPlay = !isLoading && outcome === 'ongoing' && !isSpectator
@@ -38,26 +42,31 @@ export function Game() {
     <div className='grid grid-cols-1'>
       <div className='h-svh flex flex-col items-center justify-around lg:h-screen'>
         <PlayerBoard
-          {...playerTwo!}
+          {...playerTwo}
           isPlayerOne={false}
           canPlay={canPlayerTwoPlay}
           outcome={outcome}
         />
         <GameOutcome
-          {...gameState}
-          // Could replace `gameState`'s players to make this easier?
-          playerOne={playerOne!}
-          playerTwo={playerTwo!}
-          playerId={playerOne!.id}
+          playerOne={playerOne}
+          playerTwo={playerTwo}
+          outcome={outcome}
+          rematchVote={rematchVote}
           onRematch={() => {
             void sendRematch()
           }}
           playerSide={playerSide}
         />
         <PlayerBoard
-          {...playerOne!}
+          {...playerOne}
           isPlayerOne
-          onColumnClick={canPlayerOnePlay ? sendPlay : undefined}
+          onColumnClick={
+            canPlayerOnePlay
+              ? (column) => {
+                  void sendPlay(column)
+                }
+              : undefined
+          }
           canPlay={canPlayerOnePlay}
           updateDisplayName={(displayName) => {
             void updateDisplayName(displayName)
@@ -69,11 +78,11 @@ export function Game() {
       </div>
       <OutcomeHistory
         playerSide={playerSide}
-        {...gameState}
-        playerOne={playerOne!}
-        playerTwo={playerTwo!}
+        outcomeHistory={outcomeHistory}
+        playerOne={playerOne}
+        playerTwo={playerTwo}
       />
-      <LogsModal logs={gameState.logs} />
+      <LogsModal logs={logs} />
       <QRCodeModal />
       <HowToPlayModal />
     </div>

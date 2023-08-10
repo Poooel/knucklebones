@@ -1,4 +1,5 @@
-import { IGameState } from '@knucklebones/common'
+import { IGameState, IPlayer } from '@knucklebones/common'
+import { getName } from './name'
 
 export type PlayerSide = 'player-one' | 'player-two' | 'spectator'
 
@@ -12,5 +13,19 @@ export function getPlayerSide(
     return 'player-two'
   } else {
     return 'spectator'
+  }
+}
+
+export interface AugmentedPlayer extends IPlayer {
+  inGameName: string
+}
+
+export function augmentPlayer(
+  player: IPlayer,
+  isPlayerOne: boolean
+): AugmentedPlayer {
+  return {
+    ...player,
+    inGameName: isPlayerOne ? 'You' : getName(player)
   }
 }
