@@ -25,14 +25,17 @@ export async function rematch(
     (gameState.rematchVote !== undefined && // A player already voted for rematch and the other player is voting as well
       gameState.rematchVote !== request.playerId)
   ) {
-    const newGameState = new GameState(
-      new Player(gameState.playerOne.id, gameState.playerOne.displayName),
-      new Player(
+    const newGameState = new GameState({
+      playerOne: new Player(
+        gameState.playerOne.id,
+        gameState.playerOne.displayName
+      ),
+      playerTwo: new Player(
         gameState.playerTwo.id,
         gameState.playerTwo.displayName,
         gameState.playerTwo.difficulty
       )
-    )
+    })
     newGameState.initialize(gameState)
 
     await saveGameState(newGameState, request)

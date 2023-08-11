@@ -5,10 +5,11 @@ import { IPlayer } from './IPlayer'
 export interface IGameState {
   playerOne: IPlayer
   playerTwo: IPlayer
-  logs: ILog[]
-  outcome: Outcome
-  nextPlayer: IPlayer
-  rematchVote?: string
   spectators: string[]
+  logs: ILog[]
+  nextPlayer: IPlayer
+  winnerId?: string
+  outcome: Outcome
   outcomeHistory: OutcomeHistory
+  rematchVote?: string
 }

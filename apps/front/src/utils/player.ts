@@ -16,6 +16,18 @@ export function getPlayerSide(
   }
 }
 
+// Ça gère pas le fait que le playerId puisse être celui d'un spectateur
+// C'est fait exprès
+export function getPlayerFromId(
+  playerId: string,
+  {
+    playerOne,
+    playerTwo
+  }: { playerOne: AugmentedPlayer; playerTwo: AugmentedPlayer }
+) {
+  return playerId === playerOne.id ? playerOne : playerTwo
+}
+
 export interface AugmentedPlayer extends IPlayer {
   inGameName: string
 }

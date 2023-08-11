@@ -43,15 +43,13 @@ export function OutcomeHistory({
           {getLeadMessage({
             gameOutcome: lasGameOutcome,
             playerOne,
-            playerTwo,
-            playerSide
+            playerTwo
           })}
         </Text>
         <HistoryDetail
           detailedHistory={detailedHistory}
-          playerSide={playerSide}
-          playerOneName={playerOne.inGameName}
-          playerTwoName={playerTwo.inGameName}
+          playerOne={playerOne}
+          playerTwo={playerTwo}
         />
       </div>
     </ToolbarModal>

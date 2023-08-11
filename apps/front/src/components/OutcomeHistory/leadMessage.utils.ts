@@ -1,15 +1,14 @@
 import { GameContext } from '../../hooks/useGame'
+import { getPlayerFromId } from '../../utils/player'
 import { GameOutcome } from './history.utils'
 
 interface GetLeadMessageArgs
-  extends Pick<GameContext, 'playerOne' | 'playerTwo' | 'playerSide'> {
+  extends Pick<GameContext, 'playerOne' | 'playerTwo'> {
   gameOutcome: GameOutcome
 }
 export function getLeadMessage({
   gameOutcome,
-  playerOne,
-  playerTwo,
-  playerSide
+  ...players
 }: GetLeadMessageArgs) {
   const { playerOne: playerOneOutcome, playerTwo: playerTwoOutcome } =
     gameOutcome
@@ -18,14 +17,11 @@ export function getLeadMessage({
     return 'This is a tie!'
   }
 
-  const leadingPlayer =
-    playerSide === 'spectator' ||
-    (playerOneOutcome.wins > playerTwoOutcome.wins &&
-      playerSide === 'player-one') ||
-    (playerOneOutcome.wins < playerTwoOutcome.wins &&
-      playerSide === 'player-two')
-      ? playerOne
-      : playerTwo
+  const { id } =
+    playerOneOutcome.wins > playerTwoOutcome.wins
+      ? playerOneOutcome
+      : playerTwoOutcome
+  const leadingPlayer = getPlayerFromId(id, players)
 
   // L'enfer
   const verb = leadingPlayer.inGameName === 'You' ? 'are' : 'is'

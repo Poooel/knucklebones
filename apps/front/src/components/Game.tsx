@@ -22,11 +22,12 @@ export function Game() {
     outcomeHistory,
     logs,
     nextPlayer,
+    winner,
     playerOne,
     playerTwo,
     isLoading,
-    sendPlay,
     errorMessage,
+    sendPlay,
     clearErrorMessage,
     sendRematch,
     updateDisplayName,
@@ -50,6 +51,7 @@ export function Game() {
         <GameOutcome
           playerOne={playerOne}
           playerTwo={playerTwo}
+          winner={winner}
           outcome={outcome}
           rematchVote={rematchVote}
           onRematch={() => {
