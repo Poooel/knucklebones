@@ -1,6 +1,6 @@
 import { OutcomeHistory, PlayerOutcome } from '@knucklebones/common'
 
-interface PlayerOutcomeWithWins extends PlayerOutcome {
+export interface PlayerOutcomeWithWins extends PlayerOutcome {
   wins: number
 }
 export interface GameOutcome {

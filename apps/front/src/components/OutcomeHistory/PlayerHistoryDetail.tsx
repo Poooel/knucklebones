@@ -1,9 +1,9 @@
 import * as React from 'react'
 import clsx from 'clsx'
 import { Text } from '../Text'
-import { PlayerOutcome } from './history.utils'
+import { PlayerOutcomeWithWins } from './history.utils'
 
-interface PlayerHistoryDetailProps extends PlayerOutcome {
+interface PlayerHistoryDetailProps extends PlayerOutcomeWithWins {
   playerName: string
   didWin: boolean
   isRightSide?: boolean
