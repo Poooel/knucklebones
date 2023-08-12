@@ -8,6 +8,7 @@ import { QRCodeModal } from './QRCode'
 import { HowToPlayModal } from './HowToPlay'
 import { LogsModal } from './Logs'
 import { OutcomeHistory } from './OutcomeHistory'
+import { Header } from './Header'
 
 export function Game() {
   const gameStore = useGame()
@@ -78,15 +79,23 @@ export function Game() {
         />
         <WarningToast message={errorMessage} onDismiss={clearErrorMessage} />
       </div>
-      <OutcomeHistory
-        playerSide={playerSide}
-        outcomeHistory={outcomeHistory}
-        playerOne={playerOne}
-        playerTwo={playerTwo}
+      <Header
+        leftStack={
+          <OutcomeHistory
+            playerSide={playerSide}
+            outcomeHistory={outcomeHistory}
+            playerOne={playerOne}
+            playerTwo={playerTwo}
+          />
+        }
+        rightStack={
+          <>
+            <LogsModal logs={logs} />
+            <QRCodeModal />
+            <HowToPlayModal />
+          </>
+        }
       />
-      <LogsModal logs={logs} />
-      <QRCodeModal />
-      <HowToPlayModal />
     </div>
   )
 }

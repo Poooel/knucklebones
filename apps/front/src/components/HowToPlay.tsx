@@ -3,7 +3,7 @@ import clsx from 'clsx'
 import { QuestionMarkCircleIcon } from '@heroicons/react/24/outline'
 import { Board } from './Board'
 import { ColumnScore } from './ColumnScore'
-import { ToolbarModal } from './ToolbarModal'
+import { ShortcutModal } from './ShortcutModal'
 
 const SCORE_EXAMPLE_COLUMNS = [[3], [3, 3], [3, 3, 3]]
 const PLAYER_ONE_REMOVE_EXAMPLE_COLUMNS = [[], [], [6]]
@@ -111,10 +111,10 @@ export function HowToPlayPage() {
 
 export function HowToPlayModal() {
   return (
-    <ToolbarModal icon={<QuestionMarkCircleIcon />}>
+    <ShortcutModal icon={<QuestionMarkCircleIcon />}>
       <div className='max-w-7xl'>
         <HowToPlay />
       </div>
-    </ToolbarModal>
+    </ShortcutModal>
   )
 }

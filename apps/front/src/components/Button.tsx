@@ -25,7 +25,7 @@ export function Button<E extends React.ElementType = typeof defaultElement>({
       className={clsx(
         'rounded-md border-2 border-slate-300 text-center font-medium text-slate-900 transition-colors duration-100 disabled:opacity-50 dark:border-slate-600 dark:text-slate-50',
         {
-          'p-2 text-base': size === 'default',
+          'py-1 px-2 text-base md:p-2': size === 'default',
           'p-2 text-2xl md:p-4 md:text-4xl': size === 'large',
           'p-2 text-xl md:p-4 md:text-2xl': size === 'medium',
           'bg-slate-200 hover:bg-slate-200/70 disabled:hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-700/70 disabled:dark:hover:bg-slate-700':

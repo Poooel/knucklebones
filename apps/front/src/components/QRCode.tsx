@@ -4,7 +4,7 @@ import { useClipboard } from 'use-clipboard-copy'
 import { QrCodeIcon, LinkIcon } from '@heroicons/react/24/outline'
 import { Modal } from './Modal'
 import { Button } from './Button'
-import { ToolbarModal } from './ToolbarModal'
+import { ShortcutModal } from './ShortcutModal'
 
 const TITLE = 'Scan the QR Code to share the room with other players'
 
@@ -50,8 +50,8 @@ export function QRCode() {
 
 export function QRCodeModal() {
   return (
-    <ToolbarModal icon={<QrCodeIcon />}>
+    <ShortcutModal icon={<QrCodeIcon />}>
       <QRCodeBase title={<Modal.Title>{TITLE}</Modal.Title>} />
-    </ToolbarModal>
+    </ShortcutModal>
   )
 }

@@ -3,7 +3,7 @@ import { GameContext } from '../../hooks/useGame'
 import { Button } from '../Button'
 import { Modal } from '../Modal'
 import { Text } from '../Text'
-import { ToolbarModal } from '../ToolbarModal'
+import { ShortcutModal } from '../ShortcutModal'
 import { ScoreDisplay } from './ScoreDisplay'
 import { HistoryDetail } from './HistoryDetail'
 import { getHistory } from './history.utils'
@@ -29,8 +29,7 @@ export function OutcomeHistory({
   const lasGameOutcome = detailedHistory.at(-1)!
 
   return (
-    <ToolbarModal
-      position='left'
+    <ShortcutModal
       renderTrigger={({ onClick }) => (
         <Button variant='secondary' onClick={onClick}>
           <ScoreDisplay {...lasGameOutcome} playerSide={playerSide} />
@@ -52,6 +51,6 @@ export function OutcomeHistory({
           playerTwo={playerTwo}
         />
       </div>
-    </ToolbarModal>
+    </ShortcutModal>
   )
 }

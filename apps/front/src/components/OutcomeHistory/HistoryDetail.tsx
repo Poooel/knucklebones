@@ -16,7 +16,7 @@ export function HistoryDetail({
 }: HistoryDetailProps) {
   return (
     <div
-      className='grid gap-x-2'
+      className='grid gap-x-2 overflow-x-auto'
       style={{
         // Same size for the left and right columns, and fix size based on
         // content for the middle column

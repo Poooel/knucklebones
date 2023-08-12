@@ -2,7 +2,7 @@ import * as React from 'react'
 import { DocumentTextIcon } from '@heroicons/react/24/outline'
 import { ILog } from '@knucklebones/common'
 import { Modal } from './Modal'
-import { ToolbarModal } from './ToolbarModal'
+import { ShortcutModal } from './ShortcutModal'
 
 interface LogsProps {
   logs: ILog[]
@@ -46,8 +46,8 @@ function Logs({ logs }: LogsProps) {
 
 export function LogsModal({ logs }: LogsProps) {
   return (
-    <ToolbarModal icon={<DocumentTextIcon />}>
+    <ShortcutModal icon={<DocumentTextIcon />}>
       <Logs logs={logs} />
-    </ToolbarModal>
+    </ShortcutModal>
   )
 }

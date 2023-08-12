@@ -759,6 +759,18 @@
     "@typescript-eslint/types" "5.38.1"
     eslint-visitor-keys "^3.3.0"
 
+"@use-gesture/core@10.2.27":
+  version "10.2.27"
+  resolved "https://registry.yarnpkg.com/@use-gesture/core/-/core-10.2.27.tgz#0f24b17c036cd828ba07e3451ff45e2df959c6f5"
+  integrity sha512-V4XV7hn9GAD2MYu8yBBVi5iuWBsAMfjPRMsEVzoTNGYH72tf0kFP+OKqGKc8YJFQIJx6yj+AOqxmEHOmx2/MEA==
+
+"@use-gesture/react@^10.2.27":
+  version "10.2.27"
+  resolved "https://registry.yarnpkg.com/@use-gesture/react/-/react-10.2.27.tgz#7fbd50d14449ec5bc49c9b6cfef8a2845f5e0608"
+  integrity sha512-7E5vnWCxeslWlxwZ8uKIcnUZVMTRMZ8cvSnLLKF1NkyNb3PnNiAzoXM4G1vTKJKRhgOTeI6wK1YsEpwo9ABV5w==
+  dependencies:
+    "@use-gesture/core" "10.2.27"
+
 "@vitejs/plugin-react@^2.0.1":
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/@vitejs/plugin-react/-/plugin-react-2.1.0.tgz#4c99df15e71d2630601bd3018093bdc787d40e55"

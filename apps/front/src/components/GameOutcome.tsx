@@ -1,10 +1,9 @@
 import * as React from 'react'
-import { Link } from 'react-router-dom'
 import { Button } from './Button'
-import { useMedia } from 'react-use'
 import { PlayIcon } from '@heroicons/react/24/outline'
-import { ToolbarModal } from './ToolbarModal'
+import { ShortcutModal } from './ShortcutModal'
 import { GameContext } from '../hooks/useGame'
+import { useIsOnDesktop } from '../hooks/detectDevice'
 
 interface GetWinMessageArgs extends Pick<GameContext, 'outcome' | 'winner'> {}
 
@@ -38,7 +37,7 @@ export function GameOutcome({
 }: OutcomeProps) {
   const isSpectator = playerSide === 'spectator'
   const hasVotedRematch = rematchVote === playerOne.id
-  const isDesktop = useMedia('(min-width: 768px)')
+  const isOnDesktop = useIsOnDesktop()
 
   if (outcome === 'ongoing') {
     return <p className='hidden md:block'>VS</p>
@@ -48,14 +47,9 @@ export function GameOutcome({
     <div className='grid justify-items-center gap-2 font-semibold'>
       <p>{getWinMessage({ outcome, winner })}</p>
       {!isSpectator && (
-        <div className='flex gap-4'>
-          <Button as={Link} to='/'>
-            Replay
-          </Button>
-          <Button onClick={onRematch} disabled={hasVotedRematch}>
-            Rematch
-          </Button>
-        </div>
+        <Button onClick={onRematch} disabled={hasVotedRematch}>
+          Rematch
+        </Button>
       )}
 
       {!isSpectator &&
@@ -69,16 +63,16 @@ export function GameOutcome({
     </div>
   )
 
-  if (isDesktop) {
+  if (isOnDesktop) {
     return content
-  } else {
-    return (
-      // Prevents from rendering an empty div in the flex parent, which adds more gap
-      <div className='hidden'>
-        <ToolbarModal icon={<PlayIcon />} isInitiallyOpen>
-          {content}
-        </ToolbarModal>
-      </div>
-    )
   }
+
+  return (
+    // Prevents from rendering an empty div in the flex parent, which adds more gap
+    <div className='hidden'>
+      <ShortcutModal icon={<PlayIcon />} isInitiallyOpen>
+        {content}
+      </ShortcutModal>
+    </div>
+  )
 }

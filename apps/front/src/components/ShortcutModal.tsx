@@ -1,20 +1,18 @@
 import * as React from 'react'
-import { Toolbar, ToolbarProps } from './Toolbar'
 import { IconButton } from './IconButton'
 import { Modal } from './Modal'
 
-interface ToolbarModalProps extends ToolbarProps {
+interface ToolbarModalProps {
   icon?: React.ReactNode
   isInitiallyOpen?: boolean
   renderTrigger?(args: { onClick(): void }): React.ReactNode
 }
 
-export function ToolbarModal({
+export function ShortcutModal({
   icon,
   children,
   renderTrigger = ({ onClick }) => <IconButton icon={icon} onClick={onClick} />,
-  isInitiallyOpen = false,
-  ...toolbarProps
+  isInitiallyOpen = false
 }: React.PropsWithChildren<ToolbarModalProps>) {
   const [isModalOpen, setIsModalOpen] = React.useState(isInitiallyOpen)
 
@@ -23,13 +21,11 @@ export function ToolbarModal({
   }
 
   return (
-    <>
-      <Toolbar {...toolbarProps}>
-        {renderTrigger({ onClick: openModal })}
-      </Toolbar>
+    <div className='h-full'>
+      {renderTrigger({ onClick: openModal })}
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         {children}
       </Modal>
-    </>
+    </div>
   )
 }
