@@ -46,7 +46,7 @@ function Logs({ logs }: LogsProps) {
 
 export function LogsModal({ logs }: LogsProps) {
   return (
-    <ShortcutModal icon={<DocumentTextIcon />}>
+    <ShortcutModal icon={<DocumentTextIcon />} label='Logs'>
       <Logs logs={logs} />
     </ShortcutModal>
   )

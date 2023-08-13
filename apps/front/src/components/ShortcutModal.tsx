@@ -1,17 +1,30 @@
 import * as React from 'react'
-import { IconButton } from './IconButton'
 import { Modal } from './Modal'
+import { Button } from './Button'
 
-interface ToolbarModalProps {
+interface ShortcutProps {
   icon?: React.ReactNode
+  label?: React.ReactNode
+}
+
+interface ShortcutActionProps {
+  onClick(): void
+}
+
+interface ToolbarModalProps extends ShortcutProps {
   isInitiallyOpen?: boolean
-  renderTrigger?(args: { onClick(): void }): React.ReactNode
+  renderTrigger?(args: ShortcutActionProps): React.ReactNode
 }
 
 export function ShortcutModal({
   icon,
+  label,
   children,
-  renderTrigger = ({ onClick }) => <IconButton icon={icon} onClick={onClick} />,
+  renderTrigger = ({ onClick }) => (
+    <Button variant='ghost' leftIcon={icon} onClick={onClick}>
+      {label}
+    </Button>
+  ),
   isInitiallyOpen = false
 }: React.PropsWithChildren<ToolbarModalProps>) {
   const [isModalOpen, setIsModalOpen] = React.useState(isInitiallyOpen)

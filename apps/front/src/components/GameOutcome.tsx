@@ -40,6 +40,9 @@ export function GameOutcome({
   const isOnDesktop = useIsOnDesktop()
 
   if (outcome === 'ongoing') {
+    // On peut mettre un VS semi-transparent dans le fond de la partie
+    // pour rappeler cet élément sans pour autant que ça prenne de l'espace dans
+    // le layout.
     return <p className='hidden md:block'>VS</p>
   }
 
@@ -68,11 +71,8 @@ export function GameOutcome({
   }
 
   return (
-    // Prevents from rendering an empty div in the flex parent, which adds more gap
-    <div className='hidden'>
-      <ShortcutModal icon={<PlayIcon />} isInitiallyOpen>
-        {content}
-      </ShortcutModal>
-    </div>
+    <ShortcutModal icon={<PlayIcon />} label='Continue' isInitiallyOpen>
+      {content}
+    </ShortcutModal>
   )
 }

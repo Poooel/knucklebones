@@ -50,7 +50,7 @@ export function QRCode() {
 
 export function QRCodeModal() {
   return (
-    <ShortcutModal icon={<QrCodeIcon />}>
+    <ShortcutModal icon={<QrCodeIcon />} label='Share game'>
       <QRCodeBase title={<Modal.Title>{TITLE}</Modal.Title>} />
     </ShortcutModal>
   )

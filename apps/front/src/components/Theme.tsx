@@ -4,15 +4,15 @@ import {
   MoonIcon,
   ComputerDesktopIcon
 } from '@heroicons/react/24/outline'
-import { IconButton } from './IconButton'
+import { Button } from './Button'
 
 type Themes = 'dark' | 'light' | 'default'
 
-interface ThemeIconButtonProps {
+interface ThemeProps {
   theme: Themes
 }
 
-function ThemeIcon({ theme }: ThemeIconButtonProps) {
+function ThemeIcon({ theme }: ThemeProps) {
   if (theme === 'dark') {
     return <MoonIcon />
   }
@@ -20,6 +20,16 @@ function ThemeIcon({ theme }: ThemeIconButtonProps) {
     return <SunIcon />
   }
   return <ComputerDesktopIcon />
+}
+
+function getThemeLabel({ theme }: ThemeProps) {
+  if (theme === 'dark') {
+    return 'Dark theme'
+  }
+  if (theme === 'light') {
+    return 'Light theme'
+  }
+  return 'System theme'
 }
 
 function setDarkMode(darkMode: boolean) {
@@ -30,6 +40,7 @@ function setDarkMode(darkMode: boolean) {
   }
 }
 
+// https://ui.shadcn.com/docs/components/select ?
 export function Theme() {
   const [theme, setTheme] = React.useState<Themes>('default')
 
@@ -94,5 +105,13 @@ export function Theme() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [theme])
 
-  return <IconButton icon={<ThemeIcon theme={theme} />} onClick={changeTheme} />
+  return (
+    <Button
+      variant='ghost'
+      leftIcon={<ThemeIcon theme={theme} />}
+      onClick={changeTheme}
+    >
+      {getThemeLabel({ theme })}
+    </Button>
+  )
 }

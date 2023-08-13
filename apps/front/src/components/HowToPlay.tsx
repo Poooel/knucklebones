@@ -111,7 +111,7 @@ export function HowToPlayPage() {
 
 export function HowToPlayModal() {
   return (
-    <ShortcutModal icon={<QuestionMarkCircleIcon />}>
+    <ShortcutModal icon={<QuestionMarkCircleIcon />} label='How to play'>
       <div className='max-w-7xl'>
         <HowToPlay />
       </div>
