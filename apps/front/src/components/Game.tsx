@@ -9,6 +9,7 @@ import { HowToPlayModal } from './HowToPlay'
 import { LogsModal } from './Logs'
 import { OutcomeHistory } from './OutcomeHistory'
 import { Header } from './Header'
+import { Theme } from './Theme'
 
 export function Game() {
   const gameStore = useGame()
@@ -41,8 +42,26 @@ export function Game() {
   const canPlayerTwoPlay = canPlay && nextPlayer?.id === playerTwo?.id
 
   return (
-    <div className='grid grid-cols-1'>
-      <div className='h-svh flex flex-col items-center justify-around lg:h-screen'>
+    <div className='flex flex-col items-center justify-start'>
+      <Header
+        leftStack={
+          <OutcomeHistory
+            playerSide={playerSide}
+            outcomeHistory={outcomeHistory}
+            playerOne={playerOne}
+            playerTwo={playerTwo}
+          />
+        }
+        rightStack={
+          <>
+            <LogsModal logs={logs} />
+            <QRCodeModal />
+            <HowToPlayModal />
+            <Theme />
+          </>
+        }
+      />
+      <div className='flex flex-1 flex-col items-center justify-around'>
         <PlayerBoard
           {...playerTwo}
           isPlayerOne={false}
@@ -79,23 +98,6 @@ export function Game() {
         />
         <WarningToast message={errorMessage} onDismiss={clearErrorMessage} />
       </div>
-      <Header
-        leftStack={
-          <OutcomeHistory
-            playerSide={playerSide}
-            outcomeHistory={outcomeHistory}
-            playerOne={playerOne}
-            playerTwo={playerTwo}
-          />
-        }
-        rightStack={
-          <>
-            <LogsModal logs={logs} />
-            <QRCodeModal />
-            <HowToPlayModal />
-          </>
-        }
-      />
     </div>
   )
 }

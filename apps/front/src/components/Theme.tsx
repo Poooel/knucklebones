@@ -5,7 +5,6 @@ import {
   ComputerDesktopIcon
 } from '@heroicons/react/24/outline'
 import { IconButton } from './IconButton'
-import { Toolbar } from './Toolbar'
 
 type Themes = 'dark' | 'light' | 'default'
 
@@ -23,11 +22,15 @@ function ThemeIcon({ theme }: ThemeIconButtonProps) {
   return <ComputerDesktopIcon />
 }
 
-interface ThemeProps {
-  setDarkMode(darkMode: boolean): void
+function setDarkMode(darkMode: boolean) {
+  if (darkMode) {
+    document.body.classList.add('dark')
+  } else {
+    document.body.classList.remove('dark')
+  }
 }
 
-export function Theme({ setDarkMode }: ThemeProps) {
+export function Theme() {
   const [theme, setTheme] = React.useState<Themes>('default')
 
   function changeTheme() {
@@ -91,9 +94,5 @@ export function Theme({ setDarkMode }: ThemeProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [theme])
 
-  return (
-    <Toolbar>
-      <IconButton icon={<ThemeIcon theme={theme} />} onClick={changeTheme} />
-    </Toolbar>
-  )
+  return <IconButton icon={<ThemeIcon theme={theme} />} onClick={changeTheme} />
 }

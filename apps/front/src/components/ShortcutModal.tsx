@@ -21,7 +21,7 @@ export function ShortcutModal({
   }
 
   return (
-    <div className='h-full'>
+    <div className='flex items-center'>
       {renderTrigger({ onClick: openModal })}
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         {children}
