@@ -16,6 +16,10 @@ interface ToolbarModalProps extends ShortcutProps {
   renderTrigger?(args: ShortcutActionProps): React.ReactNode
 }
 
+// Idée : Utiliser l'URL pour gérer le state d'ouverture d'une modale
+// Avantages :
+// - Persiste l'état de l'application dans l'URL (se garde après un refresh)
+// - Déclaration des modales sans besoin de shortcut et redéclaration de state
 export function ShortcutModal({
   icon,
   label,

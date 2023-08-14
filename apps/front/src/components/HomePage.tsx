@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'
 import { Transition } from '@headlessui/react'
 import { capitalize } from '@knucklebones/common'
@@ -8,7 +8,6 @@ import { Button } from './Button'
 import { Theme } from './Theme'
 
 export function HomePage() {
-  const navigate = useNavigate()
   const [showAiDifficulty, setShowAiDifficulty] = React.useState(false)
 
   return (
@@ -25,16 +24,11 @@ export function HomePage() {
           </h1>
         </div>
         <div className='flex flex-col gap-8'>
-          <Button
-            size='large'
-            className='tracking-tight'
-            onClick={() => navigate(`/room/${uuidv4()}`)}
-          >
+          <Button size='large' as={Link} to={`/room/${uuidv4()}`}>
             Play against a friend
           </Button>
           <Button
             size='large'
-            className='tracking-tight'
             onClick={() => {
               setShowAiDifficulty(!showAiDifficulty)
             }}
@@ -55,25 +49,17 @@ export function HomePage() {
               return (
                 <Button
                   key={difficulty}
+                  as={Link}
+                  to={`/room/${uuidv4()}`}
+                  state={{ playerType: 'ai', difficulty }}
                   size='medium'
-                  className='tracking-tight'
-                  onClick={() =>
-                    navigate(`/room/${uuidv4()}`, {
-                      state: { playerType: 'ai', difficulty }
-                    })
-                  }
                 >
                   {capitalize(difficulty)}
                 </Button>
               )
             })}
           </Transition>
-          <Button
-            as={Link}
-            size='large'
-            className='tracking-tight'
-            to='/how-to-play'
-          >
+          <Button as={Link} size='large' to='/how-to-play'>
             How to play
           </Button>
         </div>

@@ -8,7 +8,7 @@ import { QRCodeModal } from './QRCode'
 import { HowToPlayModal } from './HowToPlay'
 import { LogsModal } from './Logs'
 import { OutcomeHistory } from './OutcomeHistory'
-import { ActionGroup, Navigation } from './Navigation'
+import { SideBar } from './SideBar'
 import { Theme } from './Theme'
 import { useIsOnMobile } from '../hooks/detectDevice'
 
@@ -45,8 +45,6 @@ export function Game() {
   const canPlayerTwoPlay = canPlay && nextPlayer?.id === playerTwo?.id
 
   // Pas tip top je trouve, mais virtuellement ça marche
-  // Par contre, la modale réapparaît à chaque qu'on ouvre à nouveau le menu
-  // ça c'est pas ouf
   const gameOutcome = (
     <GameOutcome
       playerOne={playerOne}
@@ -62,32 +60,28 @@ export function Game() {
   )
 
   return (
-    <div className='md:grid-cols-3-central grid grid-cols-1'>
-      <Navigation
+    <div className='lg:grid-cols-3-central grid grid-cols-1'>
+      <SideBar
         gameRef={gameRef}
         actions={
           <>
-            <ActionGroup>
-              <OutcomeHistory
-                playerSide={playerSide}
-                outcomeHistory={outcomeHistory}
-                playerOne={playerOne}
-                playerTwo={playerTwo}
-              />
-              {isOnMobile && gameOutcome}
-            </ActionGroup>
-            <ActionGroup>
-              <LogsModal logs={logs} />
-              <QRCodeModal />
-              <Theme />
-              <HowToPlayModal />
-            </ActionGroup>
+            <HowToPlayModal />
+            <Theme />
+            <QRCodeModal />
+            <LogsModal logs={logs} />
+            <OutcomeHistory
+              playerSide={playerSide}
+              outcomeHistory={outcomeHistory}
+              playerOne={playerOne}
+              playerTwo={playerTwo}
+            />
+            {isOnMobile && gameOutcome}
           </>
         }
       />
       <div
         ref={gameRef}
-        className='flex flex-1 flex-col items-center justify-around'
+        className='h-svh flex flex-1 flex-col items-center justify-around'
       >
         <PlayerBoard
           {...playerTwo}

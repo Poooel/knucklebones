@@ -36,7 +36,7 @@ export function Modal({
           <div className='fixed inset-0 bg-slate-900/10 bg-opacity-75 transition-opacity dark:bg-slate-50/10' />
         </Transition.Child>
 
-        <div className='fixed inset-0 z-20 overflow-y-auto'>
+        <div className='fixed inset-0 overflow-y-auto'>
           <div className='flex min-h-full items-center justify-center p-4 text-center'>
             <Transition.Child
               enter='ease-out duration-300'
