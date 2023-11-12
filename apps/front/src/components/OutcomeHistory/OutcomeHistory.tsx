@@ -1,13 +1,13 @@
 import * as React from 'react'
+import { RectangleStackIcon } from '@heroicons/react/24/outline'
 import { GameContext } from '../../hooks/useGame'
-import { Button } from '../Button'
 import { Modal } from '../Modal'
 import { Text } from '../Text'
-import { ToolbarModal } from '../ToolbarModal'
-import { ScoreDisplay } from './ScoreDisplay'
-import { HistoryDetail } from './HistoryDetail'
+import { ShortcutModal } from '../ShortcutModal'
 import { getHistory } from './history.utils'
 import { getLeadMessage } from './leadMessage.utils'
+import { HistoryDetail } from './HistoryDetail'
+import { ScoreDisplay } from './ScoreDisplay'
 
 interface OutcomeHistoryProps
   extends Pick<
@@ -29,13 +29,9 @@ export function OutcomeHistory({
   const lasGameOutcome = detailedHistory.at(-1)!
 
   return (
-    <ToolbarModal
-      position='left'
-      renderTrigger={({ onClick }) => (
-        <Button variant='secondary' onClick={onClick}>
-          <ScoreDisplay {...lasGameOutcome} playerSide={playerSide} />
-        </Button>
-      )}
+    <ShortcutModal
+      icon={<RectangleStackIcon />}
+      label={<ScoreDisplay {...lasGameOutcome} playerSide={playerSide} />}
     >
       <Modal.Title>History</Modal.Title>
       <div className='grid grid-cols-1 gap-2'>
@@ -52,6 +48,6 @@ export function OutcomeHistory({
           playerTwo={playerTwo}
         />
       </div>
-    </ToolbarModal>
+    </ShortcutModal>
   )
 }

@@ -8,9 +8,14 @@ import { QRCodeModal } from './QRCode'
 import { HowToPlayModal } from './HowToPlay'
 import { LogsModal } from './Logs'
 import { OutcomeHistory } from './OutcomeHistory'
+import { SideBar } from './SideBar'
+import { Theme } from './Theme'
+import { useIsOnMobile } from '../hooks/detectDevice'
 
 export function Game() {
   const gameStore = useGame()
+  const isOnMobile = useIsOnMobile()
+  const gameRef = React.useRef<React.ElementRef<'div'>>(null)
 
   if (gameStore === null) {
     return <Loading />
@@ -39,26 +44,52 @@ export function Game() {
   const canPlayerOnePlay = canPlay && nextPlayer?.id === playerOne?.id
   const canPlayerTwoPlay = canPlay && nextPlayer?.id === playerTwo?.id
 
+  // Pas tip top je trouve, mais virtuellement ça marche
+  const gameOutcome = (
+    <GameOutcome
+      playerOne={playerOne}
+      playerTwo={playerTwo}
+      winner={winner}
+      outcome={outcome}
+      rematchVote={rematchVote}
+      onRematch={() => {
+        void sendRematch()
+      }}
+      playerSide={playerSide}
+    />
+  )
+
   return (
-    <div className='grid grid-cols-1'>
-      <div className='h-svh flex flex-col items-center justify-around lg:h-screen'>
+    <div className='lg:grid-cols-3-central grid grid-cols-1'>
+      <SideBar
+        gameRef={gameRef}
+        actions={
+          <>
+            <HowToPlayModal />
+            <Theme />
+            <QRCodeModal />
+            <LogsModal logs={logs} />
+            <OutcomeHistory
+              playerSide={playerSide}
+              outcomeHistory={outcomeHistory}
+              playerOne={playerOne}
+              playerTwo={playerTwo}
+            />
+            {isOnMobile && gameOutcome}
+          </>
+        }
+      />
+      <div
+        ref={gameRef}
+        className='h-svh flex flex-1 flex-col items-center justify-around'
+      >
         <PlayerBoard
           {...playerTwo}
           isPlayerOne={false}
           canPlay={canPlayerTwoPlay}
           outcome={outcome}
         />
-        <GameOutcome
-          playerOne={playerOne}
-          playerTwo={playerTwo}
-          winner={winner}
-          outcome={outcome}
-          rematchVote={rematchVote}
-          onRematch={() => {
-            void sendRematch()
-          }}
-          playerSide={playerSide}
-        />
+        {!isOnMobile && gameOutcome}
         <PlayerBoard
           {...playerOne}
           isPlayerOne
@@ -78,15 +109,7 @@ export function Game() {
         />
         <WarningToast message={errorMessage} onDismiss={clearErrorMessage} />
       </div>
-      <OutcomeHistory
-        playerSide={playerSide}
-        outcomeHistory={outcomeHistory}
-        playerOne={playerOne}
-        playerTwo={playerTwo}
-      />
-      <LogsModal logs={logs} />
-      <QRCodeModal />
-      <HowToPlayModal />
+      <div></div>
     </div>
   )
 }

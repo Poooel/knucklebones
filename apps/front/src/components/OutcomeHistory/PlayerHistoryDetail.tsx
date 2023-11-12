@@ -24,6 +24,7 @@ export function PlayerHistoryDetail({
         'font-semibold': didWin
       })}
     >
+      {/* Pas ouf sur téléphone pour les longs noms, et l'overflow marche pas à chaque fois, et le break-all rend dégueu */}
       <Text>{playerName}</Text>
       <div
         className={clsx('flex gap-2', {

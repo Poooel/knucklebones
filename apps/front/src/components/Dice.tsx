@@ -55,7 +55,8 @@ function Dot({ className }: DotProps) {
         'aspect-square rounded-full bg-slate-900 dark:bg-slate-200',
         className,
         {
-          'h-2 lg:h-3': variant === 'base',
+          'h-2 portrait:md:h-3 landscape:md:h-2 landscape:lg:h-3':
+            variant === 'base',
           'h-1': variant === 'small'
         }
       )}
