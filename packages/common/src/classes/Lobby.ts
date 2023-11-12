@@ -30,7 +30,10 @@ export class Lobby {
   }
 
   toGameState(): GameState {
-    const gameState = new GameState(this.players[0], this.players[1])
+    const gameState = new GameState({
+      playerOne: this.players[0],
+      playerTwo: this.players[1]
+    })
     gameState.initialize()
     return gameState
   }

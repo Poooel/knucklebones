@@ -1,14 +1,21 @@
 import * as React from 'react'
 import clsx from 'clsx'
 
-interface IconButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface IconButtonProps<E extends React.ElementType> {
   icon: React.ReactNode
+  as?: E
 }
+type PolymorphedIconButtonProps<E extends React.ElementType> =
+  IconButtonProps<E> & Omit<React.ComponentProps<E>, keyof IconButtonProps<E>>
 
-export function IconButton({ icon, ...props }: IconButtonProps) {
+const defaultElement = 'button'
+
+export function IconButton<
+  E extends React.ElementType = typeof defaultElement
+>({ icon, as, ...props }: PolymorphedIconButtonProps<E>) {
+  const Component = as ?? defaultElement
   return (
-    <button
+    <Component
       {...props}
       className={clsx(
         'text-slate-900 transition-all hover:text-slate-900/80 dark:text-slate-200 dark:hover:text-slate-50/80',
@@ -16,6 +23,6 @@ export function IconButton({ icon, ...props }: IconButtonProps) {
       )}
     >
       <div className='aspect-square h-6'>{icon}</div>
-    </button>
+    </Component>
   )
 }

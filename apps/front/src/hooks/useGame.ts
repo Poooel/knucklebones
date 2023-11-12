@@ -10,7 +10,12 @@ import {
 } from '../utils/api'
 import useWebSocket, { ReadyState } from 'react-use-websocket'
 import { useRoomKey } from './useRoomKey'
-import { PlayerSide, augmentPlayer, getPlayerSide } from '../utils/player'
+import {
+  PlayerSide,
+  augmentPlayer,
+  getPlayerFromId,
+  getPlayerSide
+} from '../utils/player'
 
 export type GameContext = NonNullable<ReturnType<typeof useGame>>
 
@@ -56,6 +61,11 @@ export function useGame() {
   const [playerOne, playerTwo] = isGameStateReady
     ? preparePlayers(playerSide, gameState)
     : []
+
+  const winner =
+    gameState?.winnerId !== undefined
+      ? getPlayerFromId(gameState.winnerId, { playerOne, playerTwo })
+      : undefined
 
   React.useEffect(() => {
     if (lastJsonMessage !== null) {
@@ -141,12 +151,13 @@ export function useGame() {
     isLoading,
     playerOne,
     playerTwo,
-    sendPlay,
+    playerId,
+    playerSide,
+    winner,
     errorMessage,
+    sendPlay,
     clearErrorMessage,
     sendRematch,
-    updateDisplayName,
-    playerId,
-    playerSide
+    updateDisplayName
   }
 }

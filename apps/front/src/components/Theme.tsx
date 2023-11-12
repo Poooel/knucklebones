@@ -4,16 +4,15 @@ import {
   MoonIcon,
   ComputerDesktopIcon
 } from '@heroicons/react/24/outline'
-import { IconButton } from './IconButton'
-import { Toolbar } from './Toolbar'
+import { Button } from './Button'
 
 type Themes = 'dark' | 'light' | 'default'
 
-interface ThemeIconButtonProps {
+interface ThemeProps {
   theme: Themes
 }
 
-function ThemeIcon({ theme }: ThemeIconButtonProps) {
+function ThemeIcon({ theme }: ThemeProps) {
   if (theme === 'dark') {
     return <MoonIcon />
   }
@@ -23,11 +22,26 @@ function ThemeIcon({ theme }: ThemeIconButtonProps) {
   return <ComputerDesktopIcon />
 }
 
-interface ThemeProps {
-  setDarkMode(darkMode: boolean): void
+function getThemeLabel({ theme }: ThemeProps) {
+  if (theme === 'dark') {
+    return 'Dark theme'
+  }
+  if (theme === 'light') {
+    return 'Light theme'
+  }
+  return 'System theme'
 }
 
-export function Theme({ setDarkMode }: ThemeProps) {
+function setDarkMode(darkMode: boolean) {
+  if (darkMode) {
+    document.body.classList.add('dark')
+  } else {
+    document.body.classList.remove('dark')
+  }
+}
+
+// https://ui.shadcn.com/docs/components/select ?
+export function Theme() {
   const [theme, setTheme] = React.useState<Themes>('default')
 
   function changeTheme() {
@@ -92,8 +106,12 @@ export function Theme({ setDarkMode }: ThemeProps) {
   }, [theme])
 
   return (
-    <Toolbar>
-      <IconButton icon={<ThemeIcon theme={theme} />} onClick={changeTheme} />
-    </Toolbar>
+    <Button
+      variant='ghost'
+      leftIcon={<ThemeIcon theme={theme} />}
+      onClick={changeTheme}
+    >
+      {getThemeLabel({ theme })}
+    </Button>
   )
 }

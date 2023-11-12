@@ -1,59 +1,38 @@
-import {
-  Outcome,
-  OutcomeHistory,
-  OutcomeHistoryEntry
-} from '@knucklebones/common'
+import { OutcomeHistory, PlayerOutcome } from '@knucklebones/common'
 
-export interface PlayerOutcome {
+export interface PlayerOutcomeWithWins extends PlayerOutcome {
   wins: number
-  score: number
 }
 export interface GameOutcome {
-  playerOne: PlayerOutcome
-  playerTwo: PlayerOutcome
-  outcome: Outcome
+  playerOne: PlayerOutcomeWithWins
+  playerTwo: PlayerOutcomeWithWins
 }
 export type DetailedHistory = GameOutcome[]
 
-function getOutcome({
-  playerOneScore,
-  playerTwoScore
-}: OutcomeHistoryEntry): Outcome {
-  if (playerOneScore > playerTwoScore) {
-    return 'player-one-win'
-  }
-  if (playerOneScore < playerTwoScore) {
-    return 'player-two-win'
-  }
-  return 'tie'
-}
-
 export function getHistory(outcomeHistory: OutcomeHistory) {
   return outcomeHistory.reduce<DetailedHistory>((acc, current) => {
-    const { playerOneScore, playerTwoScore } = current
-    const outcome = getOutcome(current)
-
-    const { playerOne, playerTwo } = acc.at(-1) ?? {
+    const { playerOne, playerTwo } = current
+    const lastEntry = acc.at(-1) ?? {
       playerOne: {
-        wins: 0,
-        score: 0
+        wins: 0
       },
       playerTwo: {
-        wins: 0,
-        score: 0
+        wins: 0
       }
     }
 
     acc.push({
       playerOne: {
-        wins: playerOne.wins + (outcome === 'player-one-win' ? 1 : 0),
-        score: playerOneScore
+        ...playerOne,
+        wins:
+          lastEntry.playerOne.wins + (playerOne.score > playerTwo.score ? 1 : 0)
       },
       playerTwo: {
-        wins: playerTwo.wins + (outcome === 'player-two-win' ? 1 : 0),
-        score: playerTwoScore
-      },
-      outcome
+        ...playerTwo,
+        wins:
+          lastEntry.playerTwo.wins + (playerOne.score < playerTwo.score ? 1 : 0)
+      }
+      // winner
     })
     return acc
   }, [])

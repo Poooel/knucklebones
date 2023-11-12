@@ -2,6 +2,7 @@ import * as React from 'react'
 import clsx from 'clsx'
 import { PlayerSide } from '../../utils/player'
 import { GameOutcome } from './history.utils'
+import { Text } from '../Text'
 
 type ScoreDisplayProps = GameOutcome & {
   playerSide: PlayerSide
@@ -13,7 +14,7 @@ export function ScoreDisplay({
   playerSide
 }: ScoreDisplayProps) {
   return (
-    <>
+    <Text>
       <span
         className={clsx({
           'font-semibold': playerSide === 'player-one'
@@ -29,6 +30,6 @@ export function ScoreDisplay({
       >
         {playerTwo.wins}
       </span>
-    </>
+    </Text>
   )
 }
