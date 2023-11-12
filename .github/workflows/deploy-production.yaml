@@ -17,10 +17,10 @@ jobs:
       - name: Build Worker
         run: yarn build
       
-      - name: Publish Production
-        uses: cloudflare/wrangler-action@2.0.0
+      - name: Deploy Production
+        uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           accountId: ${{ secrets.CF_ACCOUNT_ID }}
           workingDirectory: 'apps/worker'
-          command: publish --env=production
+          command: deploy --env=production
