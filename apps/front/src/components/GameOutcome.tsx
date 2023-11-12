@@ -1,93 +1,78 @@
 import * as React from 'react'
-import { Link } from 'react-router-dom'
-import { IGameState, IPlayer } from '@knucklebones/common'
 import { Button } from './Button'
-import { useMedia } from 'react-use'
 import { PlayIcon } from '@heroicons/react/24/outline'
-import { getName } from '../utils/name'
-import { ToolbarModal } from './ToolbarModal'
+import { ShortcutModal } from './ShortcutModal'
+import { GameContext } from '../hooks/useGame'
+import { useIsOnDesktop } from '../hooks/detectDevice'
 
-interface OutcomeProps extends IGameState {
-  playerId: string
-  onRematch(): void
-  isSpectator: boolean
-}
+interface GetWinMessageArgs extends Pick<GameContext, 'outcome' | 'winner'> {}
 
-function getWinnerName(playerId: string, player: IPlayer) {
-  return playerId === player.id ? 'You' : getName(player)
-}
-
-const getWinMessage = (
-  playerId: string,
-  { outcome, playerOne, playerTwo }: IGameState
-) => {
-  if (outcome === 'player-one-win') {
-    const winnerName = getWinnerName(playerId, playerOne)
-    return `${winnerName} won with ${playerOne.score} points!`
-  }
-  if (outcome === 'player-two-win') {
-    const winnerName = getWinnerName(playerId, playerTwo)
-    return `${winnerName} won with ${playerTwo.score} points!`
-  }
-  if (outcome === 'tie') {
+function getWinMessage({ outcome, winner }: GetWinMessageArgs) {
+  if (outcome === 'game-ended') {
+    if (winner !== undefined) {
+      return `${winner.inGameName} won with ${winner.score} points!`
+    }
     return 'This is a tie! Nobody wins!'
   }
+  return ''
+}
+
+interface OutcomeProps
+  extends GetWinMessageArgs,
+    Pick<
+      GameContext,
+      'rematchVote' | 'playerOne' | 'playerTwo' | 'playerSide'
+    > {
+  onRematch(): void
 }
 
 export function GameOutcome({
-  playerId,
-  onRematch,
-  isSpectator,
-  ...gameState
+  outcome,
+  winner,
+  playerSide,
+  playerOne,
+  playerTwo,
+  rematchVote,
+  onRematch
 }: OutcomeProps) {
-  const { outcome } = gameState
-  const hasVotedRematch = isSpectator || gameState.rematchVote === playerId
-  const isDesktop = useMedia('(min-width: 768px)')
+  const isSpectator = playerSide === 'spectator'
+  const hasVotedRematch = rematchVote === playerOne.id
+  const isOnDesktop = useIsOnDesktop()
 
   if (outcome === 'ongoing') {
+    // On peut mettre un VS semi-transparent dans le fond de la partie
+    // pour rappeler cet élément sans pour autant que ça prenne de l'espace dans
+    // le layout.
     return <p className='hidden md:block'>VS</p>
   }
 
-  const playerTwoId =
-    playerId === gameState.playerOne?.id
-      ? getName(gameState.playerTwo)
-      : getName(gameState.playerOne)
-
   const content = (
     <div className='grid justify-items-center gap-2 font-semibold'>
-      <p>{getWinMessage(playerId, gameState)}</p>
+      <p>{getWinMessage({ outcome, winner })}</p>
       {!isSpectator && (
-        <div className='flex gap-4'>
-          <Button as={Link} to='/'>
-            Replay
-          </Button>
-          <Button onClick={onRematch} disabled={hasVotedRematch}>
-            Rematch
-          </Button>
-        </div>
+        <Button onClick={onRematch} disabled={hasVotedRematch}>
+          Rematch
+        </Button>
       )}
 
       {!isSpectator &&
         (hasVotedRematch ? (
-          <p>Waiting for {playerTwoId}...</p>
+          <p>Waiting for {playerTwo.inGameName}...</p>
         ) : (
-          gameState.rematchVote !== undefined && ( // It means the other player has voted for rematch
-            <p>{playerTwoId} wants to rematch!</p>
+          rematchVote !== undefined && ( // It means the other player has voted for rematch
+            <p>{playerTwo.inGameName} wants to rematch!</p>
           )
         ))}
     </div>
   )
 
-  if (isDesktop) {
+  if (isOnDesktop) {
     return content
-  } else {
-    return (
-      // Prevents from rendering an empty div in the flex parent, which adds more gap
-      <div className='hidden'>
-        <ToolbarModal icon={<PlayIcon />} isInitiallyOpen>
-          {content}
-        </ToolbarModal>
-      </div>
-    )
   }
+
+  return (
+    <ShortcutModal icon={<PlayIcon />} label='Continue' isInitiallyOpen>
+      {content}
+    </ShortcutModal>
+  )
 }

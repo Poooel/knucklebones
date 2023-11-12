@@ -1,47 +1,61 @@
-import { IGameState } from '../interfaces'
-import { Outcome, Play } from '../types'
+import { IGameState, IPlayer } from '../interfaces'
+import { Outcome, Play, OutcomeHistory, PlayerOutcome } from '../types'
 import { coinflip, getRandomDice } from '../utils'
 import { Log } from './Log'
 import { Player } from './Player'
 
-export class GameState {
+interface GameStateConstructorArg
+  extends Partial<
+    Omit<IGameState, 'playerOne' | 'playerTwo' | 'logs' | 'nextPlayer'>
+  > {
   playerOne: Player
   playerTwo: Player
-  logs: Log[]
-  outcome!: Outcome
-  nextPlayer!: Player
-  rematchVote?: string
-  spectators: string[]
+  nextPlayer?: Player
+  logs?: Log[]
+}
 
-  constructor(
-    playerOne: Player,
-    playerTwo: Player,
-    logs?: Log[],
-    outcome?: Outcome,
-    nextPlayer?: Player,
-    rematchVote?: string,
-    spectators?: string[]
-  ) {
+export class GameState implements IGameState {
+  playerOne: Player
+  playerTwo: Player
+  spectators: string[]
+  logs: Log[]
+  nextPlayer!: Player
+  winnerId?: string
+  outcome!: Outcome
+  outcomeHistory: OutcomeHistory
+  rematchVote?: string
+
+  constructor({
+    playerOne,
+    playerTwo,
+    nextPlayer,
+    outcome,
+    rematchVote,
+    winnerId,
+    logs = [],
+    spectators = [],
+    outcomeHistory = []
+  }: GameStateConstructorArg) {
     this.playerOne = playerOne
     this.playerTwo = playerTwo
-    this.logs = logs ?? []
-    this.spectators = spectators ?? []
+    this.logs = logs
+    this.spectators = spectators
     this.rematchVote = rematchVote
+    this.outcomeHistory = outcomeHistory
+    this.winnerId = winnerId
 
-    // Only assign outcome if we have one
-    // otherwise it will be assigned in the initialize() method
+    // Only assign these if we have one
+    // otherwise they will be assigned in the initialize() method
     if (outcome !== undefined) {
       this.outcome = outcome
     }
 
-    // Only assign next player if we have one
-    // otherwise it will be assigned in the initialize() method
     if (nextPlayer !== undefined) {
       this.nextPlayer = nextPlayer
     }
   }
 
-  initialize() {
+  initialize(previousGameState?: GameState) {
     this.outcome = 'ongoing'
 
     const isPlayerOneStarting = coinflip()
@@ -52,6 +66,11 @@ export class GameState {
     } else {
       this.nextPlayer = this.playerTwo
       this.playerTwo.dice = getRandomDice()
+    }
+
+    if (previousGameState !== undefined) {
+      this.outcomeHistory = previousGameState.outcomeHistory
+      this.spectators = previousGameState.spectators
     }
 
     this.addToLogs(
@@ -129,24 +148,38 @@ export class GameState {
   }
 
   private whoWins() {
-    const playerOneScore = this.playerOne.score
-    const playerTwoScore = this.playerTwo.score
+    const winner = this.getWinner()
+    this.winnerId = winner?.id
+    this.outcome = 'game-ended'
 
-    if (playerOneScore > playerTwoScore) {
-      this.addToLogs(
-        `${this.playerOne.getName()} wins with ${playerOneScore} points!`
-      )
-      this.outcome = 'player-one-win'
-    } else if (playerOneScore < playerTwoScore) {
-      this.addToLogs(
-        `${this.playerTwo.getName()} wins with ${playerTwoScore} points!`
-      )
-      this.outcome = 'player-two-win'
+    if (winner !== undefined) {
+      this.addToLogs(`${winner.getName()} wins with ${winner.score} points!`)
     } else {
       this.addToLogs(
-        `It's a tie... Both players have ${playerOneScore} points!`
+        `It's a tie... Both players have ${this.playerOne.score} points!`
       )
-      this.outcome = 'tie'
+    }
+
+    this.outcomeHistory.push({
+      playerOne: this.toPlayerOutcome(this.playerOne),
+      playerTwo: this.toPlayerOutcome(this.playerTwo)
+    })
+  }
+
+  private getWinner() {
+    if (this.playerOne.score > this.playerTwo.score) {
+      return this.playerOne
+    }
+    if (this.playerOne.score < this.playerTwo.score) {
+      return this.playerTwo
+    }
+    // tie
+  }
+
+  private toPlayerOutcome({ id, score }: IPlayer): PlayerOutcome {
+    return {
+      id,
+      score
     }
   }
 
@@ -154,16 +187,20 @@ export class GameState {
     this.logs.push(new Log(logLine))
   }
 
-  static fromJson(gameState: IGameState) {
-    return new GameState(
-      Player.fromJson(gameState.playerOne),
-      Player.fromJson(gameState.playerTwo),
-      gameState.logs.map((iLog) => Log.fromJson(iLog)),
-      gameState.outcome,
-      Player.fromJson(gameState.nextPlayer),
-      gameState.rematchVote,
-      gameState.spectators
-    )
+  static fromJson({
+    playerOne,
+    playerTwo,
+    nextPlayer,
+    logs,
+    ...rest
+  }: IGameState) {
+    return new GameState({
+      ...rest,
+      playerOne: Player.fromJson(playerOne),
+      playerTwo: Player.fromJson(playerTwo),
+      nextPlayer: Player.fromJson(nextPlayer),
+      logs: logs.map((iLog) => Log.fromJson(iLog))
+    })
   }
 
   toJson(): IGameState {
@@ -174,7 +211,9 @@ export class GameState {
       outcome: this.outcome,
       nextPlayer: this.nextPlayer.toJson(),
       rematchVote: this.rematchVote,
-      spectators: this.spectators
+      spectators: this.spectators,
+      outcomeHistory: this.outcomeHistory,
+      winnerId: this.winnerId
     }
   }
 }

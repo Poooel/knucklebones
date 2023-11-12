@@ -1,11 +1,6 @@
 import * as React from 'react'
 import { useLocation } from 'react-router-dom'
-import {
-  GameState,
-  IGameState,
-  IPlayer,
-  isEmptyOrBlank
-} from '@knucklebones/common'
+import { GameState, IGameState, isEmptyOrBlank } from '@knucklebones/common'
 import {
   deleteDisplayName,
   displayName,
@@ -15,18 +10,26 @@ import {
 } from '../utils/api'
 import useWebSocket, { ReadyState } from 'react-use-websocket'
 import { useRoomKey } from './useRoomKey'
+import {
+  PlayerSide,
+  augmentPlayer,
+  getPlayerFromId,
+  getPlayerSide
+} from '../utils/player'
 
-function attributePlayers(
-  playerId: string,
-  gameState: IGameState | null
-): [IPlayer?, IPlayer?] {
-  if (gameState === null) {
-    return []
-  } else if (gameState.playerOne?.id === playerId) {
-    return [gameState.playerOne, gameState.playerTwo]
-  } else {
-    return [gameState.playerTwo, gameState.playerOne]
+export type GameContext = NonNullable<ReturnType<typeof useGame>>
+
+function preparePlayers(
+  playerSide: PlayerSide,
+  { playerOne, playerTwo }: IGameState
+) {
+  if (playerSide === 'player-two') {
+    return [augmentPlayer(playerTwo, true), augmentPlayer(playerOne, false)]
   }
+  return [
+    augmentPlayer(playerOne, playerSide !== 'spectator'),
+    augmentPlayer(playerTwo, false)
+  ]
 }
 
 function getWebSocketUrl(roomKey: string) {
@@ -46,14 +49,28 @@ export function useGame() {
   const [isLoading, setIsLoading] = React.useState(true)
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
   const roomKey = useRoomKey()
-  const playerId = localStorage.getItem('playerId')!
   const { state } = useLocation()
-
   const { lastJsonMessage, readyState } = useWebSocket(getWebSocketUrl(roomKey))
+
+  const isGameStateReady = gameState !== null
+
+  const playerId = localStorage.getItem('playerId')!
+  const playerSide = isGameStateReady
+    ? getPlayerSide(playerId, gameState)
+    : 'spectator'
+  const [playerOne, playerTwo] = isGameStateReady
+    ? preparePlayers(playerSide, gameState)
+    : []
+
+  const winner =
+    gameState?.winnerId !== undefined
+      ? getPlayerFromId(gameState.winnerId, { playerOne, playerTwo })
+      : undefined
 
   React.useEffect(() => {
     if (lastJsonMessage !== null) {
       // @ts-expect-error
+      // Can use Zod to parse the message safely
       const gameState = lastJsonMessage as IGameState
       setGameState(gameState)
       setIsLoading(false)
@@ -64,9 +81,9 @@ export function useGame() {
   React.useEffect(() => {
     if (readyState === ReadyState.OPEN) {
       init(roomKey, playerId, 'human')
-        .then(() => {
+        .then(async () => {
           if (state?.playerType === 'ai') {
-            return init(roomKey, 'beep-boop', 'ai', state?.difficulty)
+            return await init(roomKey, 'beep-boop', 'ai', state?.difficulty)
           }
         })
         .catch((error) => {
@@ -74,8 +91,6 @@ export function useGame() {
         })
     }
   }, [roomKey, playerId, readyState, state])
-
-  const [playerOne, playerTwo] = attributePlayers(playerId, gameState)
 
   async function sendPlay(column: number) {
     const dice = playerOne?.dice
@@ -126,17 +141,23 @@ export function useGame() {
     }
   }
 
+  // Easy way to do a type guard
+  if (!isGameStateReady) {
+    return null
+  }
+
   return {
-    gameState,
+    ...gameState,
     isLoading,
     playerOne,
     playerTwo,
-    sendPlay,
+    playerId,
+    playerSide,
+    winner,
     errorMessage,
+    sendPlay,
     clearErrorMessage,
     sendRematch,
-    updateDisplayName,
-    playerId,
-    roomKey
+    updateDisplayName
   }
 }

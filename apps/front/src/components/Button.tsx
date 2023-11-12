@@ -1,35 +1,53 @@
 import * as React from 'react'
 import clsx from 'clsx'
-import { Box, PolymorphicComponentProps } from 'react-polymorphic-box'
 
-interface ButtonProps {
-  variant?: 'default' | 'large' | 'medium'
+interface ButtonProps<E extends React.ElementType> {
+  size?: 'default' | 'large' | 'medium'
+  variant?: 'primary' | 'secondary' | 'ghost'
+  leftIcon?: React.ReactNode
+  rightIcon?: React.ReactNode
+  as?: E
 }
-type PolymorphedButtonProps<E extends React.ElementType> =
-  PolymorphicComponentProps<E, ButtonProps>
+type PolymorphedButtonProps<E extends React.ElementType> = ButtonProps<E> &
+  Omit<React.ComponentProps<E>, keyof ButtonProps<E>>
 
 const defaultElement = 'button'
 
 export function Button<E extends React.ElementType = typeof defaultElement>({
   children,
-  variant = 'default',
+  leftIcon,
+  rightIcon,
+  size = 'default',
+  variant = 'primary',
+  as,
   ...props
 }: PolymorphedButtonProps<E>) {
+  const Component = as ?? defaultElement
   return (
-    <Box
-      as={defaultElement}
+    <Component
       {...props}
       className={clsx(
-        'rounded-md border-2 border-slate-300 bg-slate-200 text-center font-medium hover:bg-slate-200/70 disabled:opacity-50 disabled:hover:bg-slate-200 dark:border-slate-600 dark:bg-slate-700 dark:hover:bg-slate-700/70 disabled:dark:hover:bg-slate-700',
+        'flex flex-row items-center justify-center gap-2 rounded-md text-center font-medium text-slate-900 transition-colors duration-100 disabled:opacity-50 dark:text-slate-50',
         {
-          'p-2 text-base': variant === 'default',
-          'p-2 text-2xl md:p-4 md:text-4xl': variant === 'large',
-          'p-2 text-xl md:p-4 md:text-2xl': variant === 'medium'
+          'py-1 px-2 text-base md:p-2': size === 'default',
+          'p-2 text-2xl tracking-tight md:p-4 md:text-4xl': size === 'large',
+          'p-2 text-xl tracking-tight md:p-4 md:text-2xl': size === 'medium',
+          'bg-slate-200 hover:bg-slate-200/70 disabled:hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-700/70 disabled:dark:hover:bg-slate-700':
+            variant === 'primary',
+          'hover:bg-transparent/5 dark:hover:bg-transparent/20':
+            variant !== 'primary',
+          'border-2 border-slate-300 dark:border-slate-600': variant !== 'ghost'
         },
         props.className
       )}
     >
-      {children}
-    </Box>
+      {leftIcon !== undefined && (
+        <div className='aspect-square h-6'>{leftIcon}</div>
+      )}
+      <div className='translate-y-px'>{children}</div>
+      {rightIcon !== undefined && (
+        <div className='aspect-square h-6'>{rightIcon}</div>
+      )}
+    </Component>
   )
 }

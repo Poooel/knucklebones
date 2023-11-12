@@ -7,54 +7,99 @@ import { WarningToast } from './WarningToast'
 import { QRCodeModal } from './QRCode'
 import { HowToPlayModal } from './HowToPlay'
 import { LogsModal } from './Logs'
+import { OutcomeHistory } from './OutcomeHistory'
+import { SideBar } from './SideBar'
+import { Theme } from './Theme'
+import { useIsOnMobile } from '../hooks/detectDevice'
 
 export function Game() {
-  const {
-    gameState,
-    playerOne,
-    playerTwo,
-    isLoading,
-    sendPlay,
-    errorMessage,
-    clearErrorMessage,
-    sendRematch,
-    updateDisplayName,
-    playerId
-  } = useGame()
+  const gameStore = useGame()
+  const isOnMobile = useIsOnMobile()
+  const gameRef = React.useRef<React.ElementRef<'div'>>(null)
 
-  if (gameState === null) {
+  if (gameStore === null) {
     return <Loading />
   }
 
-  const { outcome, nextPlayer } = gameState
+  const {
+    outcome,
+    rematchVote,
+    outcomeHistory,
+    logs,
+    nextPlayer,
+    winner,
+    playerOne,
+    playerTwo,
+    isLoading,
+    errorMessage,
+    sendPlay,
+    clearErrorMessage,
+    sendRematch,
+    updateDisplayName,
+    playerSide
+  } = gameStore
 
-  const isSpectator = playerId !== playerOne?.id && playerId !== playerTwo?.id
-
+  const isSpectator = playerSide === 'spectator'
   const canPlay = !isLoading && outcome === 'ongoing' && !isSpectator
   const canPlayerOnePlay = canPlay && nextPlayer?.id === playerOne?.id
   const canPlayerTwoPlay = canPlay && nextPlayer?.id === playerTwo?.id
 
+  // Pas tip top je trouve, mais virtuellement ça marche
+  const gameOutcome = (
+    <GameOutcome
+      playerOne={playerOne}
+      playerTwo={playerTwo}
+      winner={winner}
+      outcome={outcome}
+      rematchVote={rematchVote}
+      onRematch={() => {
+        void sendRematch()
+      }}
+      playerSide={playerSide}
+    />
+  )
+
   return (
-    <div className='grid grid-cols-1'>
-      <div className='h-svh flex flex-col items-center justify-around lg:h-screen'>
+    <div className='lg:grid-cols-3-central grid grid-cols-1'>
+      <SideBar
+        gameRef={gameRef}
+        actions={
+          <>
+            <HowToPlayModal />
+            <Theme />
+            <QRCodeModal />
+            <LogsModal logs={logs} />
+            <OutcomeHistory
+              playerSide={playerSide}
+              outcomeHistory={outcomeHistory}
+              playerOne={playerOne}
+              playerTwo={playerTwo}
+            />
+            {isOnMobile && gameOutcome}
+          </>
+        }
+      />
+      <div
+        ref={gameRef}
+        className='h-svh flex flex-1 flex-col items-center justify-around'
+      >
         <PlayerBoard
-          {...playerTwo!}
+          {...playerTwo}
           isPlayerOne={false}
           canPlay={canPlayerTwoPlay}
           outcome={outcome}
         />
-        <GameOutcome
-          {...gameState}
-          playerId={playerOne!.id}
-          onRematch={() => {
-            void sendRematch()
-          }}
-          isSpectator={isSpectator}
-        />
+        {!isOnMobile && gameOutcome}
         <PlayerBoard
-          {...playerOne!}
+          {...playerOne}
           isPlayerOne
-          onColumnClick={canPlayerOnePlay ? sendPlay : undefined}
+          onColumnClick={
+            canPlayerOnePlay
+              ? (column) => {
+                  void sendPlay(column)
+                }
+              : undefined
+          }
           canPlay={canPlayerOnePlay}
           updateDisplayName={(displayName) => {
             void updateDisplayName(displayName)
@@ -64,9 +109,7 @@ export function Game() {
         />
         <WarningToast message={errorMessage} onDismiss={clearErrorMessage} />
       </div>
-      <LogsModal logs={gameState.logs} />
-      <QRCodeModal />
-      <HowToPlayModal />
+      <div></div>
     </div>
   )
 }
