@@ -49,7 +49,7 @@ async function deleteDeployment(
   console.log(`Deleting deployment with id ${deploymentId}`)
 
   const response = await fetch(
-    `https://api.cloudflare.com/client/v4/accounts/${accountId}/pages/projects/${projectId}/deployments/${deploymentId}`,
+    `https://api.cloudflare.com/client/v4/accounts/${accountId}/pages/projects/${projectId}/deployments/${deploymentId}?force=true`,
     {
       method: 'DELETE',
       headers: {
@@ -82,7 +82,7 @@ async function deleteDeployments(
   const deletedDeployments = []
 
   deployments.forEach((deployment) => {
-    if (deployment.aliases === null) {
+    if (deployment.environment === 'preview') {
       deleteDeployment(accountId, projectId, bearerToken, deployment.id)
       deletedDeployments.push(deployment.id)
     }
