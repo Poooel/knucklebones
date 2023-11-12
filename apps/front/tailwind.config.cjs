@@ -7,6 +7,9 @@ module.exports = {
       gridTemplateColumns: {
         '3-central': '1fr auto 1fr'
       },
+      height: {
+        svh: '100svh'
+      },
       fontFamily: {
         mona: ['"Mona Sans"']
       }

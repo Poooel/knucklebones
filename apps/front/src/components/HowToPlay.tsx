@@ -1,11 +1,9 @@
 import * as React from 'react'
 import clsx from 'clsx'
 import { QuestionMarkCircleIcon } from '@heroicons/react/24/outline'
-import { Toolbar } from './Toolbar'
-import { IconButton } from './IconButton'
-import { Modal } from './Modal'
 import { Board } from './Board'
 import { ColumnScore } from './ColumnScore'
+import { ShortcutModal } from './ShortcutModal'
 
 const SCORE_EXAMPLE_COLUMNS = [[3], [3, 3], [3, 3, 3]]
 const PLAYER_ONE_REMOVE_EXAMPLE_COLUMNS = [[], [], [6]]
@@ -112,21 +110,11 @@ export function HowToPlayPage() {
 }
 
 export function HowToPlayModal() {
-  const [isOpen, setOpen] = React.useState(false)
-
   return (
-    <>
-      <Toolbar>
-        <IconButton
-          icon={<QuestionMarkCircleIcon />}
-          onClick={() => setOpen(true)}
-        />
-      </Toolbar>
-      <Modal isOpen={isOpen} onClose={() => setOpen(false)}>
-        <div className='max-w-7xl'>
-          <HowToPlay />
-        </div>
-      </Modal>
-    </>
+    <ShortcutModal icon={<QuestionMarkCircleIcon />} label='How to play'>
+      <div className='max-w-7xl'>
+        <HowToPlay />
+      </div>
+    </ShortcutModal>
   )
 }

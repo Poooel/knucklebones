@@ -1,74 +1,78 @@
 import * as React from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { IGameState, IPlayer, Player } from '@knucklebones/common'
 import { Button } from './Button'
+import { PlayIcon } from '@heroicons/react/24/outline'
+import { ShortcutModal } from './ShortcutModal'
+import { GameContext } from '../hooks/useGame'
+import { useIsOnDesktop } from '../hooks/detectDevice'
 
-interface OutcomeProps extends IGameState {
-  playerId: string
-  onRematch(): void
-  isSpectator: boolean
-}
+interface GetWinMessageArgs extends Pick<GameContext, 'outcome' | 'winner'> {}
 
-function getWinnerName(playerId: string, player: IPlayer) {
-  return playerId === player.id ? 'You' : Player.fromJson(player).getName()
-}
-
-const getWinMessage = (
-  playerId: string,
-  { outcome, playerOne, playerTwo }: IGameState
-) => {
-  if (outcome === 'player-one-win') {
-    const winnerName = getWinnerName(playerId, playerOne)
-    return `${winnerName} won with ${playerOne.score} points!`
-  }
-  if (outcome === 'player-two-win') {
-    const winnerName = getWinnerName(playerId, playerTwo)
-    return `${winnerName} won with ${playerTwo.score} points!`
-  }
-  if (outcome === 'tie') {
+function getWinMessage({ outcome, winner }: GetWinMessageArgs) {
+  if (outcome === 'game-ended') {
+    if (winner !== undefined) {
+      return `${winner.inGameName} won with ${winner.score} points!`
+    }
     return 'This is a tie! Nobody wins!'
   }
+  return ''
+}
+
+interface OutcomeProps
+  extends GetWinMessageArgs,
+    Pick<
+      GameContext,
+      'rematchVote' | 'playerOne' | 'playerTwo' | 'playerSide'
+    > {
+  onRematch(): void
 }
 
 export function GameOutcome({
-  playerId,
-  onRematch,
-  isSpectator,
-  ...gameState
+  outcome,
+  winner,
+  playerSide,
+  playerOne,
+  playerTwo,
+  rematchVote,
+  onRematch
 }: OutcomeProps) {
-  const { outcome } = gameState
-  const navigate = useNavigate()
-  const hasVotedRematch = isSpectator || gameState.rematchVote === playerId
+  const isSpectator = playerSide === 'spectator'
+  const hasVotedRematch = rematchVote === playerOne.id
+  const isOnDesktop = useIsOnDesktop()
 
   if (outcome === 'ongoing') {
-    return <p>VS</p>
+    // On peut mettre un VS semi-transparent dans le fond de la partie
+    // pour rappeler cet élément sans pour autant que ça prenne de l'espace dans
+    // le layout.
+    return <p className='hidden md:block'>VS</p>
   }
 
-  const playerTwoId =
-    playerId === gameState.playerOne?.id
-      ? Player.fromJson(gameState.playerTwo).getName()
-      : Player.fromJson(gameState.playerOne).getName()
-
-  return (
+  const content = (
     <div className='grid justify-items-center gap-2 font-semibold'>
-      <p>{getWinMessage(playerId, gameState)}</p>
+      <p>{getWinMessage({ outcome, winner })}</p>
       {!isSpectator && (
-        <div className='flex gap-4'>
-          <Button onClick={() => navigate('/')}>Replay</Button>
-          <Button onClick={onRematch} disabled={hasVotedRematch}>
-            Rematch
-          </Button>
-        </div>
+        <Button onClick={onRematch} disabled={hasVotedRematch}>
+          Rematch
+        </Button>
       )}
 
       {!isSpectator &&
         (hasVotedRematch ? (
-          <p>Waiting for {playerTwoId}...</p>
+          <p>Waiting for {playerTwo.inGameName}...</p>
         ) : (
-          gameState.rematchVote !== undefined && ( // It means the other player has voted for rematch
-            <p>{playerTwoId} wants to rematch!</p>
+          rematchVote !== undefined && ( // It means the other player has voted for rematch
+            <p>{playerTwo.inGameName} wants to rematch!</p>
           )
         ))}
     </div>
+  )
+
+  if (isOnDesktop) {
+    return content
+  }
+
+  return (
+    <ShortcutModal icon={<PlayIcon />} label='Continue' isInitiallyOpen>
+      {content}
+    </ShortcutModal>
   )
 }

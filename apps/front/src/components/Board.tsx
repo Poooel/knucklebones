@@ -82,7 +82,7 @@ export function Board({
 }
 
 export function PlayerBoard({
-  id: playerId,
+  id,
   dice,
   isPlayerOne,
   score = 0,
@@ -104,7 +104,7 @@ export function PlayerBoard({
       })}
     >
       <Name
-        playerId={playerId}
+        id={id}
         displayName={displayName}
         isPlayerOne={isPlayerOne}
         updateDisplayName={updateDisplayName}

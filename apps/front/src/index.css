@@ -20,11 +20,6 @@
   font-stretch: 75% 125%;
 }
 
-.h-95 {
-  height: 95vh; /* Fallback */
-  height: calc(95 * var(--vh));
-}
-
 @layer base {
   html, button, input {
     font-family: 'Hubot Sans', system-ui, sans-serif;
