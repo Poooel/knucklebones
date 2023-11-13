@@ -11,11 +11,12 @@ jobs:
     name: Deploy Production
     steps:
       - uses: actions/checkout@v2
-      - name: Yarn install with caching
-        uses: bahmutov/npm-install@v1.6.0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2.4.0
 
       - name: Build Worker
-        run: yarn build
+        run: pnpm build
       
       - name: Deploy Production
         uses: cloudflare/wrangler-action@v3
