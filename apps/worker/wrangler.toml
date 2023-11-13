@@ -9,7 +9,7 @@ durable_objects.bindings = [
 ]
 
 [build]
-command = "yarn build"
+command = "pnpm build"
 
 [[migrations]]
 tag = "v1"
