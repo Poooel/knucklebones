@@ -31,3 +31,5 @@ We use [Turborepo](https://turbo.build/) to manage our monorepo.
 The `apps` directory contains the React application (`front`) and the Cloudflare Worker (`worker`) (along with the definition of the Durable Object).
 
 The `packages` directory contains code that's shared between the React application and Cloudflare worker.
+
+test
