@@ -9,7 +9,7 @@
     "dev": "wrangler dev"
   },
   "dependencies": {
-    "@knucklebones/common": "*",
+    "@knucklebones/common": "workspace:*",
     "itty-durable": "^2.1.0",
     "itty-router": "^4.0.23"
   }
