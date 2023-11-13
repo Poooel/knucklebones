@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { Text } from '../Text'
 import { PlayerHistoryDetail } from './PlayerHistoryDetail'
-import { DetailedHistory } from './history.utils'
+import { type DetailedHistory } from './history.utils'
 import { getPlayerFromId } from '../../utils/player'
-import { GameContext } from '../../hooks/useGame'
+import { type GameContext } from '../../hooks/useGame'
 
 interface HistoryDetailProps
   extends Pick<GameContext, 'playerOne' | 'playerTwo'> {

@@ -1,5 +1,5 @@
-import { IPlayer } from '../interfaces'
-import { Difficulty } from '../types'
+import { type IPlayer } from '../interfaces'
+import { type Difficulty } from '../types'
 import { getColumnScore, sum } from '../utils'
 
 export class Player {

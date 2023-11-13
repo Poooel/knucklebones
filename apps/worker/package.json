@@ -6,15 +6,13 @@
   "module": "./dist/index.mjs",
   "scripts": {
     "build": "node build.js",
-    "dev": "wrangler dev --local --persist",
+    "dev": "wrangler dev",
     "publish:staging": "wrangler publish --env staging",
     "publish:prod": "wrangler publish --env production"
   },
   "dependencies": {
     "@knucklebones/common": "*",
-    "itty-cors": "^0.3.4",
-    "itty-durable": "^1.2.0",
-    "itty-router": "^2.6.5",
-    "itty-router-extras": "^0.4.2"
+    "itty-durable": "^2.1.0",
+    "itty-router": "^4.0.23"
   }
 }

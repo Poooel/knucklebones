@@ -1,4 +1,4 @@
-import { OutcomeHistory, PlayerOutcome } from '@knucklebones/common'
+import { type OutcomeHistory, type PlayerOutcome } from '@knucklebones/common'
 
 export interface PlayerOutcomeWithWins extends PlayerOutcome {
   wins: number

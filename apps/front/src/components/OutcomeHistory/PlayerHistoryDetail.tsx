@@ -1,7 +1,7 @@
 import * as React from 'react'
 import clsx from 'clsx'
 import { Text } from '../Text'
-import { PlayerOutcomeWithWins } from './history.utils'
+import { type PlayerOutcomeWithWins } from './history.utils'
 
 interface PlayerHistoryDetailProps extends PlayerOutcomeWithWins {
   playerName: string

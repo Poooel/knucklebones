@@ -1,4 +1,4 @@
-import { CloudflareEnvironment } from '../types/cloudflareEnvironment'
+import { type CloudflareEnvironment } from '../types/cloudflareEnvironment'
 
 export async function webSocket(
   request: Request,

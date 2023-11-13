@@ -9,20 +9,20 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@floating-ui/react-dom-interactions": "^0.10.1",
-    "@headlessui/react": "^1.7.2",
-    "@heroicons/react": "^2.0.11",
+    "@floating-ui/react": "^0.26.2",
+    "@headlessui/react": "^1.7.17",
+    "@heroicons/react": "^2.0.18",
     "@knucklebones/common": "*",
-    "@use-gesture/react": "^10.2.27",
-    "clsx": "^1.2.1",
+    "@use-gesture/react": "^10.3.0",
+    "clsx": "^2.0.0",
     "qrcode.react": "^3.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "6",
+    "react-router-dom": "6.18.0",
     "react-use": "^17.4.0",
-    "react-use-websocket": "^4.2.0",
+    "react-use-websocket": "^4.5.0",
     "unique-names-generator": "^4.7.1",
     "use-clipboard-copy": "^0.2.0",
-    "uuid": "^8.3.2"
+    "uuid": "^9.0.1"
   }
 }

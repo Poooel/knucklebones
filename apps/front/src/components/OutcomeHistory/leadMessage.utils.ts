@@ -1,6 +1,6 @@
-import { GameContext } from '../../hooks/useGame'
+import { type GameContext } from '../../hooks/useGame'
 import { getPlayerFromId } from '../../utils/player'
-import { GameOutcome } from './history.utils'
+import { type GameOutcome } from './history.utils'
 
 interface GetLeadMessageArgs
   extends Pick<GameContext, 'playerOne' | 'playerTwo'> {

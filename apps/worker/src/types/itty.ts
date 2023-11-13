@@ -1,4 +1,4 @@
-import { GameStateDurableObjectProps } from '../durable-objects/GameStateDurableObject'
+import { type GameStateDurableObjectProps } from '../durable-objects/GameStateDurableObject'
 
 export type PromisifyPublicFunctions<T> = {
   [K in keyof T]: T[K] extends (...args: any[]) => any

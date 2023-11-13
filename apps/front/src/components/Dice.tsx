@@ -127,7 +127,7 @@ function DiceSix() {
   )
 }
 
-const DiceMap: { [key: number]: React.ComponentType } = {
+const DiceMap: Record<number, React.ComponentType> = {
   1: DiceOne,
   2: DiceTwo,
   3: DiceThree,

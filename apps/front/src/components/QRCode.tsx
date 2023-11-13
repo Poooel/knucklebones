@@ -25,7 +25,9 @@ function QRCodeBase({ title }: QRCodeBaseProps) {
         <Button
           className='flex flex-row items-center gap-2 text-lg'
           leftIcon={copied ? undefined : <LinkIcon />}
-          onClick={() => copy(window.location.href)}
+          onClick={() => {
+            copy(window.location.href)
+          }}
         >
           {copied ? 'Copied!' : 'Copy link'}
         </Button>

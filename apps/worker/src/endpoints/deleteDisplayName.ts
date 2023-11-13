@@ -1,6 +1,6 @@
-import { error, status } from 'itty-router-extras'
-import { CloudflareEnvironment } from '../types/cloudflareEnvironment'
-import { BaseRequestWithProps } from '../types/itty'
+import { error, status } from 'itty-router'
+import { type CloudflareEnvironment } from '../types/cloudflareEnvironment'
+import { type BaseRequestWithProps } from '../types/itty'
 import {
   broadcastGameState,
   getGameState,

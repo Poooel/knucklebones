@@ -1,4 +1,4 @@
-import { ILog } from '../interfaces'
+import { type ILog } from '../interfaces'
 
 export class Log {
   private static lastTimestamp: number = 0

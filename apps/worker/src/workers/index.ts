@@ -1,6 +1,5 @@
-import { ThrowableRouter, missing, withParams } from 'itty-router-extras'
+import { Router, error, withParams, createCors } from 'itty-router'
 import { withDurables } from 'itty-durable'
-import { createCors } from 'itty-cors'
 import {
   deleteDisplayName,
   displayName,
@@ -9,28 +8,28 @@ import {
   rematch,
   webSocket
 } from '../endpoints'
-import { CloudflareEnvironment } from '../types/cloudflareEnvironment'
+import { type CloudflareEnvironment } from '../types/cloudflareEnvironment'
 
 export { GameStateDurableObject } from '../durable-objects/GameStateDurableObject'
 export { WebSocketDurableObject } from '../durable-objects/WebSocketDurableObject'
 
-const router = ThrowableRouter()
+const router = Router()
 
 const { preflight, corsify } = createCors({
   methods: ['POST', 'DELETE']
 })
 
 router
-  .all('*', withDurables({ parse: true }), preflight)
+  .all('*', withDurables({ parse: true }), preflight, withParams)
 
-  .post('/:roomKey/:playerId/init', withParams, init)
-  .post('/:roomKey/:playerId/play/:column/:dice', withParams, play)
-  .post('/:roomKey/:playerId/rematch', withParams, rematch)
-  .post('/:roomKey/:playerId/displayName/:displayName', withParams, displayName)
+  .post('/:roomKey/:playerId/init', init)
+  .post('/:roomKey/:playerId/play/:column/:dice', play)
+  .post('/:roomKey/:playerId/rematch', rematch)
+  .post('/:roomKey/:playerId/displayName/:displayName', displayName)
 
-  .delete('/:roomKey/:playerId/displayName', withParams, deleteDisplayName)
+  .delete('/:roomKey/:playerId/displayName', deleteDisplayName)
 
-  .all('*', () => missing('Are you sure about that?'))
+  .all('*', () => error(404, 'Are you sure about that?'))
 
 export default {
   async fetch(

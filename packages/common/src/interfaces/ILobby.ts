@@ -1,4 +1,4 @@
-import { IPlayer } from './IPlayer'
+import { type IPlayer } from './IPlayer'
 
 export interface ILobby {
   players: IPlayer[]

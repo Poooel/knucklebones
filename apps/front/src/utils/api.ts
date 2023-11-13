@@ -1,4 +1,8 @@
-import { Difficulty, Play, PlayerType } from '@knucklebones/common'
+import {
+  type Difficulty,
+  type Play,
+  type PlayerType
+} from '@knucklebones/common'
 
 export type Method = 'GET' | 'POST' | 'DELETE'
 
@@ -23,17 +27,17 @@ export async function init(
 
   const path = `/${roomKey}/${playerId}/init${queryParamsString}`
 
-  return await sendApiRequest(path, 'POST')
+  await sendApiRequest(path, 'POST')
 }
 
 export async function rematch(roomKey: string, playerId: string) {
   const path = `/${roomKey}/${playerId}/rematch`
-  return await sendApiRequest(path, 'POST')
+  await sendApiRequest(path, 'POST')
 }
 
 export async function play(roomKey: string, play: Play) {
   const path = `/${roomKey}/${play.author}/play/${play.column}/${play.dice}`
-  return await sendApiRequest(path, 'POST')
+  await sendApiRequest(path, 'POST')
 }
 
 export async function displayName(
@@ -42,12 +46,12 @@ export async function displayName(
   displayName: string
 ) {
   const path = `/${roomKey}/${playerId}/displayName/${displayName}`
-  return await sendApiRequest(path, 'POST')
+  await sendApiRequest(path, 'POST')
 }
 
 export async function deleteDisplayName(roomKey: string, playerId: string) {
   const path = `/${roomKey}/${playerId}/displayName`
-  return await sendApiRequest(path, 'DELETE')
+  await sendApiRequest(path, 'DELETE')
 }
 
 async function sendApiRequest(path: string, method: Method, body?: any) {
@@ -56,7 +60,7 @@ async function sendApiRequest(path: string, method: Method, body?: any) {
     ...(body !== undefined && { 'Content-Type': 'application/json' })
   }
 
-  return await fetch(`${import.meta.env.VITE_WORKER_URL}${path}`, {
+  await fetch(`${import.meta.env.VITE_WORKER_URL}${path}`, {
     method,
     headers,
     ...(body !== undefined && { body: JSON.stringify(body) })
