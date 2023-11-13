@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Button } from './Button'
 import { PlayIcon } from '@heroicons/react/24/outline'
 import { ShortcutModal } from './ShortcutModal'
-import { GameContext } from '../hooks/useGame'
+import { type GameContext } from '../hooks/useGame'
 import { useIsOnDesktop } from '../hooks/detectDevice'
 
 interface GetWinMessageArgs extends Pick<GameContext, 'outcome' | 'winner'> {}

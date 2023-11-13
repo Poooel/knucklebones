@@ -1,16 +1,22 @@
-export function getMaxBy<T extends Object>(array: T[], key: keyof T) {
+export function getMaxBy<T extends Record<string, unknown>>(
+  array: T[],
+  key: keyof T
+) {
   return array.reduce((acc, current) => {
     return current[key] > acc[key] ? current : acc
   })
 }
 
-export function getMinBy<T extends Object>(array: T[], key: keyof T) {
+export function getMinBy<T extends Record<string, unknown>>(
+  array: T[],
+  key: keyof T
+) {
   return array.reduce((acc, current) => {
     return current[key] < acc[key] ? current : acc
   })
 }
 
-export function sortBy<T extends Object>(
+export function sortBy<T extends Record<string, unknown>>(
   array: T[],
   key: keyof T,
   order: 'ascending' | 'descending' = 'ascending'

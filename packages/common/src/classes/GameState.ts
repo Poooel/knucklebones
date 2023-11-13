@@ -1,5 +1,10 @@
-import { IGameState, IPlayer } from '../interfaces'
-import { Outcome, Play, OutcomeHistory, PlayerOutcome } from '../types'
+import { type IGameState, type IPlayer } from '../interfaces'
+import {
+  type Outcome,
+  type Play,
+  type OutcomeHistory,
+  type PlayerOutcome
+} from '../types'
 import { coinflip, getRandomDice } from '../utils'
 import { Log } from './Log'
 import { Player } from './Player'

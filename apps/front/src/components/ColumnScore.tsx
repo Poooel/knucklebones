@@ -5,7 +5,7 @@ import {
   useHover,
   useInteractions,
   useDismiss
-} from '@floating-ui/react-dom-interactions'
+} from '@floating-ui/react'
 import { countDiceInColumn } from '@knucklebones/common'
 import { Dice } from './Dice'
 
@@ -69,7 +69,7 @@ export function ColumnScoreTooltip({
   isPlayerOne
 }: ColumnScoreTooltipProps) {
   const [showTooltip, setShowTooltip] = React.useState(false)
-  const { x, y, reference, floating, strategy, context } = useFloating({
+  const { x, y, refs, strategy, context } = useFloating({
     placement: isPlayerOne ? 'top' : 'bottom',
     open: showTooltip,
     onOpenChange(open) {
@@ -86,12 +86,16 @@ export function ColumnScoreTooltip({
 
   return (
     <>
-      <p ref={reference} className='text-center' {...getReferenceProps()}>
+      <p
+        ref={refs.setReference}
+        className='text-center'
+        {...getReferenceProps()}
+      >
         {score}
       </p>
       {showTooltip && score > 0 && (
         <div
-          ref={floating}
+          ref={refs.setFloating}
           style={{
             position: strategy,
             top: y ?? 0,

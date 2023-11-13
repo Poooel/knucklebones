@@ -1,7 +1,7 @@
 import { createDurable } from 'itty-durable'
-import { IGameState, ILobby, Lobby } from '@knucklebones/common'
-import { CloudflareEnvironment } from '../types/cloudflareEnvironment'
-import { IttyDurableObjectNamespace } from '../types/itty'
+import { type IGameState, type ILobby, Lobby } from '@knucklebones/common'
+import { type CloudflareEnvironment } from '../types/cloudflareEnvironment'
+import { type IttyDurableObjectNamespace } from '../types/itty'
 
 export class GameStateDurableObject extends createDurable({
   autoPersist: true

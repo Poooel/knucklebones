@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { DocumentTextIcon } from '@heroicons/react/24/outline'
-import { ILog } from '@knucklebones/common'
+import { type ILog } from '@knucklebones/common'
 import { Modal } from './Modal'
 import { ShortcutModal } from './ShortcutModal'
 

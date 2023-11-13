@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { RectangleStackIcon } from '@heroicons/react/24/outline'
-import { GameContext } from '../../hooks/useGame'
+import { type GameContext } from '../../hooks/useGame'
 import { Modal } from '../Modal'
 import { Text } from '../Text'
 import { ShortcutModal } from '../ShortcutModal'

@@ -1,10 +1,10 @@
 import {
   countDiceInColumn,
-  Difficulty,
+  type Difficulty,
   getColumnScore,
   getMaxBy,
   getMinBy,
-  Player,
+  type Player,
   sortBy
 } from '@knucklebones/common'
 

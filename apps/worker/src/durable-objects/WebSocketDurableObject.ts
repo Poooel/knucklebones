@@ -1,4 +1,4 @@
-import { CloudflareEnvironment } from '../types/cloudflareEnvironment'
+import { type CloudflareEnvironment } from '../types/cloudflareEnvironment'
 
 interface Session {
   webSocket: WebSocket

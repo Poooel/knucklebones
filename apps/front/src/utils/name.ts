@@ -1,4 +1,4 @@
-import { IPlayer, isEmptyOrBlank } from '@knucklebones/common'
+import { type IPlayer, isEmptyOrBlank } from '@knucklebones/common'
 import {
   uniqueNamesGenerator,
   adjectives,

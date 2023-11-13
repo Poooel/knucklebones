@@ -1,4 +1,4 @@
-import { ILobby } from '../interfaces'
+import { type ILobby } from '../interfaces'
 import { GameState } from './GameState'
 import { Player } from './Player'
 

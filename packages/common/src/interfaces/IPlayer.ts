@@ -1,4 +1,4 @@
-import { Difficulty } from '../types'
+import { type Difficulty } from '../types'
 
 export interface IPlayer {
   id: string

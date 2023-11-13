@@ -1,6 +1,10 @@
 import * as React from 'react'
 import { useLocation } from 'react-router-dom'
-import { GameState, IGameState, isEmptyOrBlank } from '@knucklebones/common'
+import {
+  GameState,
+  type IGameState,
+  isEmptyOrBlank
+} from '@knucklebones/common'
 import {
   deleteDisplayName,
   displayName,
@@ -11,7 +15,7 @@ import {
 import useWebSocket, { ReadyState } from 'react-use-websocket'
 import { useRoomKey } from './useRoomKey'
 import {
-  PlayerSide,
+  type PlayerSide,
   augmentPlayer,
   getPlayerFromId,
   getPlayerSide
@@ -69,7 +73,6 @@ export function useGame() {
 
   React.useEffect(() => {
     if (lastJsonMessage !== null) {
-      // @ts-expect-error
       // Can use Zod to parse the message safely
       const gameState = lastJsonMessage as IGameState
       setGameState(gameState)
@@ -83,7 +86,7 @@ export function useGame() {
       init(roomKey, playerId, 'human')
         .then(async () => {
           if (state?.playerType === 'ai') {
-            return await init(roomKey, 'beep-boop', 'ai', state?.difficulty)
+            await init(roomKey, 'beep-boop', 'ai', state?.difficulty)
           }
         })
         .catch((error) => {

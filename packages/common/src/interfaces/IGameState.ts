@@ -1,6 +1,6 @@
-import { Outcome, OutcomeHistory } from '../types'
-import { ILog } from './ILog'
-import { IPlayer } from './IPlayer'
+import { type Outcome, type OutcomeHistory } from '../types'
+import { type ILog } from './ILog'
+import { type IPlayer } from './IPlayer'
 
 export interface IGameState {
   playerOne: IPlayer

@@ -44,7 +44,9 @@ export function SideBar({ actions, gameRef }: HeaderProps) {
       const timeout = setTimeout(() => {
         setShowToolbar(false)
       }, 1500)
-      return () => clearTimeout(timeout)
+      return () => {
+        clearTimeout(timeout)
+      }
     } else {
       setShowToolbar(true)
     }
@@ -92,7 +94,9 @@ export function SideBar({ actions, gameRef }: HeaderProps) {
           </div>
           {isOnMobile && (
             <IconButton
-              onClick={() => setShowToolbar((prev) => !prev)}
+              onClick={() => {
+                setShowToolbar((prev) => !prev)
+              }}
               icon={<ChevronRightIcon />}
               className={clsx('transition-transform duration-300 ease-in-out', {
                 'rotate-180': showToolbar

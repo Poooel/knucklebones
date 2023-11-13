@@ -1,6 +1,10 @@
 import * as React from 'react'
 import { clsx } from 'clsx'
-import { IPlayer, countDiceInColumn, Outcome } from '@knucklebones/common'
+import {
+  type IPlayer,
+  countDiceInColumn,
+  type Outcome
+} from '@knucklebones/common'
 import { Dice } from './Dice'
 import { Column } from './Column'
 import { Cell } from './Cell'
