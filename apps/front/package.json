@@ -12,7 +12,7 @@
     "@floating-ui/react": "^0.26.2",
     "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.0.18",
-    "@knucklebones/common": "*",
+    "@knucklebones/common": "workspace:*",
     "@use-gesture/react": "^10.3.0",
     "clsx": "^2.0.0",
     "qrcode.react": "^3.1.0",
