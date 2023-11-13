@@ -17,6 +17,8 @@ jobs:
         uses: pnpm/action-setup@v2.4.0
         with:
           version: 8
+          # Possibilité d'utiliser un cache si nécessaire
+          run_install: true
 
       - name: Build Worker
         run: pnpm build
