@@ -11,6 +11,7 @@ import { CodeBracketIcon, EnvelopeIcon } from '@heroicons/react/24/outline'
 
 export function HomePage() {
   const [showAiDifficulty, setShowAiDifficulty] = React.useState(false)
+  const [showBos, setShowBos] = React.useState(false)
 
   return (
     <>
@@ -26,12 +27,43 @@ export function HomePage() {
           </h1>
         </div>
         <div className='flex flex-col gap-8'>
-          <Button size='large' as={Link} to={`/room/${uuidv4()}`}>
-            Play against a friend
-          </Button>
           <Button
             size='large'
             onClick={() => {
+              setShowAiDifficulty(false)
+              setShowBos(!showBos)
+            }}
+          >
+            Play against a friend
+          </Button>
+          <Transition
+            show={showBos}
+            className='flex flex-row justify-center gap-4'
+            enter='transition ease-in-out duration-300 transform'
+            enterFrom='opacity-0 -translate-y-8'
+            enterTo='opacity-100 translate-y-0'
+            leave='transition ease-in-out duration-300 transform'
+            leaveFrom='opacity-100 translate-y-0'
+            leaveTo='opacity-0 -translate-y-8'
+          >
+            {['Best of 1', 'Best of 3', 'Best of 5'].map((bos) => {
+              return (
+                <Button
+                  key={bos}
+                  as={Link}
+                  to={`/room/${uuidv4()}`}
+                  state={{ bo: bos }}
+                  size='medium'
+                >
+                  {bos}
+                </Button>
+              )
+            })}
+          </Transition>
+          <Button
+            size='large'
+            onClick={() => {
+              setShowBos(false)
               setShowAiDifficulty(!showAiDifficulty)
             }}
           >

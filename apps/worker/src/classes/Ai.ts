@@ -90,6 +90,31 @@ export class Ai {
   }
 
   private weighPlayInColumn(column: number): WeightedPlay {
+    /**
+     * Gains:
+     *   - Immediate point gain: The immediate score you gain by placing a dice in this column
+     *   - Stacking identical dice: Stacking identical dice should give a bonus as this gives more points than stacking random dice
+     *   - Potential future points: Stacking 6s should be better than stacking 1s
+     *   - Immediate point loss for opponent: Placing a 3 instead of 6 might result in more gains because the opponent might lose more points
+     *   Notes:
+     *     - Stacking dice and stacking high value dice should give more gains, it's not linear
+     *     - Assign a factor to each value to control how much they weigh in the final weight
+     *       - Potential future points might be more important than immediate point gain
+     *       - Dynamic weights: the importance of potential future points versus immediate gains might vary as the game progresses
+     *
+     * Risks:
+     *   - Potential future point loss: Stacking 6s has a higher risk than stacking 2s
+     *   - Potential future point loss: Stacking dice in a column where the opponent has no dice is more risky
+     *   - Potential future point loss: Stacking your third die is more risky than placing your first
+     *
+     * Behaviour:
+     *   - Aggressive / Defensive: Playing more aggressively when behind opponent and playing defensively when ahead of opponent
+     *     - Aggressive: Optimize for gains
+     *     - Defensive: Optimize for risks
+     *   - Anticipating future plays: Don't play in a column where your opponent is stacking dice as to leave it open if you can counter his play
+     *   - See the future: Consider all future plays by the opponent to pick the best current one; might go a few levels deep (see more than the next turn)
+     */
+
     const gain = this.evaluateGainInColumn(column)
     const risk = this.evaluateRiskInColumn(column)
     const score = gain - risk
