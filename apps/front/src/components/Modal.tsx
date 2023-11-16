@@ -11,7 +11,7 @@ interface ModalProps {
 
 function ModalTitle({ children }: React.PropsWithChildren) {
   return (
-    <Dialog.Title className='mb-4 text-center text-xl font-medium'>
+    <Dialog.Title className='mb-4 text-center text-xl font-medium md:text-2xl'>
       {children}
     </Dialog.Title>
   )

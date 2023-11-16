@@ -53,6 +53,7 @@ export function useGame() {
   const [isLoading, setIsLoading] = React.useState(true)
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
   const roomKey = useRoomKey()
+  // TODO: Type state
   const { state } = useLocation()
   const { lastJsonMessage, readyState } = useWebSocket(getWebSocketUrl(roomKey))
 
