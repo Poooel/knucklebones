@@ -1,6 +1,6 @@
+import { type GameOutcome } from '@knucklebones/common'
 import { type GameContext } from '../../hooks/useGame'
 import { getPlayerFromId } from '../../utils/player'
-import { type GameOutcome } from './history.utils'
 
 interface GetLeadMessageArgs
   extends Pick<GameContext, 'playerOne' | 'playerTwo'> {

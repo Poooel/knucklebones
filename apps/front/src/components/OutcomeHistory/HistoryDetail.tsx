@@ -1,7 +1,7 @@
 import * as React from 'react'
+import { type DetailedHistory } from '@knucklebones/common'
 import { Text } from '../Text'
 import { PlayerHistoryDetail } from './PlayerHistoryDetail'
-import { type DetailedHistory } from './history.utils'
 import { getPlayerFromId } from '../../utils/player'
 import { type GameContext } from '../../hooks/useGame'
 

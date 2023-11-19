@@ -1,7 +1,7 @@
 import * as React from 'react'
 import clsx from 'clsx'
+import { type GameOutcome } from '@knucklebones/common'
 import { type PlayerSide } from '../../utils/player'
-import { type GameOutcome } from './history.utils'
 import { Text } from '../Text'
 
 type ScoreDisplayProps = GameOutcome & {

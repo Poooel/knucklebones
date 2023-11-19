@@ -5,7 +5,6 @@
   "type": "module",
   "module": "./dist/index.mjs",
   "scripts": {
-    "build": "node build.js",
     "dev": "NODE_ENV=development wrangler dev"
   },
   "dependencies": {
