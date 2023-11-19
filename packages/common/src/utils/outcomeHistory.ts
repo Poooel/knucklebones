@@ -1,4 +1,4 @@
-import { type OutcomeHistory, type PlayerOutcome } from '@knucklebones/common'
+import { type OutcomeHistory, type PlayerOutcome } from '../types'
 
 export interface PlayerOutcomeWithWins extends PlayerOutcome {
   wins: number
@@ -9,7 +9,7 @@ export interface GameOutcome {
 }
 export type DetailedHistory = GameOutcome[]
 
-export function getHistory(outcomeHistory: OutcomeHistory) {
+export function getWinHistory(outcomeHistory: OutcomeHistory) {
   return outcomeHistory.reduce<DetailedHistory>((acc, current) => {
     const { playerOne, playerTwo } = current
     const lastEntry = acc.at(-1) ?? {

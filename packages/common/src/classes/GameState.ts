@@ -3,9 +3,10 @@ import {
   type Outcome,
   type Play,
   type OutcomeHistory,
-  type PlayerOutcome
+  type PlayerOutcome,
+  type BoType
 } from '../types'
-import { coinflip, getRandomDice } from '../utils'
+import { coinflip, getRandomDice, getWinHistory } from '../utils'
 import { Log } from './Log'
 import { Player } from './Player'
 
@@ -25,6 +26,7 @@ export class GameState implements IGameState {
   spectators: string[]
   logs: Log[]
   nextPlayer!: Player
+  boType?: BoType
   winnerId?: string
   outcome!: Outcome
   outcomeHistory: OutcomeHistory
@@ -36,6 +38,7 @@ export class GameState implements IGameState {
     nextPlayer,
     outcome,
     rematchVote,
+    boType,
     winnerId,
     logs = [],
     spectators = [],
@@ -47,6 +50,7 @@ export class GameState implements IGameState {
     this.spectators = spectators
     this.rematchVote = rematchVote
     this.outcomeHistory = outcomeHistory
+    this.boType = boType
     this.winnerId = winnerId
 
     // Only assign these if we have one
@@ -76,6 +80,7 @@ export class GameState implements IGameState {
     if (previousGameState !== undefined) {
       this.outcomeHistory = previousGameState.outcomeHistory
       this.spectators = previousGameState.spectators
+      this.boType = previousGameState?.boType
     }
 
     this.addToLogs(
@@ -153,9 +158,18 @@ export class GameState implements IGameState {
   }
 
   private whoWins() {
+    this.outcomeHistory.push({
+      playerOne: this.toPlayerOutcome(this.playerOne),
+      playerTwo: this.toPlayerOutcome(this.playerTwo)
+    })
     const winner = this.getWinner()
     this.winnerId = winner?.id
-    this.outcome = 'game-ended'
+
+    if (this.boType !== undefined && !this.hasBoEnded()) {
+      this.outcome = 'round-ended'
+    } else {
+      this.outcome = 'game-ended'
+    }
 
     if (winner !== undefined) {
       this.addToLogs(`${winner.getName()} wins with ${winner.score} points!`)
@@ -164,11 +178,12 @@ export class GameState implements IGameState {
         `It's a tie... Both players have ${this.playerOne.score} points!`
       )
     }
+  }
 
-    this.outcomeHistory.push({
-      playerOne: this.toPlayerOutcome(this.playerOne),
-      playerTwo: this.toPlayerOutcome(this.playerTwo)
-    })
+  private hasBoEnded() {
+    const majority = Math.ceil(this.boType! / 2)
+    const { playerOne, playerTwo } = getWinHistory(this.outcomeHistory).at(-1)!
+    return playerOne.wins === majority || playerTwo.wins === majority
   }
 
   private getWinner() {
@@ -218,6 +233,7 @@ export class GameState implements IGameState {
       rematchVote: this.rematchVote,
       spectators: this.spectators,
       outcomeHistory: this.outcomeHistory,
+      boType: this.boType,
       winnerId: this.winnerId
     }
   }

@@ -3,10 +3,11 @@ import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { IconButton } from './IconButton'
 
-interface ModalProps {
+export interface ModalProps {
   isOpen: boolean
   className?: string
   onClose(): void
+  onAfterClose?(): void
 }
 
 function ModalTitle({ children }: React.PropsWithChildren) {
@@ -20,10 +21,11 @@ function ModalTitle({ children }: React.PropsWithChildren) {
 export function Modal({
   isOpen,
   children,
-  onClose
+  onClose,
+  onAfterClose
 }: React.PropsWithChildren<ModalProps>) {
   return (
-    <Transition.Root show={isOpen}>
+    <Transition.Root show={isOpen} afterLeave={onAfterClose}>
       <Dialog className='relative z-20' onClose={onClose}>
         <Transition.Child
           enter='ease-out duration-300'

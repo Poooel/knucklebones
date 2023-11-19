@@ -1,30 +1,24 @@
 import * as React from 'react'
 import { Link } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'
-import { capitalize } from '@knucklebones/common'
-import { Modal } from './Modal'
-import { type Option, ToggleGroup } from './ToggleGroup'
-import { Button } from './Button'
-
-const DIFFICULTIES = ['easy', 'medium', 'hard'] as const
-const BO_TYPES = ['indefinite', 1, 3, 5] as const
-type Difficulty = (typeof DIFFICULTIES)[number]
-type BoType = (typeof BO_TYPES)[number]
-
-const DIFFICULTIES_OPTIONS: Option[] = DIFFICULTIES.map((difficulty) => ({
-  label: capitalize(difficulty),
-  value: difficulty
-}))
-const BO_TYPES_OPTIONS: Option[] = BO_TYPES.map((bo) => ({
-  label: typeof bo === 'number' ? `Best of ${bo}` : capitalize(bo),
-  value: String(bo)
-}))
-
-export type PlayerType = 'human' | 'ai'
+import {
+  type GameSettings,
+  type Difficulty,
+  type PlayerType
+} from '@knucklebones/common'
+import { Modal, type ModalProps } from '../Modal'
+import { type Option, ToggleGroup } from '../ToggleGroup'
+import { Button } from '../Button'
+import {
+  BO_TYPES_OPTIONS,
+  DIFFICULTIES_OPTIONS,
+  convertToBoType,
+  type StringBoType
+} from './options'
 
 interface GameSettingProps<T> {
   label: string
-  options: Option[]
+  options: Array<Option<T>>
   value: T
   onValueChange(value: T): void
 }
@@ -53,17 +47,19 @@ function GameSetting<T>({
   )
 }
 
-interface GameSettingsProps {
+interface GameSettingsProps extends ModalProps {
   playerType?: PlayerType
-  onCancel(): void
 }
 
-export function GameSettings({ playerType, onCancel }: GameSettingsProps) {
+export function GameSettingsModal({
+  playerType,
+  ...modalProps
+}: GameSettingsProps) {
   const [difficulty, setDifficulty] = React.useState<Difficulty>('medium')
-  const [boType, setBoType] = React.useState<BoType>('indefinite')
+  const [boType, setBoType] = React.useState<StringBoType>('indefinite')
 
   return (
-    <Modal isOpen={playerType !== undefined} onClose={onCancel}>
+    <Modal {...modalProps}>
       <Modal.Title>Game settings</Modal.Title>
       <div className='grid grid-cols-1 gap-8'>
         {playerType === 'ai' && (
@@ -84,11 +80,16 @@ export function GameSettings({ playerType, onCancel }: GameSettingsProps) {
           as={Link}
           size='medium'
           to={`/room/${uuidv4()}`}
-          state={{
-            playerType,
-            boType,
-            difficulty: playerType === 'ai' ? difficulty : undefined
-          }}
+          // Sauvegarder les paramètres dans le local storage pour les
+          // prochaines parties
+          state={
+            {
+              playerType: playerType!,
+              boType:
+                boType === 'indefinite' ? undefined : convertToBoType(boType),
+              difficulty: playerType === 'ai' ? difficulty : undefined
+            } satisfies GameSettings
+          }
         >
           Start game
         </Button>

@@ -6,7 +6,7 @@
   "module": "./dist/index.mjs",
   "scripts": {
     "build": "node build.js",
-    "dev": "wrangler dev"
+    "dev": "NODE_ENV=development wrangler dev"
   },
   "dependencies": {
     "@knucklebones/common": "workspace:*",

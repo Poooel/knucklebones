@@ -5,10 +5,17 @@ import { Button } from './Button'
 import { Theme } from './Theme'
 import { Disclaimer } from './Disclaimer'
 import { CodeBracketIcon, EnvelopeIcon } from '@heroicons/react/24/outline'
-import { type PlayerType, GameSettings } from './GameSettings'
+import { GameSettingsModal } from './GameSettings'
+import { type PlayerType } from '@knucklebones/common'
 
 export function HomePage() {
   const [playerType, setPlayerType] = React.useState<PlayerType>()
+  const [isEditingGameSettings, setEditingGameSettings] = React.useState(false)
+
+  function openGameSettings(playerType: PlayerType) {
+    setEditingGameSettings(true)
+    setPlayerType(playerType)
+  }
 
   return (
     <>
@@ -27,7 +34,7 @@ export function HomePage() {
           <Button
             size='large'
             onClick={() => {
-              setPlayerType('human')
+              openGameSettings('human')
             }}
           >
             Play against a friend
@@ -35,7 +42,7 @@ export function HomePage() {
           <Button
             size='large'
             onClick={() => {
-              setPlayerType('ai')
+              openGameSettings('ai')
             }}
           >
             Play against an AI
@@ -71,9 +78,13 @@ export function HomePage() {
         </div>
       </div>
       <div className='fixed top-0 right-0 p-2 md:p-4'>
-        <GameSettings
+        <GameSettingsModal
+          isOpen={isEditingGameSettings}
           playerType={playerType}
-          onCancel={() => {
+          onClose={() => {
+            setEditingGameSettings(false)
+          }}
+          onAfterClose={() => {
             setPlayerType(undefined)
           }}
         />

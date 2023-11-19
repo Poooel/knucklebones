@@ -3,19 +3,19 @@ import * as RadixToggleGroup from '@radix-ui/react-toggle-group'
 import { Button, type ButtonProps } from './Button'
 import clsx from 'clsx'
 
-export interface Option {
+export interface Option<V = string> {
   label: string
-  value: string
+  value: V
 }
 
-interface ToggleGroupProps
+interface ToggleGroupProps<V = string>
   extends RadixToggleGroup.ToggleGroupSingleProps,
     Pick<ButtonProps<'button'>, 'size' | 'variant'> {
-  options: Option[]
+  options: Array<Option<V>>
   mandatory?: boolean
 }
 
-export function ToggleGroup({
+export function ToggleGroup<V = string>({
   className,
   options,
   size,
@@ -23,7 +23,7 @@ export function ToggleGroup({
   onValueChange,
   mandatory = false,
   ...rootProps
-}: ToggleGroupProps) {
+}: ToggleGroupProps<V>) {
   function _onValueChange(value: string) {
     if (!mandatory || value.length > 0) {
       onValueChange?.(value)
@@ -39,8 +39,9 @@ export function ToggleGroup({
       {options.map(({ label, value }, index) => (
         <Button
           as={RadixToggleGroup.Item}
-          key={value}
-          value={value}
+          key={String(value)}
+          // Peut être utile d'exposer un serializer si besoin
+          value={String(value)}
           size={size}
           variant={variant}
           className={clsx(

@@ -8,11 +8,12 @@ import { useIsOnDesktop } from '../hooks/detectDevice'
 interface GetWinMessageArgs extends Pick<GameContext, 'outcome' | 'winner'> {}
 
 function getWinMessage({ outcome, winner }: GetWinMessageArgs) {
-  if (outcome === 'game-ended') {
+  const roundPrecision = outcome === 'round-ended' ? ' this round' : ''
+  if (outcome !== 'ongoing') {
     if (winner !== undefined) {
-      return `${winner.inGameName} won with ${winner.score} points!`
+      return `${winner.inGameName} won${roundPrecision} with ${winner.score} points!`
     }
-    return 'This is a tie! Nobody wins!'
+    return `This is a tie! Nobody wins${roundPrecision}!`
   }
   return ''
 }

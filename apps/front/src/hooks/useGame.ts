@@ -3,14 +3,15 @@ import { useLocation } from 'react-router-dom'
 import {
   GameState,
   type IGameState,
-  isEmptyOrBlank
+  isEmptyOrBlank,
+  type GameSettings
 } from '@knucklebones/common'
 import {
   deleteDisplayName,
-  displayName,
-  init,
+  updateDisplayName,
+  initGame,
   play,
-  rematch
+  voteRematch
 } from '../utils/api'
 import useWebSocket, { ReadyState } from 'react-use-websocket'
 import { useRoomKey } from './useRoomKey'
@@ -53,8 +54,7 @@ export function useGame() {
   const [isLoading, setIsLoading] = React.useState(true)
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
   const roomKey = useRoomKey()
-  // TODO: Type state
-  const { state } = useLocation()
+  const state = useLocation().state as GameSettings | undefined
   const { lastJsonMessage, readyState } = useWebSocket(getWebSocketUrl(roomKey))
 
   const isGameStateReady = gameState !== null
@@ -84,10 +84,18 @@ export function useGame() {
 
   React.useEffect(() => {
     if (readyState === ReadyState.OPEN) {
-      init(roomKey, playerId, 'human')
+      initGame({ roomKey, playerId }, { playerType: 'human' })
         .then(async () => {
+          // À déplacer côté serveur
           if (state?.playerType === 'ai') {
-            await init(roomKey, 'beep-boop', 'ai', state?.difficulty)
+            await initGame(
+              { roomKey, playerId: 'beep-boop' },
+              {
+                playerType: 'ai',
+                difficulty: state?.difficulty,
+                boType: state?.boType
+              }
+            )
           }
         })
         .catch((error) => {
@@ -115,7 +123,7 @@ export function useGame() {
 
       setGameState(mutatedGameState)
 
-      await play(roomKey, body).catch((error) => {
+      await play({ roomKey, playerId }, { column, dice }).catch((error) => {
         setErrorMessage(error.message)
         setGameState(previousGameState)
         setIsLoading(false)
@@ -128,18 +136,21 @@ export function useGame() {
   }
 
   async function sendRematch() {
-    await rematch(roomKey, playerId).catch((error) => {
+    await voteRematch({ roomKey, playerId }).catch((error) => {
       setErrorMessage(error.message)
     })
   }
 
-  async function updateDisplayName(newDisplayName: string) {
+  async function _updateDisplayName(newDisplayName: string) {
     if (isEmptyOrBlank(newDisplayName)) {
-      await deleteDisplayName(roomKey, playerId).catch((error) => {
+      await deleteDisplayName({ roomKey, playerId }).catch((error) => {
         setErrorMessage(error.message)
       })
     } else {
-      await displayName(roomKey, playerId, newDisplayName).catch((error) => {
+      await updateDisplayName(
+        { roomKey, playerId },
+        { displayName: newDisplayName }
+      ).catch((error) => {
         setErrorMessage(error.message)
       })
     }
@@ -162,6 +173,6 @@ export function useGame() {
     sendPlay,
     clearErrorMessage,
     sendRematch,
-    updateDisplayName
+    updateDisplayName: _updateDisplayName
   }
 }
