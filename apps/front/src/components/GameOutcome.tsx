@@ -18,14 +18,56 @@ function getWinMessage({ outcome, winner }: GetWinMessageArgs) {
   return ''
 }
 
+interface VoteButtonProps extends Pick<GameContext, 'boType' | 'outcome'> {
+  hasVoted: boolean
+  onRematch(): void
+  onContinue(): void
+  onContinueIndefinitely(): void
+}
+
+function VoteButtons({
+  boType,
+  hasVoted,
+  outcome,
+  onContinue,
+  onContinueIndefinitely,
+  onRematch
+}: VoteButtonProps) {
+  if (boType !== 'indefinite') {
+    if (outcome === 'round-ended') {
+      return (
+        <Button onClick={onContinue} disabled={hasVoted}>
+          Continue
+        </Button>
+      )
+    }
+    if (outcome === 'game-ended') {
+      return (
+        <div className='flex flex-col md:flex-row gap-2 items-center'>
+          <Button onClick={onRematch} disabled={hasVoted}>
+            Rematch
+          </Button>
+          <Button onClick={onContinueIndefinitely} disabled={hasVoted}>
+            Continue
+          </Button>
+        </div>
+      )
+    }
+  }
+  return (
+    <Button onClick={onRematch} disabled={hasVoted}>
+      Rematch
+    </Button>
+  )
+}
+
 interface OutcomeProps
   extends GetWinMessageArgs,
+    Omit<VoteButtonProps, 'hasVoted'>,
     Pick<
       GameContext,
       'rematchVote' | 'playerOne' | 'playerTwo' | 'playerSide'
-    > {
-  onRematch(): void
-}
+    > {}
 
 export function GameOutcome({
   outcome,
@@ -34,10 +76,13 @@ export function GameOutcome({
   playerOne,
   playerTwo,
   rematchVote,
+  boType,
+  onContinue,
+  onContinueIndefinitely,
   onRematch
 }: OutcomeProps) {
   const isSpectator = playerSide === 'spectator'
-  const hasVotedRematch = rematchVote === playerOne.id
+  const hasVoted = rematchVote === playerOne.id
   const isOnDesktop = useIsOnDesktop()
 
   if (outcome === 'ongoing') {
@@ -51,13 +96,18 @@ export function GameOutcome({
     <div className='grid justify-items-center gap-2 font-semibold'>
       <p>{getWinMessage({ outcome, winner })}</p>
       {!isSpectator && (
-        <Button onClick={onRematch} disabled={hasVotedRematch}>
-          Rematch
-        </Button>
+        <VoteButtons
+          boType={boType}
+          hasVoted={hasVoted}
+          outcome={outcome}
+          onContinue={onContinue}
+          onContinueIndefinitely={onContinueIndefinitely}
+          onRematch={onRematch}
+        />
       )}
 
       {!isSpectator &&
-        (hasVotedRematch ? (
+        (hasVoted ? (
           <p>Waiting for {playerTwo.inGameName}...</p>
         ) : (
           rematchVote !== undefined && ( // It means the other player has voted for rematch

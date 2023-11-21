@@ -16,7 +16,7 @@ export const DIFFICULTIES_OPTIONS: Array<Option<Difficulty>> = [
   }
 ]
 
-export type StringBoType = `${BoType}` | 'indefinite'
+export type StringBoType = `${BoType}`
 export const BO_TYPES_OPTIONS: Array<Option<StringBoType>> = [
   {
     value: 'indefinite',
@@ -37,6 +37,9 @@ export const BO_TYPES_OPTIONS: Array<Option<StringBoType>> = [
 ]
 
 export function convertToBoType(boType: string) {
+  if (boType === 'indefinite') {
+    return boType satisfies BoType
+  }
   const parsed = Number(boType)
   // .includes ?
   if (parsed === 1 || parsed === 3 || parsed === 5) {

@@ -84,7 +84,10 @@ export function useGame() {
 
   React.useEffect(() => {
     if (readyState === ReadyState.OPEN) {
-      initGame({ roomKey, playerId }, { playerType: 'human' })
+      initGame(
+        { roomKey, playerId },
+        { playerType: 'human', boType: state?.boType ?? 'indefinite' }
+      )
         .then(async () => {
           // À déplacer côté serveur
           if (state?.playerType === 'ai') {
@@ -135,10 +138,26 @@ export function useGame() {
     setErrorMessage(null)
   }
 
-  async function sendRematch() {
+  // Mouais à voir comment on peut repenser les options ici
+
+  async function _voteRematch() {
     await voteRematch({ roomKey, playerId }).catch((error) => {
       setErrorMessage(error.message)
     })
+  }
+
+  async function voteContinueBo() {
+    await voteRematch({ roomKey, playerId }).catch((error) => {
+      setErrorMessage(error.message)
+    })
+  }
+
+  async function voteContinueIndefinitely() {
+    await voteRematch({ roomKey, playerId }, { boType: 'indefinite' }).catch(
+      (error) => {
+        setErrorMessage(error.message)
+      }
+    )
   }
 
   async function _updateDisplayName(newDisplayName: string) {
@@ -172,7 +191,9 @@ export function useGame() {
     errorMessage,
     sendPlay,
     clearErrorMessage,
-    sendRematch,
+    voteContinueBo,
+    voteContinueIndefinitely,
+    voteRematch: _voteRematch,
     updateDisplayName: _updateDisplayName
   }
 }

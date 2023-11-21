@@ -8,7 +8,7 @@ export interface IGameState {
   spectators: string[]
   logs: ILog[]
   nextPlayer: IPlayer
-  boType?: BoType
+  boType: BoType
   winnerId?: string
   outcome: Outcome
   outcomeHistory: OutcomeHistory

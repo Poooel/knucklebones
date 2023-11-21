@@ -3,18 +3,20 @@ import clsx from 'clsx'
 import { type GameOutcome } from '@knucklebones/common'
 import { type PlayerSide } from '../../utils/player'
 import { Text } from '../Text'
+import { type GameContext } from '../../hooks/useGame'
 
-type ScoreDisplayProps = GameOutcome & {
+interface ScoreDisplayProps extends GameOutcome, Pick<GameContext, 'boType'> {
   playerSide: PlayerSide
 }
 
 export function ScoreDisplay({
+  boType,
   playerOne,
   playerTwo,
   playerSide
 }: ScoreDisplayProps) {
-  return (
-    <Text>
+  const score = (
+    <>
       <span
         className={clsx({
           'font-semibold': playerSide === 'player-one'
@@ -30,6 +32,18 @@ export function ScoreDisplay({
       >
         {playerTwo.wins}
       </span>
+    </>
+  )
+
+  if (boType === 'indefinite') {
+    return <Text>{score}</Text>
+  }
+
+  const currentRound = Math.min(playerOne.wins + playerTwo.wins + 1, boType)
+
+  return (
+    <Text>
+      Round {currentRound} of {boType} ({score})
     </Text>
   )
 }

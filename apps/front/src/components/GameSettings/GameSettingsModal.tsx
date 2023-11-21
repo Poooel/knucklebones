@@ -85,8 +85,7 @@ export function GameSettingsModal({
           state={
             {
               playerType: playerType!,
-              boType:
-                boType === 'indefinite' ? undefined : convertToBoType(boType),
+              boType: convertToBoType(boType),
               difficulty: playerType === 'ai' ? difficulty : undefined
             } satisfies GameSettings
           }

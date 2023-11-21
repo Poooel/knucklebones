@@ -26,7 +26,7 @@ export class GameState implements IGameState {
   spectators: string[]
   logs: Log[]
   nextPlayer!: Player
-  boType?: BoType
+  boType: BoType
   winnerId?: string
   outcome!: Outcome
   outcomeHistory: OutcomeHistory
@@ -38,8 +38,8 @@ export class GameState implements IGameState {
     nextPlayer,
     outcome,
     rematchVote,
-    boType,
     winnerId,
+    boType = 'indefinite',
     logs = [],
     spectators = [],
     outcomeHistory = []
@@ -64,7 +64,7 @@ export class GameState implements IGameState {
     }
   }
 
-  initialize(previousGameState?: GameState) {
+  initialize(previousGameState?: IGameState) {
     this.outcome = 'ongoing'
 
     const isPlayerOneStarting = coinflip()
@@ -81,6 +81,10 @@ export class GameState implements IGameState {
       this.outcomeHistory = previousGameState.outcomeHistory
       this.spectators = previousGameState.spectators
       this.boType = previousGameState?.boType
+
+      if (this.hasBoEnded() && this.boType !== 'indefinite') {
+        this.outcomeHistory = []
+      }
     }
 
     this.addToLogs(
@@ -158,18 +162,13 @@ export class GameState implements IGameState {
   }
 
   private whoWins() {
+    const winner = this.getWinner()
+    this.winnerId = winner?.id
     this.outcomeHistory.push({
       playerOne: this.toPlayerOutcome(this.playerOne),
       playerTwo: this.toPlayerOutcome(this.playerTwo)
     })
-    const winner = this.getWinner()
-    this.winnerId = winner?.id
-
-    if (this.boType !== undefined && !this.hasBoEnded()) {
-      this.outcome = 'round-ended'
-    } else {
-      this.outcome = 'game-ended'
-    }
+    this.outcome = this.hasBoEnded() ? 'game-ended' : 'round-ended'
 
     if (winner !== undefined) {
       this.addToLogs(`${winner.getName()} wins with ${winner.score} points!`)
@@ -181,7 +180,10 @@ export class GameState implements IGameState {
   }
 
   private hasBoEnded() {
-    const majority = Math.ceil(this.boType! / 2)
+    if (this.boType === 'indefinite') {
+      return true
+    }
+    const majority = Math.ceil(this.boType / 2)
     const { playerOne, playerTwo } = getWinHistory(this.outcomeHistory).at(-1)!
     return playerOne.wins === majority || playerTwo.wins === majority
   }

@@ -35,8 +35,21 @@ export async function initGame(
   await sendApiRequest(path, 'POST')
 }
 
-export async function voteRematch({ playerId, roomKey }: IdentificationParams) {
-  const path = `/${roomKey}/${playerId}/rematch`
+// Pas besoin de repréciser `boType` si il change pas de la partie en cours
+type VoteRematchRequestParams = Partial<Omit<GameSettings, 'playerType'>>
+export async function voteRematch(
+  { playerId, roomKey }: IdentificationParams,
+  { boType, difficulty }: VoteRematchRequestParams = {}
+) {
+  const urlSearchParams = new URLSearchParams()
+  if (boType !== undefined) {
+    urlSearchParams.append('boType', String(boType))
+  }
+  if (difficulty !== undefined) {
+    urlSearchParams.append('difficulty', difficulty)
+  }
+
+  const path = `/${roomKey}/${playerId}/rematch?${urlSearchParams.toString()}`
   await sendApiRequest(path, 'POST')
 }
 
