@@ -11,14 +11,18 @@
     "ghcr.io/devcontainers/features/node:1": {
       "version": "latest"
     },
-    "ghcr.io/devcontainers-contrib/features/cloudflare-wrangler:1": {}
+    "ghcr.io/devcontainers-contrib/features/cloudflare-wrangler:1": {},
+    "ghcr.io/devcontainers-contrib/features/turborepo-npm:1": {}
   },
   "customizations": {
     "vscode": {
       "settings": {
         "git.autofetch": true,
         "workbench.colorTheme": "One Dark Pro Darker",
-        "workbench.iconTheme": "material-icon-theme"
+        "workbench.iconTheme": "material-icon-theme",
+        "terminal.integrated.defaultProfile.osx": "zsh",
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "terminal.integrated.defaultProfile.windows": "zsh"
       },
       "extensions": [
         "VisualStudioExptTeam.vscodeintellicode",
@@ -29,7 +33,8 @@
         "christian-kohler.path-intellisense",
         "formulahendry.auto-close-tag",
         "GitHub.github-vscode-theme",
-        "zhuangtongfa.Material-theme"
+        "zhuangtongfa.Material-theme",
+        "DavidAnson.vscode-markdownlint"
       ]
     }
   }
