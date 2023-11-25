@@ -5,5 +5,21 @@
     "ghcr.io/devcontainers/features/node:1": {},
     "ghcr.io/devcontainers-contrib/features/cloudflare-wrangler:1": {},
     "ghcr.io/devcontainers-contrib/features/turborepo-npm:1": {}
+  },
+  "customizations": {
+    "vscode": {
+      "settings": {},
+      "extensions": [
+        "VisualStudioExptTeam.vscodeintellicode",
+        "dbaeumer.vscode-eslint",
+        "eamodio.gitlens",
+        "PKief.material-icon-theme",
+        "formulahendry.auto-rename-tag",
+        "christian-kohler.path-intellisense",
+        "formulahendry.auto-close-tag",
+        "GitHub.github-vscode-theme",
+        "zhuangtongfa.Material-theme"
+      ]
+    }
   }
 }
