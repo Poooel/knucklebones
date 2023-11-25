@@ -7,6 +7,12 @@
   "updateContentCommand": "pnpm install",
   "postCreateCommand": "",
   "name": "Knucklebones Codespace",
+  "forwardPorts": [5173],
+  "portsAttributes": {
+    "5173": {
+      "label": "Knucklebones.io"
+    }
+  },
   "features": {
     "ghcr.io/devcontainers/features/node:1": {
       "version": "latest"
