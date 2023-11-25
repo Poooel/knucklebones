@@ -1,5 +1,6 @@
 {
   "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "name": "Knucklebones Codespace",
   "features": {
     "ghcr.io/devcontainers/features/node:1": {},
     "ghcr.io/devcontainers-contrib/features/cloudflare-wrangler:1": {},
