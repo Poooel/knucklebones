@@ -1,14 +1,25 @@
 {
-  "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node",
+  "hostRequirements": {
+    "cpus": 4
+  },
+  "waitFor": "onCreateCommand",
+  "updateContentCommand": "pnpm install",
+  "postCreateCommand": "",
   "name": "Knucklebones Codespace",
   "features": {
-    "ghcr.io/devcontainers/features/node:1": {},
-    "ghcr.io/devcontainers-contrib/features/cloudflare-wrangler:1": {},
-    "ghcr.io/devcontainers-contrib/features/turborepo-npm:1": {}
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers-contrib/features/cloudflare-wrangler:1": {}
   },
   "customizations": {
     "vscode": {
-      "settings": {},
+      "settings": {
+        "git.autofetch": true,
+        "workbench.colorTheme": "One Dark Pro Darker",
+        "workbench.iconTheme": "material-icon-theme"
+      },
       "extensions": [
         "VisualStudioExptTeam.vscodeintellicode",
         "dbaeumer.vscode-eslint",
