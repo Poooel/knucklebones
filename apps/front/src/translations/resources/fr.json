@@ -3,9 +3,9 @@
   "home": {
     "play": {
       "friend": "Jouer contre un ami",
-      "ai": "Jouer contre un bot"
+      "ai": "Jouer contre une IA"
     },
-    "footer": "Le jeu original Knucklebones de Cult of the Lamb a été créé par Massive Monster.\nCe site est créé par des fans et n'est pas officiellement maintenu par Massive Monster.\nVous pouvez retrouver le jeu original sur le site de <0>Cult of the Lamb</0>."
+    "footer": "Le jeu original Knucklebones de Cult of the Lamb a été créé par Massive Monster.\nCe site est une création de fans et ne constitue pas une mise en œuvre officielle par Massive Monster.\nVous pouvez trouver le jeu original sur le site de <0>Cult of the Lamb</0>."
   },
   "guide": {
     "label": "Comment jouer",
@@ -16,7 +16,7 @@
   "game-settings": {
     "title": "Paramètres de la partie",
     "difficulty": {
-      "label": "Difficulté du bot",
+      "label": "Difficulté de l'IA",
       "easy": "Facile",
       "medium": "Moyenne",
       "hard": "Difficile"
@@ -59,7 +59,7 @@
   "game": {
     "total": "Total",
     "you": "Vous",
-    "ai": "Bot",
+    "ai": "IA",
     "rematch": "Rejouer",
     "continue": "Continuer",
     "win-round": "{{player}} a gagné ce round avec {{points}} points !",
