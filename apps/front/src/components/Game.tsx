@@ -11,6 +11,7 @@ import { OutcomeHistory } from './OutcomeHistory'
 import { SideBar } from './SideBar'
 import { Theme } from './Theme'
 import { useIsOnMobile } from '../hooks/detectDevice'
+import { Language } from './Language'
 
 export function Game() {
   const gameStore = useGame()
@@ -77,6 +78,7 @@ export function Game() {
           <>
             <HowToPlayModal />
             <Theme />
+            <Language />
             <QRCodeModal />
             <LogsModal logs={logs} />
             <OutcomeHistory

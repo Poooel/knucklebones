@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { useTranslation } from 'react-i18next'
 import { QRCodeSVG } from 'qrcode.react'
 import { useClipboard } from 'use-clipboard-copy'
 import { QrCodeIcon, LinkIcon } from '@heroicons/react/24/outline'
@@ -6,14 +7,13 @@ import { Modal } from './Modal'
 import { Button } from './Button'
 import { ShortcutModal } from './ShortcutModal'
 
-const TITLE = 'Scan the QR Code to share the room with other players'
-
 interface QRCodeBaseProps {
   title: React.ReactNode
 }
 
 function QRCodeBase({ title }: QRCodeBaseProps) {
   const { copy, copied } = useClipboard({ copiedTimeout: 750 })
+  const { t } = useTranslation()
 
   return (
     <>
@@ -29,7 +29,7 @@ function QRCodeBase({ title }: QRCodeBaseProps) {
             copy(window.location.href)
           }}
         >
-          {copied ? 'Copied!' : 'Copy link'}
+          {t(copied ? 'menu.share.copied' : 'menu.share.copy')}
         </Button>
       </div>
     </>
@@ -37,17 +37,23 @@ function QRCodeBase({ title }: QRCodeBaseProps) {
 }
 
 export function QRCode() {
+  const { t } = useTranslation()
   return (
     <QRCodeBase
-      title={<h3 className='text-center text-xl font-medium'>{TITLE}</h3>}
+      title={
+        <h3 className='text-center text-xl font-medium'>
+          {t('menu.share.title')}
+        </h3>
+      }
     />
   )
 }
 
 export function QRCodeModal() {
+  const { t } = useTranslation()
   return (
-    <ShortcutModal icon={<QrCodeIcon />} label='Share game'>
-      <QRCodeBase title={<Modal.Title>{TITLE}</Modal.Title>} />
+    <ShortcutModal icon={<QrCodeIcon />} label={t('menu.share.label')}>
+      <QRCodeBase title={<Modal.Title>{t('menu.share.title')}</Modal.Title>} />
     </ShortcutModal>
   )
 }

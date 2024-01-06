@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { useTranslation } from 'react-i18next'
 import clsx from 'clsx'
 import { type GameOutcome } from '@knucklebones/common'
 import { type PlayerSide } from '../../utils/player'
@@ -15,6 +16,7 @@ export function ScoreDisplay({
   playerTwo,
   playerSide
 }: ScoreDisplayProps) {
+  const { t } = useTranslation()
   const score = (
     <>
       <span
@@ -43,7 +45,7 @@ export function ScoreDisplay({
 
   return (
     <Text>
-      Round {currentRound} of {boType} ({score})
+      {t('menu.history.label', { current: currentRound, boType })} ({score})
     </Text>
   )
 }

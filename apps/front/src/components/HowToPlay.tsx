@@ -1,5 +1,6 @@
 import * as React from 'react'
 import clsx from 'clsx'
+import { useTranslation } from 'react-i18next'
 import { QuestionMarkCircleIcon } from '@heroicons/react/24/outline'
 import { Board } from './Board'
 import { ColumnScore } from './ColumnScore'
@@ -11,7 +12,9 @@ const PLAYER_TWO_REMOVE_EXAMPLE_COLUMNS = [[], [], [6, 6]]
 
 function ExplanationText({ children }: React.PropsWithChildren) {
   return (
-    <p className='text-center text-lg font-medium leading-tight'>{children}</p>
+    <p className='text-center text-lg font-medium leading-tight whitespace-pre-line'>
+      {children}
+    </p>
   )
 }
 
@@ -30,6 +33,7 @@ function Separator({ className }: SeparatorProps) {
 }
 
 function ScoreExample() {
+  const { t } = useTranslation()
   return (
     <div className='flex flex-col items-center justify-center gap-8 xl:flex-row'>
       <div className='flex-shrink-0'>
@@ -40,9 +44,7 @@ function ScoreExample() {
         />
       </div>
       <div className='grid grid-cols-1 place-items-center gap-2'>
-        <ExplanationText>
-          You score even more points when stacking the same dice in a column
-        </ExplanationText>
+        <ExplanationText>{t('guide.rule1')}</ExplanationText>
         <ColumnScore dice={[3]} score={3} showScore />
         <ColumnScore dice={[3, 3]} score={12} showScore />
         <ColumnScore dice={[3, 3, 3]} score={27} showScore />
@@ -52,6 +54,7 @@ function ScoreExample() {
 }
 
 function RemovalExample() {
+  const { t } = useTranslation()
   return (
     <div className='flex flex-col items-center justify-center gap-8 xl:flex-row'>
       <div className='grid flex-shrink-0 grid-cols-1 gap-4'>
@@ -67,25 +70,17 @@ function RemovalExample() {
           isPlayerOne={true}
         />
       </div>
-      <ExplanationText>
-        You remove all opponent's dice with the same value when placing a dice
-        in the matching column
-      </ExplanationText>
+      <ExplanationText>{t('guide.rule2')}</ExplanationText>
     </div>
   )
 }
 
 function HowToPlay() {
+  const { t } = useTranslation()
   return (
     <div className='grid grid-cols-1 gap-8'>
       <div className='grid grid-cols-1 gap-2'>
-        <ExplanationText>
-          Each turn, you get a random dice to place in a column.
-        </ExplanationText>
-        <ExplanationText>
-          The goal is to score more points than your opponent when the game
-          ends, which happens when one of the boards is full.
-        </ExplanationText>
+        <ExplanationText>{t('guide.goal')}</ExplanationText>
       </div>
       <Separator />
       <div className='flex flex-col justify-center gap-4 lg:flex-row'>
@@ -110,8 +105,9 @@ export function HowToPlayPage() {
 }
 
 export function HowToPlayModal() {
+  const { t } = useTranslation()
   return (
-    <ShortcutModal icon={<QuestionMarkCircleIcon />} label='How to play'>
+    <ShortcutModal icon={<QuestionMarkCircleIcon />} label={t('guide.label')}>
       <div className='max-w-7xl'>
         <HowToPlay />
       </div>
