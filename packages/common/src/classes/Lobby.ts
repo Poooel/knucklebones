@@ -1,12 +1,23 @@
 import { type ILobby } from '../interfaces'
+import { type BoType } from '../types'
 import { GameState } from './GameState'
 import { Player } from './Player'
 
-export class Lobby {
-  players: Player[]
+interface LobbyConstructorArg extends Partial<Omit<ILobby, 'players'>> {
+  players?: Player[]
+}
 
-  constructor(players?: Player[]) {
-    this.players = players ?? []
+export class Lobby implements ILobby {
+  players: Player[]
+  boType?: BoType
+
+  constructor({ boType, players = [] }: LobbyConstructorArg = {}) {
+    this.players = players
+    this.boType = boType
+  }
+
+  setBoType(boType: BoType) {
+    this.boType = boType
   }
 
   addPlayer(player: Player): boolean {
@@ -32,19 +43,24 @@ export class Lobby {
   toGameState(): GameState {
     const gameState = new GameState({
       playerOne: this.players[0],
-      playerTwo: this.players[1]
+      playerTwo: this.players[1],
+      boType: this.boType
     })
     gameState.initialize()
     return gameState
   }
 
-  static fromJson(iLobby: ILobby): Lobby {
-    return new Lobby(iLobby.players.map((iPlayer) => Player.fromJson(iPlayer)))
+  static fromJson({ players, boType }: ILobby): Lobby {
+    return new Lobby({
+      players: players.map((iPlayer) => Player.fromJson(iPlayer)),
+      boType
+    })
   }
 
   toJson(): ILobby {
     return {
-      players: this.players.map((player) => player.toJson())
+      players: this.players.map((player) => player.toJson()),
+      boType: this.boType
     }
   }
 }

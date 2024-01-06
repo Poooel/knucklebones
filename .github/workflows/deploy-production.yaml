@@ -18,13 +18,11 @@ jobs:
           version: 8
           # Possibilité d'utiliser un cache si nécessaire
           run_install: true
-
-      - name: Build Worker
-        run: pnpm build
       
       - name: Deploy Production
         uses: cloudflare/wrangler-action@v3
         with:
+          # Variables dépréciées, il faut utiliser `CLOUDFLARE_`
           apiToken: ${{ secrets.CF_API_TOKEN }}
           accountId: ${{ secrets.CF_ACCOUNT_ID }}
           workingDirectory: 'apps/worker'

@@ -1,5 +1,6 @@
 import * as React from 'react'
 import clsx from 'clsx'
+import { IconWrapper } from './IconWrapper'
 
 interface IconButtonProps<E extends React.ElementType> {
   icon: React.ReactNode
@@ -22,7 +23,7 @@ export function IconButton<
         props.className
       )}
     >
-      <div className='aspect-square h-6'>{icon}</div>
+      <IconWrapper>{icon}</IconWrapper>
     </Component>
   )
 }

@@ -5,7 +5,5 @@
     "outDir": "./dist"
   },
   "extends": "../../tsconfig.base.json",
-  "include": [
-    "index.ts"
-  ]
+  "include": ["src"]
 }
