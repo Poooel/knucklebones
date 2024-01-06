@@ -32,11 +32,14 @@ export function Game() {
     playerTwo,
     isLoading,
     errorMessage,
-    sendPlay,
+    playerSide,
+    boType,
     clearErrorMessage,
-    sendRematch,
+    sendPlay,
     updateDisplayName,
-    playerSide
+    voteContinueBo,
+    voteContinueIndefinitely,
+    voteRematch
   } = gameStore
 
   const isSpectator = playerSide === 'spectator'
@@ -52,10 +55,17 @@ export function Game() {
       winner={winner}
       outcome={outcome}
       rematchVote={rematchVote}
-      onRematch={() => {
-        void sendRematch()
-      }}
       playerSide={playerSide}
+      boType={boType}
+      onRematch={() => {
+        void voteRematch()
+      }}
+      onContinue={() => {
+        void voteContinueBo()
+      }}
+      onContinueIndefinitely={() => {
+        void voteContinueIndefinitely()
+      }}
     />
   )
 
@@ -70,6 +80,7 @@ export function Game() {
             <QRCodeModal />
             <LogsModal logs={logs} />
             <OutcomeHistory
+              boType={boType}
               playerSide={playerSide}
               outcomeHistory={outcomeHistory}
               playerOne={playerOne}

@@ -1,4 +1,4 @@
-import { type Difficulty, Player } from '@knucklebones/common'
+import { type Difficulty, Player, type BoType } from '@knucklebones/common'
 import { status } from 'itty-router'
 import { type CloudflareEnvironment } from '../types/cloudflareEnvironment'
 import { type BaseRequestWithProps } from '../types/itty'
@@ -12,8 +12,8 @@ import {
   saveLobby
 } from '../utils/endpoints'
 
-interface InitRequest extends BaseRequestWithProps {
-  query?: { displayName: string; difficulty: Difficulty }
+export interface InitRequest extends BaseRequestWithProps {
+  query?: { displayName?: string; difficulty?: Difficulty; boType?: BoType }
 }
 
 export async function init(
@@ -37,6 +37,10 @@ export async function init(
       request.query?.displayName,
       request.query?.difficulty
     )
+
+    if (request.query?.boType !== undefined) {
+      lobby.setBoType(request.query.boType)
+    }
 
     if (lobby.addPlayer(player)) {
       await saveLobby(lobby, request)

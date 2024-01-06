@@ -1,5 +1,4 @@
-// Plus tard on pourra ajouter `round-ended` pour les BO
-export type Outcome = 'ongoing' | 'game-ended'
+export type Outcome = 'ongoing' | 'round-ended' | 'game-ended'
 
 export interface PlayerOutcome {
   id: string

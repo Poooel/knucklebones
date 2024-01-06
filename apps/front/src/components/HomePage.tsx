@@ -1,16 +1,21 @@
 import * as React from 'react'
 import { Link } from 'react-router-dom'
-import { v4 as uuidv4 } from 'uuid'
-import { Transition } from '@headlessui/react'
-import { capitalize } from '@knucklebones/common'
 import KnucklebonesLogo from '../svgs/logo.svg'
 import { Button } from './Button'
 import { Theme } from './Theme'
 import { Disclaimer } from './Disclaimer'
 import { CodeBracketIcon, EnvelopeIcon } from '@heroicons/react/24/outline'
+import { GameSettingsModal } from './GameSettings'
+import { type PlayerType } from '@knucklebones/common'
 
 export function HomePage() {
-  const [showAiDifficulty, setShowAiDifficulty] = React.useState(false)
+  const [playerType, setPlayerType] = React.useState<PlayerType>()
+  const [isEditingGameSettings, setEditingGameSettings] = React.useState(false)
+
+  function openGameSettings(playerType: PlayerType) {
+    setEditingGameSettings(true)
+    setPlayerType(playerType)
+  }
 
   return (
     <>
@@ -26,41 +31,22 @@ export function HomePage() {
           </h1>
         </div>
         <div className='flex flex-col gap-8'>
-          <Button size='large' as={Link} to={`/room/${uuidv4()}`}>
+          <Button
+            size='large'
+            onClick={() => {
+              openGameSettings('human')
+            }}
+          >
             Play against a friend
           </Button>
           <Button
             size='large'
             onClick={() => {
-              setShowAiDifficulty(!showAiDifficulty)
+              openGameSettings('ai')
             }}
           >
             Play against an AI
           </Button>
-          <Transition
-            show={showAiDifficulty}
-            className='flex flex-row justify-center gap-4'
-            enter='transition ease-in-out duration-300 transform'
-            enterFrom='opacity-0 -translate-y-8'
-            enterTo='opacity-100 translate-y-0'
-            leave='transition ease-in-out duration-300 transform'
-            leaveFrom='opacity-100 translate-y-0'
-            leaveTo='opacity-0 -translate-y-8'
-          >
-            {['easy', 'medium', 'hard'].map((difficulty) => {
-              return (
-                <Button
-                  key={difficulty}
-                  as={Link}
-                  to={`/room/${uuidv4()}`}
-                  state={{ playerType: 'ai', difficulty }}
-                  size='medium'
-                >
-                  {capitalize(difficulty)}
-                </Button>
-              )
-            })}
-          </Transition>
           <Button as={Link} size='large' to='/how-to-play'>
             How to play
           </Button>
@@ -92,6 +78,16 @@ export function HomePage() {
         </div>
       </div>
       <div className='fixed top-0 right-0 p-2 md:p-4'>
+        <GameSettingsModal
+          isOpen={isEditingGameSettings}
+          playerType={playerType}
+          onClose={() => {
+            setEditingGameSettings(false)
+          }}
+          onAfterClose={() => {
+            setPlayerType(undefined)
+          }}
+        />
         <Theme />
       </div>
     </>

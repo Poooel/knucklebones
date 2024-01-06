@@ -1,4 +1,4 @@
-import { GameState, Player } from '@knucklebones/common'
+import { type GameSettings, GameState, Player } from '@knucklebones/common'
 import { error, status } from 'itty-router'
 import { type CloudflareEnvironment } from '../types/cloudflareEnvironment'
 import { type BaseRequestWithProps } from '../types/itty'
@@ -9,8 +9,12 @@ import {
   saveGameState
 } from '../utils/endpoints'
 
+export interface RematchRequest extends BaseRequestWithProps {
+  query?: Omit<GameSettings, 'playerType'>
+}
+
 export async function rematch(
-  request: BaseRequestWithProps,
+  request: RematchRequest,
   cloudflareEnvironment: CloudflareEnvironment,
   context: ExecutionContext
 ) {
@@ -36,7 +40,7 @@ export async function rematch(
         gameState.playerTwo.difficulty
       )
     })
-    newGameState.initialize(gameState)
+    newGameState.initialize({ ...gameState, ...request.query })
 
     await saveGameState(newGameState, request)
     await broadcastGameState(newGameState, request, cloudflareEnvironment)

@@ -1,5 +1,5 @@
 name = "knuclebones-worker"
-main = "dist/index.mjs"
+main = "src/workers/index.ts"
 compatibility_date = "2022-09-08"
 workers_dev = false
 
@@ -7,9 +7,6 @@ durable_objects.bindings = [
   { name = "GAME_STATE_DURABLE_OBJECT", class_name = "GameStateDurableObject" },
   { name = "WEB_SOCKET_DURABLE_OBJECT", class_name = "WebSocketDurableObject" }
 ]
-
-[build]
-command = "pnpm build"
 
 [[migrations]]
 tag = "v1"

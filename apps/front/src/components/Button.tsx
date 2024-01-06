@@ -1,7 +1,7 @@
 import * as React from 'react'
 import clsx from 'clsx'
 
-interface ButtonProps<E extends React.ElementType> {
+export interface ButtonProps<E extends React.ElementType> {
   size?: 'default' | 'large' | 'medium'
   variant?: 'primary' | 'secondary' | 'ghost'
   leftIcon?: React.ReactNode
@@ -30,8 +30,8 @@ export function Button<E extends React.ElementType = typeof defaultElement>({
         'flex flex-row items-center justify-center gap-2 rounded-md text-center font-medium text-slate-900 transition-colors duration-100 disabled:opacity-50 dark:text-slate-50',
         {
           'py-1 px-2 text-base md:p-2': size === 'default',
+          'p-2 text-lg tracking-tight md:p-3 md:text-xl': size === 'medium',
           'p-2 text-2xl tracking-tight md:p-4 md:text-4xl': size === 'large',
-          'p-2 text-xl tracking-tight md:p-4 md:text-2xl': size === 'medium',
           'bg-slate-200 hover:bg-slate-200/70 disabled:hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-700/70 disabled:dark:hover:bg-slate-700':
             variant === 'primary',
           'hover:bg-transparent/5 dark:hover:bg-transparent/20':
