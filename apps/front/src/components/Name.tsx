@@ -22,7 +22,6 @@ export function Name({
   ...player
 }: NameProps) {
   const computedName = getName(player)
-  console.log(player, computedName)
   const { id, displayName } = player
   const [isBeingEdited, setIsBeingEdited] = React.useState(false)
   const [name, setName] = React.useState(computedName)
