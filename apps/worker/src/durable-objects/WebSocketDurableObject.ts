@@ -57,15 +57,14 @@ export class WebSocketDurableObject {
     reason: string,
     wasClean: boolean
   ) {
-    await this.closeOrErrorHandler(webSocket)
+    if (!wasClean) {
+      console.error(code, reason)
+    }
   }
 
   async webSocketError(webSocket: WebSocket, error: any) {
     console.error(error)
-    await this.closeOrErrorHandler(webSocket)
   }
-
-  async closeOrErrorHandler(webSocket: WebSocket) {}
 
   broadcast(message: string) {
     this.state.getWebSockets().forEach((webSocket) => {
