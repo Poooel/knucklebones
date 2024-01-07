@@ -27,4 +27,4 @@ jobs:
           accountId: ${{ secrets.CF_ACCOUNT_ID }}
           workingDirectory: 'apps/worker'
           packageManager: pnpm
-          environment: staging
+          environment: production
