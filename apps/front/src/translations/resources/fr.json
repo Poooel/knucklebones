@@ -2,10 +2,10 @@
   "language": "Français",
   "home": {
     "play": {
-      "friend": "Jouer contre un ami",
+      "friend": "Jouer contre quelqu'un",
       "ai": "Jouer contre une IA"
     },
-    "footer": "Le jeu original Knucklebones de Cult of the Lamb a été créé par Massive Monster.\nCe site est une création de fans et ne constitue pas une mise en œuvre officielle par Massive Monster.\nVous pouvez trouver le jeu original sur le site de <0>Cult of the Lamb</0>."
+    "footer": "Le jeu Knucklebones est une création originale de l'entité Massive Monster.\nLe présent site est une réalisation de fans et ne constitue en aucun cas une implémentation officielle de la part de Massive Monster.\nPour accéder au jeu original, nous vous invitons à consulter le site internet officiel de <0>Cult of the Lamb</0>."
   },
   "guide": {
     "label": "Comment jouer",
@@ -22,11 +22,11 @@
       "hard": "Difficile"
     },
     "games": {
-      "label": "Nombre de rounds",
-      "indefinite": "Indéfini",
-      "1": "Best of 1",
-      "3": "Best of 3",
-      "5": "Best of 5"
+      "label": "Nombre de manches gagnantes",
+      "indefinite": "Partie libre",
+      "1": "1 manche",
+      "3": "2 manches",
+      "5": "3 manches"
     },
     "start": "Commencer la partie"
   },
@@ -40,32 +40,33 @@
       "label": "Partager la partie",
       "title": "Scannez le QR code pour inviter d'autres joueurs dans la partie",
       "copy": "Copier le lien",
-      "copied": "Copié!"
+      "copied": "Copié !"
     },
     "logs": {
       "label": "Journaux",
       "title": "Journaux"
     },
     "history": {
-      "label": "Round {{current}} sur {{boType}}",
+      "label": "Manche {{current}} sur {{boType}}",
       "title": "Historique",
-      "empty-round": "Le premier round n'est pas encore terminé!",
+      "empty-round": "La première manche n'est pas encore terminée !",
       "tie": "Égalité!",
-      "win": "{{player}} a gagné!",
-      "you-lead": "Vous avez l'avantage!",
-      "opponent-lead": "{{player}} a l'avantage!"
+      "win": "{{player}} a gagné !",
+      "you-lead": "Vous avez l'avantage !",
+      "opponent-lead": "{{player}} a l'avantage !"
     }
   },
   "game": {
     "total": "Total",
     "you": "Vous",
     "ai": "IA",
-    "rematch": "Rejouer",
-    "continue": "Continuer",
-    "win-round": "{{player}} a gagné ce round avec {{points}} points !",
-    "win-game": "{{player}} a gagné avec {{points}} points !",
-    "waiting-rematch": "En attente de {{player}} ...",
-    "opponent-rematch": "{{player}} veut rejouter!"
+    "rematch": "Relancer une partie",
+    "continue": "Continuer la partie",
+    "go-free-play": "Partir en mode libre",
+    "win-round": "{{player}} a gagné cette manche avec {{points}} points !",
+    "win-game": "{{player}} a gagné la partie avec {{points}} points !",
+    "waiting-rematch": "En attente de {{player}}...",
+    "opponent-rematch": "{{player}} veut rejouer !"
   },
-  "loading": "En attente du début de la partie "
+  "loading": "En attente du début de la partie"
 }

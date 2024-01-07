@@ -50,7 +50,7 @@ function VoteButtons({
             {t('game.rematch')}
           </Button>
           <Button onClick={onContinueIndefinitely} disabled={hasVoted}>
-            {t('game.continue')}
+            {t('game.go-free-play')}
           </Button>
         </div>
       )
