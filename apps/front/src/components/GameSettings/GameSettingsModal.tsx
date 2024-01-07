@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { v4 as uuidv4 } from 'uuid'
 import {
   type GameSettings,
@@ -10,8 +11,8 @@ import { Modal, type ModalProps } from '../Modal'
 import { type Option, ToggleGroup } from '../ToggleGroup'
 import { Button } from '../Button'
 import {
-  BO_TYPES_OPTIONS,
-  DIFFICULTIES_OPTIONS,
+  getBoTypeOptions,
+  getDifficultyOptions,
   convertToBoType,
   type StringBoType
 } from './options'
@@ -57,24 +58,25 @@ export function GameSettingsModal({
 }: GameSettingsProps) {
   const [difficulty, setDifficulty] = React.useState<Difficulty>('medium')
   const [boType, setBoType] = React.useState<StringBoType>('indefinite')
+  const { t } = useTranslation()
 
   return (
     <Modal {...modalProps}>
-      <Modal.Title>Game settings</Modal.Title>
+      <Modal.Title>{t('game-settings.title')}</Modal.Title>
       <div className='grid grid-cols-1 gap-8'>
         {playerType === 'ai' && (
           <GameSetting
-            label='AI difficulty'
+            label={t('game-settings.difficulty.label')}
             value={difficulty}
             onValueChange={setDifficulty}
-            options={DIFFICULTIES_OPTIONS}
+            options={getDifficultyOptions()}
           />
         )}
         <GameSetting
-          label='Number of games'
+          label={t('game-settings.games.label')}
           value={boType}
           onValueChange={setBoType}
-          options={BO_TYPES_OPTIONS}
+          options={getBoTypeOptions()}
         />
         <Button
           as={Link}
@@ -90,7 +92,7 @@ export function GameSettingsModal({
             } satisfies GameSettings
           }
         >
-          Start game
+          {t('game-settings.start')}
         </Button>
       </div>
     </Modal>

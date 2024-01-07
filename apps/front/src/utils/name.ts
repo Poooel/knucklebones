@@ -1,4 +1,9 @@
-import { type IPlayer, isEmptyOrBlank } from '@knucklebones/common'
+import {
+  isEmptyOrBlank,
+  type IPlayer,
+  type Difficulty
+} from '@knucklebones/common'
+import i18next from 'i18next'
 import {
   uniqueNamesGenerator,
   adjectives,
@@ -14,7 +19,7 @@ const shortAdjectives = adjectives.filter((a) => a.length <= MAX_WORD_LENGTH)
 const shortColors = colors.filter((c) => c.length <= MAX_WORD_LENGTH)
 const shortAnimals = animals.filter((a) => a.length <= MAX_WORD_LENGTH)
 
-export const randomName = () => {
+export function randomName() {
   return uniqueNamesGenerator({
     dictionaries: [shortAdjectives, shortColors, shortAnimals],
     length: 3,
@@ -23,9 +28,19 @@ export const randomName = () => {
   })
 }
 
-export interface PlayerNameProps extends Pick<IPlayer, 'displayName' | 'id'> {}
+function getAiName(difficulty: Difficulty) {
+  return `${i18next.t('game.ai')} (${i18next.t(
+    `game-settings.difficulty.${difficulty}`
+  )})`
+}
 
-export function getName({ displayName, id }: PlayerNameProps) {
+export interface PlayerNameProps
+  extends Pick<IPlayer, 'displayName' | 'id' | 'difficulty'> {}
+
+export function getName({ difficulty, displayName, id }: PlayerNameProps) {
+  if (difficulty !== undefined) {
+    return getAiName(difficulty)
+  }
   if (displayName === undefined || isEmptyOrBlank(displayName)) {
     return id
   } else {

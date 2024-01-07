@@ -1,4 +1,5 @@
 import * as React from 'react'
+import i18next from 'i18next'
 import {
   SunIcon,
   MoonIcon,
@@ -24,12 +25,12 @@ function ThemeIcon({ theme }: ThemeProps) {
 
 function getThemeLabel({ theme }: ThemeProps) {
   if (theme === 'dark') {
-    return 'Dark theme'
+    return i18next.t('menu.style.dark')
   }
   if (theme === 'light') {
-    return 'Light theme'
+    return i18next.t('menu.style.light')
   }
-  return 'System theme'
+  return i18next.t('menu.style.system')
 }
 
 function setDarkMode(darkMode: boolean) {

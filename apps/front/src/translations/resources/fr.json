@@ -1,0 +1,72 @@
+{
+  "language": "Français",
+  "home": {
+    "play": {
+      "friend": "Jouer contre quelqu'un",
+      "ai": "Jouer contre une IA"
+    },
+    "footer": "Le jeu Knucklebones est une création originale de l'entité Massive Monster.\nLe présent site est une réalisation de fans et ne constitue en aucun cas une implémentation officielle de la part de Massive Monster.\nPour accéder au jeu original, nous vous invitons à consulter le site internet officiel de <0>Cult of the Lamb</0>."
+  },
+  "guide": {
+    "label": "Comment jouer",
+    "goal": "Chaque tour, vous obtenez un dé aléatoire à placer dans une colonne.\nLe but est d'avoir plus de points que votre adversaire quand la partie se termine, c'est-à-dire quand l'un des 2 plateaux est plein.",
+    "rule1": "Vous obtenez encore plus de points quand le même dé apparaît plusieurs fois dans la même colonne.",
+    "rule2": "Vous retirez du plateau de votre adversaire tous les dés avec la même valeur en plaçant un dé dans la colonne correspondante de votre plateau."
+  },
+  "game-settings": {
+    "title": "Paramètres de la partie",
+    "difficulty": {
+      "label": "Difficulté de l'IA",
+      "easy": "Facile",
+      "medium": "Moyenne",
+      "hard": "Difficile"
+    },
+    "games": {
+      "label": "Nombre de manches gagnantes",
+      "indefinite": "Partie libre",
+      "1": "Une",
+      "3": "Deux",
+      "5": "Trois"
+    },
+    "start": "Commencer la partie"
+  },
+  "menu": {
+    "style": {
+      "system": "Thème du système",
+      "dark": "Thème sombre",
+      "light": "Thème clair"
+    },
+    "share": {
+      "label": "Partager la partie",
+      "title": "Scannez le QR code pour inviter d'autres joueurs dans la partie",
+      "copy": "Copier le lien",
+      "copied": "Copié !"
+    },
+    "logs": {
+      "label": "Journaux",
+      "title": "Journaux"
+    },
+    "history": {
+      "label": "Manche {{current}} sur {{boType}}",
+      "title": "Historique",
+      "empty-round": "La première manche n'est pas encore terminée !",
+      "tie": "Égalité!",
+      "win": "{{player}} a gagné !",
+      "you-lead": "Vous avez l'avantage !",
+      "opponent-lead": "{{player}} a l'avantage !"
+    }
+  },
+  "game": {
+    "total": "Total",
+    "you": "Vous",
+    "ai": "IA",
+    "rematch": "Relancer une partie",
+    "continue": "Continuer la partie",
+    "go-free-play": "Partir en mode libre",
+    "win-round": "{{player}} a gagné cette manche avec {{points}} points !",
+    "win-game": "{{player}} a gagné la partie avec {{points}} points !",
+    "waiting-rematch": "En attente de {{player}}...",
+    "opponent-rematch": "{{player}} veut rejouer !"
+  },
+  "loading": "En attente du début de la partie"
+}

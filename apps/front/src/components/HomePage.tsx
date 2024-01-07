@@ -1,16 +1,18 @@
 import * as React from 'react'
 import { Link } from 'react-router-dom'
-import KnucklebonesLogo from '../svgs/logo.svg'
+import { useTranslation } from 'react-i18next'
 import { Button } from './Button'
 import { Theme } from './Theme'
-import { Disclaimer } from './Disclaimer'
-import { CodeBracketIcon, EnvelopeIcon } from '@heroicons/react/24/outline'
 import { GameSettingsModal } from './GameSettings'
+import KnucklebonesLogo from '../svgs/logo.svg'
 import { type PlayerType } from '@knucklebones/common'
+import { Footer } from './Footer'
+import { Language } from './Language'
 
 export function HomePage() {
   const [playerType, setPlayerType] = React.useState<PlayerType>()
   const [isEditingGameSettings, setEditingGameSettings] = React.useState(false)
+  const { t } = useTranslation()
 
   function openGameSettings(playerType: PlayerType) {
     setEditingGameSettings(true)
@@ -37,7 +39,7 @@ export function HomePage() {
               openGameSettings('human')
             }}
           >
-            Play against a friend
+            {t('home.play.friend')}
           </Button>
           <Button
             size='large'
@@ -45,36 +47,14 @@ export function HomePage() {
               openGameSettings('ai')
             }}
           >
-            Play against an AI
+            {t('home.play.ai')}
           </Button>
           <Button as={Link} size='large' to='/how-to-play'>
-            How to play
+            {t('guide.label')}
           </Button>
         </div>
         <div className='absolute bottom-0 flex flex-col gap-2 p-2'>
-          <Disclaimer />
-          <div className='flex flex-row justify-center gap-4'>
-            <a
-              className='text-slate-900 transition-all hover:text-slate-900/80 dark:text-slate-200 dark:hover:text-slate-50/80'
-              href='https://github.com/Poooel/knucklebones'
-              target='_blank'
-              rel='noreferrer'
-            >
-              <div className='aspect-square h-6'>
-                <CodeBracketIcon />
-              </div>
-            </a>
-            <a
-              className='text-slate-900 transition-all hover:text-slate-900/80 dark:text-slate-200 dark:hover:text-slate-50/80'
-              href='mailto:contact@knucklebones.io'
-              target='_blank'
-              rel='noreferrer'
-            >
-              <div className='aspect-square h-6'>
-                <EnvelopeIcon />
-              </div>
-            </a>
-          </div>
+          <Footer />
         </div>
       </div>
       <div className='fixed top-0 right-0 p-2 md:p-4'>
@@ -89,6 +69,7 @@ export function HomePage() {
           }}
         />
         <Theme />
+        <Language />
       </div>
     </>
   )

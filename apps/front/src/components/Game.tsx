@@ -6,11 +6,11 @@ import { Loading } from './Loading'
 import { WarningToast } from './WarningToast'
 import { QRCodeModal } from './QRCode'
 import { HowToPlayModal } from './HowToPlay'
-import { LogsModal } from './Logs'
 import { OutcomeHistory } from './OutcomeHistory'
 import { SideBar } from './SideBar'
 import { Theme } from './Theme'
 import { useIsOnMobile } from '../hooks/detectDevice'
+import { Language } from './Language'
 
 export function Game() {
   const gameStore = useGame()
@@ -25,7 +25,6 @@ export function Game() {
     outcome,
     rematchVote,
     outcomeHistory,
-    logs,
     nextPlayer,
     winner,
     playerOne,
@@ -77,8 +76,8 @@ export function Game() {
           <>
             <HowToPlayModal />
             <Theme />
+            <Language />
             <QRCodeModal />
-            <LogsModal logs={logs} />
             <OutcomeHistory
               boType={boType}
               playerSide={playerSide}

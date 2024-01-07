@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { useTranslation } from 'react-i18next'
 import { DocumentTextIcon } from '@heroicons/react/24/outline'
 import { type ILog } from '@knucklebones/common'
 import { Modal } from './Modal'
@@ -24,6 +25,7 @@ const MemoizedLog = React.memo(function Log({ content, timestamp }: ILog) {
 
 function Logs({ logs }: LogsProps) {
   const ref = React.createRef<HTMLUListElement>()
+  const { t } = useTranslation()
 
   React.useEffect(() => {
     ref.current?.scrollTo({
@@ -34,7 +36,7 @@ function Logs({ logs }: LogsProps) {
 
   return (
     <>
-      <Modal.Title>Logs</Modal.Title>
+      <Modal.Title>{t('menu.logs.title')}</Modal.Title>
       <ul ref={ref} className='min-h-0 flex-1 overflow-y-auto'>
         {logs.map((log) => (
           <MemoizedLog key={log.timestamp} {...log} />
@@ -45,8 +47,9 @@ function Logs({ logs }: LogsProps) {
 }
 
 export function LogsModal({ logs }: LogsProps) {
+  const { t } = useTranslation()
   return (
-    <ShortcutModal icon={<DocumentTextIcon />} label='Logs'>
+    <ShortcutModal icon={<DocumentTextIcon />} label={t('menu.logs.label')}>
       <Logs logs={logs} />
     </ShortcutModal>
   )

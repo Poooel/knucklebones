@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { useTranslation } from 'react-i18next'
 import { RectangleStackIcon } from '@heroicons/react/24/outline'
 import { type GameContext } from '../../hooks/useGame'
 import { Modal } from '../Modal'
@@ -22,6 +23,7 @@ export function OutcomeHistory({
   playerOne,
   playerTwo
 }: OutcomeHistoryProps) {
+  const { t } = useTranslation()
   const detailedHistory = getWinHistory(outcomeHistory)
   const lastGameOutcome = detailedHistory.at(-1) ?? {
     playerOne: { id: playerOne.id, score: 0, wins: 0 },
@@ -39,7 +41,7 @@ export function OutcomeHistory({
         />
       }
     >
-      <Modal.Title>History</Modal.Title>
+      <Modal.Title>{t('menu.history.title')}</Modal.Title>
       <div className='grid grid-cols-1 gap-2'>
         <Text className='text-center'>
           {getLeadMessage({

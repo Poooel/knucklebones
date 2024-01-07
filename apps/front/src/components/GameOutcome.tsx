@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { useTranslation } from 'react-i18next'
 import { Button } from './Button'
 import { PlayIcon } from '@heroicons/react/24/outline'
 import { ShortcutModal } from './ShortcutModal'
@@ -33,11 +34,12 @@ function VoteButtons({
   onContinueIndefinitely,
   onRematch
 }: VoteButtonProps) {
+  const { t } = useTranslation()
   if (boType !== 'indefinite') {
     if (outcome === 'round-ended') {
       return (
         <Button onClick={onContinue} disabled={hasVoted}>
-          Continue
+          {t('game.continue')}
         </Button>
       )
     }
@@ -45,10 +47,10 @@ function VoteButtons({
       return (
         <div className='flex flex-col md:flex-row gap-2 items-center'>
           <Button onClick={onRematch} disabled={hasVoted}>
-            Rematch
+            {t('game.rematch')}
           </Button>
           <Button onClick={onContinueIndefinitely} disabled={hasVoted}>
-            Continue
+            {t('game.go-free-play')}
           </Button>
         </div>
       )
@@ -56,7 +58,7 @@ function VoteButtons({
   }
   return (
     <Button onClick={onRematch} disabled={hasVoted}>
-      Rematch
+      {t('game.rematch')}
     </Button>
   )
 }
@@ -84,6 +86,7 @@ export function GameOutcome({
   const isSpectator = playerSide === 'spectator'
   const hasVoted = rematchVote === playerOne.id
   const isOnDesktop = useIsOnDesktop()
+  const { t } = useTranslation()
 
   if (outcome === 'ongoing') {
     // On peut mettre un VS semi-transparent dans le fond de la partie
@@ -108,10 +111,12 @@ export function GameOutcome({
 
       {!isSpectator &&
         (hasVoted ? (
-          <p>Waiting for {playerTwo.inGameName}...</p>
+          <p>{t('game.waiting-rematch', { player: playerTwo.inGameName })}</p>
         ) : (
           rematchVote !== undefined && ( // It means the other player has voted for rematch
-            <p>{playerTwo.inGameName} wants to rematch!</p>
+            <p>
+              {t('game.opponent-rematch', { player: playerTwo.inGameName })}
+            </p>
           )
         ))}
     </div>
@@ -122,7 +127,11 @@ export function GameOutcome({
   }
 
   return (
-    <ShortcutModal icon={<PlayIcon />} label='Continue' isInitiallyOpen>
+    <ShortcutModal
+      icon={<PlayIcon />}
+      label={t('game.continue')}
+      isInitiallyOpen
+    >
       {content}
     </ShortcutModal>
   )
