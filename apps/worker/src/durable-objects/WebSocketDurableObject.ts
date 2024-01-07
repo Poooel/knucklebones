@@ -1,12 +1,6 @@
 import { type CloudflareEnvironment } from '../types/cloudflareEnvironment'
 
-interface Session {
-  webSocket: WebSocket
-  quit: boolean
-}
-
 export class WebSocketDurableObject {
-  sessions: Session[]
   state: DurableObjectState
   cloudflareEnvironment: CloudflareEnvironment
 
@@ -16,7 +10,6 @@ export class WebSocketDurableObject {
   ) {
     this.state = state
     this.cloudflareEnvironment = cloudflareEnvironment
-    this.sessions = []
   }
 
   async fetch(request: Request) {
@@ -47,35 +40,40 @@ export class WebSocketDurableObject {
   }
 
   async handleSession(webSocket: WebSocket) {
-    webSocket.accept()
-
-    const session = { webSocket, quit: false }
-
-    this.sessions.push(session)
-
-    webSocket.addEventListener('message', (message) => {
-      try {
-        if (session.quit) {
-          webSocket.close(1011, 'WebSocket broken.')
-        }
-
-        this.broadcast(JSON.stringify(message.data))
-      } catch (err) {
-        console.error(err)
-      }
-    })
-
-    const closeOrErrorHandler = () => {
-      session.quit = true
-      this.sessions = this.sessions.filter((member) => member !== session)
-    }
-    webSocket.addEventListener('close', closeOrErrorHandler)
-    webSocket.addEventListener('error', closeOrErrorHandler)
+    this.state.acceptWebSocket(webSocket)
   }
 
+  async webSocketMessage(webSocket: WebSocket, message: string | ArrayBuffer) {
+    try {
+      this.broadcast(JSON.stringify(message))
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  async webSocketClose(
+    webSocket: WebSocket,
+    code: number,
+    reason: string,
+    wasClean: boolean
+  ) {
+    await this.closeOrErrorHandler(webSocket)
+  }
+
+  async webSocketError(webSocket: WebSocket, error: any) {
+    console.error(error)
+    await this.closeOrErrorHandler(webSocket)
+  }
+
+  async closeOrErrorHandler(webSocket: WebSocket) {}
+
   broadcast(message: string) {
-    this.sessions.forEach((session) => {
-      session.webSocket.send(message)
+    this.state.getWebSockets().forEach((webSocket) => {
+      try {
+        webSocket.send(message)
+      } catch (error) {
+        console.error(error)
+      }
     })
   }
 }
