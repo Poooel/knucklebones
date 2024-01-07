@@ -9,7 +9,7 @@ export function setupI18n() {
   const userLanguage = getUserLanguage()
 
   if (pathLanguage === undefined) {
-    // Would be better to have a server side redirection
+    // Ça serait mieux d'avoir une redirection côté CloudFlare
     // https://developers.cloudflare.com/rules/url-forwarding/
     window.location.assign(`/${userLanguage}/`)
   }
