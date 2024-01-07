@@ -1,6 +1,6 @@
 name = "knuclebones-worker"
 main = "src/workers/index.ts"
-compatibility_date = "2022-09-08"
+compatibility_date = "2024-01-07"
 workers_dev = false
 
 durable_objects.bindings = [
