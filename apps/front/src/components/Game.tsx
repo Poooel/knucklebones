@@ -6,7 +6,6 @@ import { Loading } from './Loading'
 import { WarningToast } from './WarningToast'
 import { QRCodeModal } from './QRCode'
 import { HowToPlayModal } from './HowToPlay'
-import { LogsModal } from './Logs'
 import { OutcomeHistory } from './OutcomeHistory'
 import { SideBar } from './SideBar'
 import { Theme } from './Theme'
@@ -26,7 +25,6 @@ export function Game() {
     outcome,
     rematchVote,
     outcomeHistory,
-    logs,
     nextPlayer,
     winner,
     playerOne,
@@ -80,7 +78,6 @@ export function Game() {
             <Theme />
             <Language />
             <QRCodeModal />
-            <LogsModal logs={logs} />
             <OutcomeHistory
               boType={boType}
               playerSide={playerSide}

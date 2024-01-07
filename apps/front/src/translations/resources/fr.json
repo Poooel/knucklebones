@@ -24,9 +24,9 @@
     "games": {
       "label": "Nombre de manches gagnantes",
       "indefinite": "Partie libre",
-      "1": "1 manche",
-      "3": "2 manches",
-      "5": "3 manches"
+      "1": "Une",
+      "3": "Deux",
+      "5": "Trois"
     },
     "start": "Commencer la partie"
   },
