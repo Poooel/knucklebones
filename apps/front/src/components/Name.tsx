@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   PencilSquareIcon,
   CheckIcon,
@@ -21,9 +22,11 @@ export function Name({
   ...player
 }: NameProps) {
   const computedName = getName(player)
+  console.log(player, computedName)
   const { id, displayName } = player
   const [isBeingEdited, setIsBeingEdited] = React.useState(false)
   const [name, setName] = React.useState(computedName)
+  const { t } = useTranslation()
 
   React.useEffect(() => {
     setName(computedName)
@@ -113,7 +116,7 @@ export function Name({
       <div className='flex flex-wrap items-center justify-center gap-2'>
         <p className='break-all text-center'>
           {name}
-          {isPlayerOne && isEditable && ' (you)'}
+          {isPlayerOne && isEditable && ` (${t('game.you')})`}
         </p>
         {isEditable && (
           <IconButton icon={<PencilSquareIcon />} onClick={onEditClick} />

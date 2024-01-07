@@ -16,3 +16,9 @@ export const supportedLanguages = Object.entries(resources).map(
     label: resource.translation.language
   })
 )
+
+export const DEFAULT_LANGUAGE = 'en'
+
+export function isLanguageSupported(lang: string) {
+  return supportedLanguages.some(({ value }) => lang === value)
+}

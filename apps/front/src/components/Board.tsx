@@ -87,6 +87,8 @@ export function Board({
 
 export function PlayerBoard({
   id,
+  // Peut-être plus simple d'avoir juste une prop `player`
+  difficulty,
   dice,
   isPlayerOne,
   score = 0,
@@ -109,6 +111,7 @@ export function PlayerBoard({
     >
       <Name
         id={id}
+        difficulty={difficulty}
         displayName={displayName}
         isPlayerOne={isPlayerOne}
         updateDisplayName={updateDisplayName}

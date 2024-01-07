@@ -1,3 +1,3 @@
 export * from './resources'
-export * from './setup'
-export * from './userLanguage'
+export * from './setupI18n'
+export * from './language'
