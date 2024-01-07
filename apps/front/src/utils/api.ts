@@ -2,13 +2,15 @@ import { type GameSettings } from '@knucklebones/common'
 
 type Method = 'GET' | 'POST' | 'DELETE'
 
-// À synchroniser avece les types de requêtes côté back
+// À synchroniser avec les types de requêtes côté back
 interface IdentificationParams {
   roomKey: string
   playerId: string
 }
 
-type InitGameRequestParams = GameSettings
+interface InitGameRequestParams extends Omit<GameSettings, 'boType'> {
+  boType?: GameSettings['boType']
+}
 export async function initGame(
   { playerId, roomKey }: IdentificationParams,
   { boType, difficulty, playerType }: InitGameRequestParams
