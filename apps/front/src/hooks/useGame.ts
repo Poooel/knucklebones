@@ -86,7 +86,7 @@ export function useGame() {
     if (readyState === ReadyState.OPEN) {
       initGame(
         { roomKey, playerId },
-        { playerType: 'human', boType: state?.boType ?? 'indefinite' }
+        { playerType: 'human', boType: state?.boType }
       )
         .then(async () => {
           // À déplacer côté serveur
