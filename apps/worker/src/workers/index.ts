@@ -9,6 +9,7 @@ import {
   webSocket
 } from '../endpoints'
 import { type CloudflareEnvironment } from '../types/cloudflareEnvironment'
+import { Toucan } from 'toucan-js'
 
 export { GameStateDurableObject } from '../durable-objects/GameStateDurableObject'
 export { WebSocketDurableObject } from '../durable-objects/WebSocketDurableObject'
@@ -37,13 +38,24 @@ export default {
     cloudflareEnvironment: CloudflareEnvironment,
     context: ExecutionContext
   ) {
+    const sentry = new Toucan({
+      dsn: cloudflareEnvironment.SENTRY_DSN,
+      context,
+      request
+    })
+
     if (isWebSocketEndpointCalled(request)) {
-      return await webSocket(request, cloudflareEnvironment)
+      return await webSocket(request, cloudflareEnvironment).catch((error) => {
+        sentry.captureException(error)
+      })
     }
 
     return await router
       .handle(request, cloudflareEnvironment, context)
       .then(corsify)
+      .catch((error) => {
+        sentry.captureException(error)
+      })
   }
 }
 

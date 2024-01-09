@@ -1,8 +1,10 @@
+import { Toucan } from 'toucan-js'
 import { type CloudflareEnvironment } from '../types/cloudflareEnvironment'
 
 export class WebSocketDurableObject {
   state: DurableObjectState
   cloudflareEnvironment: CloudflareEnvironment
+  sentry: Toucan
 
   constructor(
     state: DurableObjectState,
@@ -10,32 +12,43 @@ export class WebSocketDurableObject {
   ) {
     this.state = state
     this.cloudflareEnvironment = cloudflareEnvironment
+    this.sentry = new Toucan({
+      dsn: this.cloudflareEnvironment.SENTRY_DSN,
+      context: this.state
+    })
   }
 
   async fetch(request: Request) {
-    const url = new URL(request.url)
+    try {
+      const url = new URL(request.url)
 
-    switch (url.pathname) {
-      case '/websocket': {
-        if (request.headers.get('Upgrade') !== 'websocket') {
-          return new Response(
-            'Expected Upgrade header with webSocket value but found nothing',
-            { status: 400 }
-          )
+      switch (url.pathname) {
+        case '/websocket': {
+          if (request.headers.get('Upgrade') !== 'websocket') {
+            return new Response(
+              'Expected Upgrade header with webSocket value but found nothing',
+              { status: 400 }
+            )
+          }
+
+          const [client, server] = Object.values(new WebSocketPair())
+
+          await this.handleSession(server)
+
+          return new Response(null, { status: 101, webSocket: client })
         }
-
-        const [client, server] = Object.values(new WebSocketPair())
-
-        await this.handleSession(server)
-
-        return new Response(null, { status: 101, webSocket: client })
+        case '/broadcast': {
+          this.broadcast(await request.text())
+          return new Response(null, { status: 200 })
+        }
+        default:
+          return new Response('Not found', { status: 404 })
       }
-      case '/broadcast': {
-        this.broadcast(await request.text())
-        return new Response(null, { status: 200 })
-      }
-      default:
-        return new Response('Not found', { status: 404 })
+    } catch (error) {
+      this.sentry.captureException(error)
+      return new Response('Something went wrong! Team has been notified.', {
+        status: 500
+      })
     }
   }
 
@@ -47,7 +60,7 @@ export class WebSocketDurableObject {
     try {
       this.broadcast(JSON.stringify(message))
     } catch (error) {
-      console.error(error)
+      this.sentry.captureException(error)
     }
   }
 
@@ -58,12 +71,12 @@ export class WebSocketDurableObject {
     wasClean: boolean
   ) {
     if (!wasClean) {
-      console.error(code, reason)
+      this.sentry.captureMessage(`${code} - ${reason}`, 'error')
     }
   }
 
   async webSocketError(webSocket: WebSocket, error: any) {
-    console.error(error)
+    this.sentry.captureException(error)
   }
 
   broadcast(message: string) {
@@ -71,7 +84,7 @@ export class WebSocketDurableObject {
       try {
         webSocket.send(message)
       } catch (error) {
-        console.error(error)
+        this.sentry.captureException(error)
       }
     })
   }
