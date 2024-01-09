@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Disallow: /en/room/
+Disallow: /fr/room/
