@@ -63,10 +63,16 @@
     "rematch": "Play another game",
     "continue": "Continue game",
     "go-free-play": "Go into free play",
-    "win-round": "{{player}} won this round with {{points}} points!",
-    "win-game": "{{player}} won the game with {{points}} points!",
     "waiting-rematch": "Waiting for {{player}}...",
-    "opponent-rematch": "{{player}} wants to rematch!"
+    "opponent-rematch": "{{player}} wants to rematch!",
+    "round": {
+      "tie": "This is a tie! Nobody wins this round!",
+      "win": "{{player}} won this round with {{points}} points!"
+    },
+    "game": {
+      "tie": "This is a tie! Nobody wins!",
+      "win": "{{player}} won the game with {{points}} points!"
+    }
   },
   "loading": "Waiting for game to start"
 }
