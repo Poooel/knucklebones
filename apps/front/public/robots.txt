@@ -1,4 +1,8 @@
+# Any user agent
 User-agent: *
-Allow: /
-Disallow: /en/room/
-Disallow: /fr/room/
+# Allow root
+Allow: /$
+# Allow how to play page in any language
+Allow: /*/how-to-play
+# Disallow everything else
+Disallow: /
