@@ -5,6 +5,7 @@
       "friend": "Play against someone",
       "ai": "Play against an AI"
     },
+    "description": "Online placing dice game from Cult of the Lamb, where the goal is to score more points that your opponent",
     "footer": "The original Knucklebones game in Cult of the Lamb was created by Massive Monster.\nThis is a fan-site and not an official implementation by Massive Monster.\nYou can find the original game on the <0>Cult of the Lamb</0> website."
   },
   "guide": {
