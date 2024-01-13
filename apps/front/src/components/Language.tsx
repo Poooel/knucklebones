@@ -21,9 +21,8 @@ export function Language() {
     <Button
       as='a'
       href={nextLanguagePath}
-      leftIcon={<GlobeAltIcon />}
       variant='ghost'
-      center={false}
+      leftIcon={<GlobeAltIcon />}
     >
       {t('language')}
     </Button>
