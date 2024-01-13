@@ -21,7 +21,7 @@ export function HomePage() {
 
   return (
     <>
-      <div className='flex flex-col items-center justify-center gap-4 md:gap-8 m-4'>
+      <div className='flex flex-col items-center justify-center gap-8'>
         <div className='flex flex-row items-center gap-2 md:gap-4'>
           <img
             src={KnucklebonesLogo}
@@ -32,7 +32,7 @@ export function HomePage() {
             Knucklebones
           </h1>
         </div>
-        <div className='flex flex-col gap-4 md:gap-8'>
+        <div className='flex flex-col gap-8'>
           <Button
             size='large'
             onClick={() => {
@@ -57,7 +57,7 @@ export function HomePage() {
           <Footer />
         </div>
       </div>
-      <div className='fixed top-0 left-0 p-2 md:p-4'>
+      <div className='fixed top-0 right-0 p-2 md:p-4'>
         <GameSettingsModal
           isOpen={isEditingGameSettings}
           playerType={playerType}
