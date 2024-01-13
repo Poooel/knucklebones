@@ -50,7 +50,7 @@
       "label": "Manche {{current}} sur {{boType}}",
       "title": "Historique",
       "empty-round": "La première manche n'est pas encore terminée !",
-      "tie": "Égalité!",
+      "tie": "Égalité !",
       "win": "{{player}} a gagné !",
       "you-lead": "Vous avez l'avantage !",
       "opponent-lead": "{{player}} a l'avantage !"
@@ -63,10 +63,17 @@
     "rematch": "Relancer une partie",
     "continue": "Continuer la partie",
     "go-free-play": "Partir en mode libre",
-    "win-round": "{{player}} a gagné cette manche avec {{points}} points !",
-    "win-game": "{{player}} a gagné la partie avec {{points}} points !",
+    "tie": "Égalité ! Personne n'a gagné !",
     "waiting-rematch": "En attente de {{player}}...",
-    "opponent-rematch": "{{player}} veut rejouer !"
+    "opponent-rematch": "{{player}} veut rejouer !",
+    "round": {
+      "tie": "Égalité ! Personne n'a gagné cette manche !",
+      "win": "{{player}} a gagné cette manche avec {{points}} points !"
+    },
+    "game": {
+      "tie": "Égalité ! Personne n'a gagné !",
+      "win": "{{player}} a gagné la partie avec {{points}} points !"
+    }
   },
   "loading": "En attente du début de la partie"
 }
