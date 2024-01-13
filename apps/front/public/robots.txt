@@ -1,8 +1,12 @@
 # Any user agent
 User-agent: *
-# Allow root
+# Allow root page
 Allow: /$
-# Allow how to play page in any language
-Allow: /*/how-to-play
+# Allow root page in supported languages
+Allow: /fr
+Allow: /en
+# Allow how to play page in supported language
+Allow: /fr/how-to-play
+Allow: /en/how-to-play
 # Disallow everything else
 Disallow: /
