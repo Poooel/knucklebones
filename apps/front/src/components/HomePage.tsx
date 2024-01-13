@@ -32,9 +32,6 @@ export function HomePage() {
             Knucklebones
           </h1>
         </div>
-        <p className='text-base md:text-xl text-center max-w-sm md:max-w-xl'>
-          {t('home.description')}
-        </p>
         <div className='flex flex-col gap-4 md:gap-8'>
           <Button
             size='large'
