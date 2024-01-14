@@ -16,5 +16,5 @@ export default defineConfig({
       }
     }
   },
-  base: process.env.CF_PAGES_URL ?? '/'
+  base: process.env.CF_PAGES_URL ?? ''
 })
