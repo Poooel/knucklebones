@@ -2,6 +2,8 @@ import * as React from 'react'
 import clsx from 'clsx'
 
 export interface ButtonProps<E extends React.ElementType> {
+  // Not a fan of having this prop
+  center?: boolean
   size?: 'default' | 'large' | 'medium'
   variant?: 'primary' | 'secondary' | 'ghost'
   leftIcon?: React.ReactNode
@@ -17,6 +19,7 @@ export function Button<E extends React.ElementType = typeof defaultElement>({
   children,
   leftIcon,
   rightIcon,
+  center = true,
   size = 'default',
   variant = 'primary',
   as,
@@ -27,8 +30,10 @@ export function Button<E extends React.ElementType = typeof defaultElement>({
     <Component
       {...props}
       className={clsx(
-        'flex flex-row items-center justify-center gap-2 rounded-md text-center font-medium text-slate-900 transition-colors duration-100 disabled:opacity-50 dark:text-slate-50',
+        'flex flex-row items-center gap-2 rounded-md text-center font-medium text-slate-900 transition-colors duration-100 disabled:opacity-50 dark:text-slate-50',
         {
+          'justify-center': center,
+          'justify-start': !center,
           'py-1 px-2 text-base md:p-2': size === 'default',
           'p-2 text-lg tracking-tight md:p-3 md:text-xl': size === 'medium',
           'p-2 text-2xl tracking-tight md:p-4 md:text-4xl': size === 'large',

@@ -21,9 +21,10 @@ interface BoardProps {
 }
 
 interface PlayerBoardProps extends IPlayer, BoardProps {
-  updateDisplayName?(displayName: string): void
-  isDisplayNameEditable?: boolean
+  isNextPlayer: boolean
   outcome: Outcome
+  isDisplayNameEditable?: boolean
+  updateDisplayName?(displayName: string): void
 }
 
 const MAX_COLUMNS = 3
@@ -95,7 +96,8 @@ export function PlayerBoard({
   scorePerColumn = [0, 0, 0],
   columns = [[], [], []],
   displayName,
-  canPlay = false,
+  canPlay,
+  isNextPlayer,
   onColumnClick,
   updateDisplayName,
   isDisplayNameEditable = false,
@@ -124,7 +126,10 @@ export function PlayerBoard({
         })}
       >
         <div className='my-4'>
-          <Dice value={outcome === 'ongoing' ? dice : undefined} />
+          <Dice
+            value={outcome === 'ongoing' ? dice : undefined}
+            showUndefined={isNextPlayer}
+          />
         </div>
         <div
           className={clsx('flex items-center gap-1 md:gap-4', {

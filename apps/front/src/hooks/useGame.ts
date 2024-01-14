@@ -121,7 +121,7 @@ export function useGame() {
       const previousGameState = gameState
 
       const realGameState = GameState.fromJson(gameState!)
-      realGameState.applyPlay(body)
+      realGameState.applyPlay(body, false)
       const mutatedGameState = realGameState.toJson()
 
       setGameState(mutatedGameState)

@@ -97,7 +97,7 @@ export function GameOutcome({
     // On peut mettre un VS semi-transparent dans le fond de la partie
     // pour rappeler cet élément sans pour autant que ça prenne de l'espace dans
     // le layout.
-    return <p className='hidden md:block'>VS</p>
+    return <p className='hidden lg:block'>VS</p>
   }
 
   const content = (

@@ -94,7 +94,7 @@ export class GameState implements IGameState {
     )
   }
 
-  applyPlay(play: Play) {
+  applyPlay(play: Play, giveNextDice = true) {
     const [playerOne, playerTwo] = this.getPlayers(play.author)
 
     playerOne.addDice(play.dice, play.column)
@@ -109,7 +109,7 @@ export class GameState implements IGameState {
     if (playerOne.areColumnsFilled()) {
       this.whoWins()
     } else {
-      this.nextTurn(play.author)
+      this.nextTurn(play.author, giveNextDice)
     }
   }
 
@@ -148,11 +148,14 @@ export class GameState implements IGameState {
     }
   }
 
-  private nextTurn(lastPlayer: string) {
+  private nextTurn(lastPlayer: string, giveNextDice = true) {
     const [playerOne, playerTwo] = this.getPlayers(lastPlayer)
 
     playerOne.dice = undefined
-    playerTwo.dice = getRandomDice()
+
+    if (giveNextDice) {
+      playerTwo.dice = getRandomDice()
+    }
 
     this.nextPlayer = playerTwo
 
