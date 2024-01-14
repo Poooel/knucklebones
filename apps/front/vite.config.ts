@@ -15,5 +15,6 @@ export default defineConfig({
         fr: resolve(__dirname, 'fr/index.html')
       }
     }
-  }
+  },
+  base: process.env.CF_PAGES_URL ?? ''
 })
