@@ -11,11 +11,13 @@ import { SideBar } from './SideBar'
 import { Theme } from './Theme'
 import { useIsOnMobile } from '../hooks/detectDevice'
 import { Language } from './Language'
+import { useNoIndex } from '../hooks/useNoIndex'
 
 export function Game() {
   const gameStore = useGame()
   const isOnMobile = useIsOnMobile()
   const gameRef = React.useRef<React.ElementRef<'div'>>(null)
+  useNoIndex()
 
   if (gameStore === null) {
     return <Loading />
