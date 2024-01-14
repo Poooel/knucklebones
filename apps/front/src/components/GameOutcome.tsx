@@ -1,4 +1,5 @@
 import * as React from 'react'
+import i18next from 'i18next'
 import { useTranslation } from 'react-i18next'
 import { Button } from './Button'
 import { PlayIcon } from '@heroicons/react/24/outline'
@@ -9,12 +10,16 @@ import { useIsOnDesktop } from '../hooks/detectDevice'
 interface GetWinMessageArgs extends Pick<GameContext, 'outcome' | 'winner'> {}
 
 function getWinMessage({ outcome, winner }: GetWinMessageArgs) {
-  const roundPrecision = outcome === 'round-ended' ? ' this round' : ''
   if (outcome !== 'ongoing') {
     if (winner !== undefined) {
-      return `${winner.inGameName} won${roundPrecision} with ${winner.score} points!`
+      return i18next.t(
+        outcome === 'round-ended' ? 'game.round.win' : 'game.game.win',
+        { player: winner.inGameName, points: winner.score }
+      )
     }
-    return `This is a tie! Nobody wins${roundPrecision}!`
+    return i18next.t(
+      outcome === 'round-ended' ? 'game.round.tie' : 'game.game.tie'
+    )
   }
   return ''
 }
@@ -92,7 +97,7 @@ export function GameOutcome({
     // On peut mettre un VS semi-transparent dans le fond de la partie
     // pour rappeler cet élément sans pour autant que ça prenne de l'espace dans
     // le layout.
-    return <p className='hidden md:block'>VS</p>
+    return <p className='hidden lg:block'>VS</p>
   }
 
   const content = (

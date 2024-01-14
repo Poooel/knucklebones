@@ -1,7 +1,7 @@
 name = "knuclebones-worker"
 main = "src/workers/index.ts"
 compatibility_date = "2024-01-07"
-workers_dev = false
+keep_vars = true
 
 durable_objects.bindings = [
   { name = "GAME_STATE_DURABLE_OBJECT", class_name = "GameStateDurableObject" },

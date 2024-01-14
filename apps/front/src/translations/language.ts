@@ -1,12 +1,12 @@
 import { isLanguageSupported } from './resources'
 
-const LANGUAGE_REGEX = /\/(\w+)\//i
-const PATH_WITHOUT_LANGUAGE_REGEX = /\/(?:\w+)(.+)/i
+const LANGUAGE_REGEX = /^\/(\w{2})\//i
+const PATH_WITHOUT_LANGUAGE_REGEX = /^\/(?:\w{2})(\/.+)/i
 
 export function getPathWithoutLanguage() {
   const [, path] =
     window.location.pathname.match(PATH_WITHOUT_LANGUAGE_REGEX) ?? []
-  return path
+  return path ?? window.location.pathname
 }
 
 export function getPathLanguage() {
