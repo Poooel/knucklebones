@@ -5,16 +5,18 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react-swc'
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(({mode}) => ({
   plugins: [react()],
   build: {
     rollupOptions: {
       input: {
+        // https://vitejs.dev/guide/build.html#multi-page-app
         default: resolve(__dirname, 'index.html'),
         en: resolve(__dirname, 'en/index.html'),
         fr: resolve(__dirname, 'fr/index.html')
       }
     }
   },
-  base: process.env.CF_PAGES_URL ?? ''
-})
+  // https://vitejs.dev/config/shared-options.html#base
+  base: mode === 'production' ? 'https://knucklebones.io/' : '/'
+}))
