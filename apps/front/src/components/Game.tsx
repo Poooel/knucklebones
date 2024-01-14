@@ -96,6 +96,7 @@ export function Game() {
         <PlayerBoard
           {...playerTwo}
           isPlayerOne={false}
+          isNextPlayer={nextPlayer?.id === playerTwo?.id}
           canPlay={canPlayerTwoPlay}
           outcome={outcome}
         />
@@ -103,6 +104,7 @@ export function Game() {
         <PlayerBoard
           {...playerOne}
           isPlayerOne
+          isNextPlayer={nextPlayer?.id === playerOne?.id}
           onColumnClick={
             canPlayerOnePlay
               ? (column) => {

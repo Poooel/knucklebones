@@ -4,10 +4,11 @@ import { Transition } from '@headlessui/react'
 
 type DiceVariant = 'base' | 'small'
 interface DiceProps {
-  value: number
-  count?: number
-  variant?: DiceVariant
+  value?: number
   className?: string
+  count?: number
+  showUndefined?: boolean
+  variant?: DiceVariant
 }
 interface DotProps {
   className?: string
@@ -127,7 +128,18 @@ function DiceSix() {
   )
 }
 
-const DiceMap: Record<number, React.ComponentType> = {
+function DiceUndefined() {
+  return (
+    <DiceContainer>
+      <p className='col-start-2 row-start-2 text-xl md:text-2xl font-semibold'>
+        ?
+      </p>
+    </DiceContainer>
+  )
+}
+
+const DiceMap: Record<number | 'undefined', React.ComponentType> = {
+  undefined: DiceUndefined,
   1: DiceOne,
   2: DiceTwo,
   3: DiceThree,
@@ -137,7 +149,7 @@ const DiceMap: Record<number, React.ComponentType> = {
 }
 
 function SimpleDice({ value, className, count = 1 }: DiceProps) {
-  const DiceValue = DiceMap[value]
+  const DiceValue = DiceMap[value ?? 'undefined']
   const variant = React.useContext(VariantContext)
   return (
     <div
@@ -168,8 +180,9 @@ export function Dice({
   value,
   className,
   count = 1,
+  showUndefined = false,
   variant = 'base'
-}: Partial<DiceProps>) {
+}: DiceProps) {
   // Temporarily store the dice value to keep the dice shown during the
   // transition after it has been unset. While the animation is done, the cached
   // value is reset. When the value is set, it will update the cached value.
@@ -187,7 +200,7 @@ export function Dice({
     // Sharing the variant in a context so it's easier to drill it down
     <VariantContext.Provider value={variant}>
       <Transition
-        show={Boolean(value)}
+        show={Boolean(value) || showUndefined}
         className={clsx('transition duration-100 ease-in-out', className)}
         enterFrom='opacity-0 scale-75'
         enterTo='opacity-100 scale-100'
@@ -197,15 +210,15 @@ export function Dice({
           setCachedValue(undefined)
         }}
       >
-        {cachedValue !== undefined && (
-          <SimpleDice value={cachedValue} count={count} className={className} />
-        )}
+        <SimpleDice value={cachedValue} count={count} className={className} />
       </Transition>
       {/*
         Cannot show `DicePlaceholder` within `Transition` when `shown` is
         false, since the `Transition` block isn't rendered.
       */}
-      {cachedValue === undefined && <DicePlaceholder className={className} />}
+      {cachedValue === undefined && !showUndefined && (
+        <DicePlaceholder className={className} />
+      )}
     </VariantContext.Provider>
   )
 }
