@@ -3,8 +3,8 @@ User-agent: *
 # Allow root page
 Allow: /$
 # Allow root page in supported languages
-Allow: /fr$
-Allow: /en$
+Allow: /fr/$
+Allow: /en/$
 # Allow how to play page in supported language
 Allow: /fr/how-to-play$
 Allow: /en/how-to-play$
