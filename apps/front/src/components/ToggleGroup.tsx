@@ -1,4 +1,3 @@
-import React from 'react'
 import * as RadixToggleGroup from '@radix-ui/react-toggle-group'
 import { Button, type ButtonProps } from './Button'
 import clsx from 'clsx'

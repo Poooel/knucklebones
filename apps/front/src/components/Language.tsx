@@ -1,4 +1,3 @@
-import * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import { GlobeAltIcon } from '@heroicons/react/24/outline'
 import { Button } from './Button'

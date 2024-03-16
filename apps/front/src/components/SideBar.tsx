@@ -65,7 +65,7 @@ export function SideBar({ actions, gameRef }: HeaderProps) {
       ></div>
       <div
         className={clsx(
-          'fixed top-0 left-0 transition-transform duration-300 ease-in-out lg:static lg:z-0',
+          'fixed left-0 top-0 transition-transform duration-300 ease-in-out lg:static lg:z-0',
           {
             '-translate-x-64': !showToolbar,
             'translate-x-0': showToolbar
@@ -73,7 +73,7 @@ export function SideBar({ actions, gameRef }: HeaderProps) {
         )}
       >
         <div className='flex flex-row items-center gap-2'>
-          <div className='flex h-screen w-64 flex-col gap-12 border-r border-slate-300 bg-slate-50 p-2 pt-4 pl-4 shadow-lg transition-colors duration-150 ease-in-out dark:border-slate-600 dark:bg-slate-900 lg:border-0 lg:shadow-none'>
+          <div className='flex h-screen w-64 flex-col gap-12 border-r border-slate-300 bg-slate-50 p-2 pl-4 pt-4 shadow-lg transition-colors duration-150 ease-in-out dark:border-slate-600 dark:bg-slate-900 lg:border-0 lg:shadow-none'>
             <Link
               to='/'
               className='flex flex-row items-center gap-2 underline decoration-transparent decoration-4 underline-offset-2 transition-all duration-100 ease-in-out hover:decoration-slate-900'

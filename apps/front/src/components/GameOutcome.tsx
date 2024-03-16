@@ -1,4 +1,3 @@
-import * as React from 'react'
 import i18next from 'i18next'
 import { useTranslation } from 'react-i18next'
 import { Button } from './Button'
@@ -50,7 +49,7 @@ function VoteButtons({
     }
     if (outcome === 'game-ended') {
       return (
-        <div className='flex flex-col md:flex-row gap-2 items-center'>
+        <div className='flex flex-col items-center gap-2 md:flex-row'>
           <Button onClick={onRematch} disabled={hasVoted}>
             {t('game.rematch')}
           </Button>
