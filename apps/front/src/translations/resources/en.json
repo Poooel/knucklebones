@@ -51,7 +51,8 @@
       "title": "History",
       "empty-round": "The first round isn't finished yet!",
       "tie": "This is a tie!",
-      "win": "{{player}} won!",
+      "you-win": "You won!",
+      "opponent-win": "{{player}} won!",
       "you-lead": "You are taking the lead!",
       "opponent-lead": "{{player}} is taking the lead!"
     }
@@ -67,11 +68,13 @@
     "opponent-rematch": "{{player}} wants to rematch!",
     "round": {
       "tie": "This is a tie! Nobody wins this round!",
-      "win": "{{player}} won this round with {{points}} points!"
+      "you-win": "You won this round with {{points}} points!",
+      "opponent-win": "{{player}} won this round with {{points}} points!"
     },
     "game": {
       "tie": "This is a tie! Nobody wins!",
-      "win": "{{player}} won the game with {{points}} points!"
+      "you-win": "You won the game with {{points}} points!",
+      "opponent-win": "{{player}} won the game with {{points}} points!"
     }
   },
   "loading": "Waiting for game to start"
