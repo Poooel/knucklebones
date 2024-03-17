@@ -12,44 +12,13 @@ import {
   initGame,
   play,
   voteRematch
-} from '../utils/api'
+} from '../../utils/api'
 import useWebSocket, { ReadyState } from 'react-use-websocket'
-import { useRoomKey } from './useRoomKey'
-import {
-  type PlayerSide,
-  augmentPlayer,
-  getPlayerFromId,
-  getPlayerSide
-} from '../utils/player'
+import { useRoomKey } from '../../hooks/useRoomKey'
+import { getPlayerFromId, getPlayerSide } from '../../utils/player'
+import { getWebSocketUrl, preparePlayers } from './utils'
 
-export type GameContext = NonNullable<ReturnType<typeof useGame>>
-
-function preparePlayers(
-  playerSide: PlayerSide,
-  { playerOne, playerTwo }: IGameState
-) {
-  if (playerSide === 'player-two') {
-    return [augmentPlayer(playerTwo, true), augmentPlayer(playerOne, false)]
-  }
-  return [
-    augmentPlayer(playerOne, playerSide !== 'spectator'),
-    augmentPlayer(playerTwo, false)
-  ]
-}
-
-function getWebSocketUrl(roomKey: string) {
-  let hostname = import.meta.env.VITE_WORKER_URL
-
-  if (hostname.startsWith('http://')) {
-    hostname = hostname.replace('http', 'ws')
-  } else if (hostname.startsWith('https://')) {
-    hostname = hostname.replace('https', 'wss')
-  }
-
-  return `${hostname}/${roomKey}/websocket`
-}
-
-export function useGame() {
+export function useGameSetup() {
   const [gameState, setGameState] = React.useState<IGameState | null>(null)
   const [isLoading, setIsLoading] = React.useState(true)
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null)

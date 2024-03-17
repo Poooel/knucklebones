@@ -3,10 +3,10 @@ import { type DetailedHistory } from '@knucklebones/common'
 import { Text } from '../Text'
 import { PlayerHistoryDetail } from './PlayerHistoryDetail'
 import { getPlayerFromId } from '../../utils/player'
-import { type GameContext } from '../../hooks/useGame'
+import { type InGameContext } from '../GameContext'
 
 interface HistoryDetailProps
-  extends Pick<GameContext, 'playerOne' | 'playerTwo'> {
+  extends Pick<InGameContext, 'playerOne' | 'playerTwo'> {
   detailedHistory: DetailedHistory
 }
 

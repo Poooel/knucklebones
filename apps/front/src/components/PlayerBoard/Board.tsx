@@ -5,7 +5,7 @@ import {
   countDiceInColumn,
   type Outcome
 } from '@knucklebones/common'
-import { Dice } from './Dice'
+import { Dice } from '../Dice'
 import { Column } from './Column'
 import { Cell } from './Cell'
 import { Name } from './Name'
