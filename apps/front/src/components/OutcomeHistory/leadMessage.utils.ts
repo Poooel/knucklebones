@@ -25,18 +25,14 @@ export function getLeadMessage({
   const leadingPlayer = getPlayerFromId(id, players)
 
   // `boType` est considéré comme un `string`, je sais pas trop pourquoi
-  if (
+  const gameScope =
     boType !== 'indefinite' &&
     Number(boType) === playerOne.wins + playerTwo.wins
-  ) {
-    return i18next.t('menu.history.win', { player: leadingPlayer.inGameName })
-  }
+      ? 'win'
+      : 'lead'
+  const playerWin = leadingPlayer.isPlayerOne ? 'you' : 'opponent'
 
-  // L'enfer
-  return i18next.t(
-    leadingPlayer.inGameName === 'You'
-      ? 'menu.history.you-lead'
-      : 'menu.history.opponent-lead',
-    { player: leadingPlayer.inGameName }
-  )
+  return i18next.t(`menu.history.${playerWin}-${gameScope}` as const, {
+    player: leadingPlayer.inGameName
+  })
 }

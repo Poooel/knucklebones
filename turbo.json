@@ -7,7 +7,9 @@
     },
     "dev": {
       "dependsOn": ["^dev"],
-      "outputs": ["dist/**"]
+      "outputs": ["dist/**"],
+      "cache": false,
+      "persistent": true
     },
     "lint": {}
   }

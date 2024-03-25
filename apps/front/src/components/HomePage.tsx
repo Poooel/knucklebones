@@ -1,13 +1,11 @@
-import * as React from 'react'
-import { Link } from 'react-router-dom'
-import { useTranslation } from 'react-i18next'
-import { Button } from './Button'
-import { Theme } from './Theme'
-import { GameSettingsModal } from './GameSettings'
-import KnucklebonesLogo from '../svgs/logo.svg'
 import { type PlayerType } from '@knucklebones/common'
+import * as React from 'react'
+import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router-dom'
+import KnucklebonesLogo from '../svgs/logo.svg'
+import { Button } from './Button'
 import { Footer } from './Footer'
-import { Language } from './Language'
+import { GameSettingsModal } from './GameSettings'
 
 export function HomePage() {
   const [playerType, setPlayerType] = React.useState<PlayerType>()
@@ -21,7 +19,7 @@ export function HomePage() {
 
   return (
     <>
-      <div className='flex flex-col items-center justify-center gap-4 md:gap-8 m-4'>
+      <div className='flex flex-col items-center justify-center gap-4 md:gap-8 mx-4'>
         <div className='flex flex-row items-center gap-2 md:gap-4'>
           <img
             src={KnucklebonesLogo}
@@ -57,7 +55,7 @@ export function HomePage() {
           <Footer />
         </div>
       </div>
-      <div className='fixed top-0 left-0 p-2 md:p-4'>
+      <div className='fixed'>
         <GameSettingsModal
           isOpen={isEditingGameSettings}
           playerType={playerType}
@@ -68,8 +66,6 @@ export function HomePage() {
             setPlayerType(undefined)
           }}
         />
-        <Theme />
-        <Language />
       </div>
     </>
   )

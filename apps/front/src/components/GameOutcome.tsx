@@ -12,10 +12,12 @@ interface GetWinMessageArgs extends Pick<InGameContext, 'outcome' | 'winner'> {}
 function getWinMessage({ outcome, winner }: GetWinMessageArgs) {
   if (outcome !== 'ongoing') {
     if (winner !== undefined) {
-      return i18next.t(
-        outcome === 'round-ended' ? 'game.round.win' : 'game.game.win',
-        { player: winner.inGameName, points: winner.score }
-      )
+      const gameScope = outcome === 'round-ended' ? 'round' : 'game'
+      const playerWin = winner.isPlayerOne ? 'you-win' : 'opponent-win'
+      return i18next.t(`game.${gameScope}.${playerWin}` as const, {
+        player: winner.inGameName,
+        points: winner.score
+      })
     }
     return i18next.t(
       outcome === 'round-ended' ? 'game.round.tie' : 'game.game.tie'

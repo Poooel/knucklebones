@@ -16,7 +16,7 @@ export function HistoryDetail({
 }: HistoryDetailProps) {
   return (
     <div className='grid-cols-3-central grid gap-x-2 overflow-x-auto'>
-      {[...detailedHistory].reverse().map(({ playerOne, playerTwo }, index) => {
+      {detailedHistory.map(({ playerOne, playerTwo }, index) => {
         const leftPlayer = getPlayerFromId(playerOne.id, players)
         const rightPlayer = getPlayerFromId(playerTwo.id, players)
 
