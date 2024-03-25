@@ -1,20 +1,24 @@
-import * as React from 'react'
-import clsx from 'clsx'
-import { Link } from 'react-router-dom'
 import { ChevronRightIcon } from '@heroicons/react/24/outline'
 import { useDrag } from '@use-gesture/react'
-import { useIsOnMobile } from '../hooks/detectDevice'
-import KnucklebonesLogo from '../svgs/logo.svg'
-import { Text } from './Text'
-import { IconButton } from './IconButton'
+import clsx from 'clsx'
+import * as React from 'react'
+import { Link } from 'react-router-dom'
+import { useIsOnMobile } from '../../hooks/detectDevice'
+import KnucklebonesLogo from '../../svgs/logo.svg'
+import { IconButton } from '../IconButton'
+import { Text } from '../Text'
+import { SideBarActionContainer } from './SideBarActions'
 
-interface HeaderProps {
+export interface SideBarContainerProps {
   actions: React.ReactNode
-  gameRef: React.RefObject<HTMLDivElement>
+  swipeableAreaRef: React.RefObject<HTMLDivElement>
 }
 
 // https://ui.shadcn.com/docs/components/sheet ?
-export function SideBar({ actions, gameRef }: HeaderProps) {
+export function SideBarContainer({
+  actions,
+  swipeableAreaRef
+}: SideBarContainerProps) {
   // Always displayed by default
   const [showToolbar, setShowToolbar] = React.useState(true)
   const isOnMobile = useIsOnMobile()
@@ -31,7 +35,7 @@ export function SideBar({ actions, gameRef }: HeaderProps) {
     },
     {
       enabled: isOnMobile,
-      target: gameRef,
+      target: swipeableAreaRef,
       axis: 'x',
       swipe: { duration: 1000 },
       filterTaps: true
@@ -53,7 +57,7 @@ export function SideBar({ actions, gameRef }: HeaderProps) {
   }, [isOnMobile])
 
   return (
-    <div className='z-10'>
+    <div className='z-10 h-0 md:h-auto'>
       <div
         className={clsx(
           'pointer-events-none fixed inset-0 bg-slate-900/10 bg-opacity-75 transition-opacity duration-300 ease-in-out dark:bg-slate-50/10 lg:hidden',
@@ -90,7 +94,7 @@ export function SideBar({ actions, gameRef }: HeaderProps) {
                 Knucklebones
               </Text>
             </Link>
-            <div className='flex flex-col items-start gap-4'>{actions}</div>
+            <SideBarActionContainer>{actions}</SideBarActionContainer>
           </div>
           {isOnMobile && (
             <IconButton

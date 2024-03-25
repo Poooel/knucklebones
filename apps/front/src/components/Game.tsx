@@ -1,17 +1,15 @@
 import * as React from 'react'
+import { useIsOnMobile } from '../hooks/detectDevice'
 import { useGame } from '../hooks/useGame'
+import { useNoIndex } from '../hooks/useNoIndex'
 import { PlayerBoard } from './Board'
 import { GameOutcome } from './GameOutcome'
-import { Loading } from './Loading'
-import { WarningToast } from './WarningToast'
-import { QRCodeModal } from './QRCode'
 import { HowToPlayModal } from './HowToPlay'
+import { Loading } from './Loading'
 import { OutcomeHistory } from './OutcomeHistory'
-import { SideBar } from './SideBar'
-import { Theme } from './Theme'
-import { useIsOnMobile } from '../hooks/detectDevice'
-import { Language } from './Language'
-import { useNoIndex } from '../hooks/useNoIndex'
+import { QRCodeModal } from './QRCode'
+import { SideBarActions } from './SideBar'
+import { WarningToast } from './WarningToast'
 
 export function Game() {
   const gameStore = useGame()
@@ -71,30 +69,20 @@ export function Game() {
   )
 
   return (
-    <div className='lg:grid-cols-3-central grid grid-cols-1'>
-      <SideBar
-        gameRef={gameRef}
-        actions={
-          <>
-            <HowToPlayModal />
-            <Theme />
-            <Language />
-            <QRCodeModal />
-            <OutcomeHistory
-              boType={boType}
-              playerSide={playerSide}
-              outcomeHistory={outcomeHistory}
-              playerOne={playerOne}
-              playerTwo={playerTwo}
-            />
-            {isOnMobile && gameOutcome}
-          </>
-        }
-      />
-      <div
-        ref={gameRef}
-        className='h-svh flex flex-1 flex-col items-center justify-around'
-      >
+    <>
+      <SideBarActions>
+        <HowToPlayModal />
+        <QRCodeModal />
+        <OutcomeHistory
+          boType={boType}
+          playerSide={playerSide}
+          outcomeHistory={outcomeHistory}
+          playerOne={playerOne}
+          playerTwo={playerTwo}
+        />
+        {isOnMobile && gameOutcome}
+      </SideBarActions>
+      <div ref={gameRef} className='flex flex-col items-center justify-around'>
         <PlayerBoard
           {...playerTwo}
           isPlayerOne={false}
@@ -123,7 +111,6 @@ export function Game() {
         />
         <WarningToast message={errorMessage} onDismiss={clearErrorMessage} />
       </div>
-      <div></div>
-    </div>
+    </>
   )
 }
