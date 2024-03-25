@@ -51,7 +51,8 @@
       "title": "Historique",
       "empty-round": "La première manche n'est pas encore terminée !",
       "tie": "Égalité !",
-      "win": "{{player}} a gagné !",
+      "you-win": "Vous avez gagné !",
+      "opponent-win": "{{player}} a gagné !",
       "you-lead": "Vous avez l'avantage !",
       "opponent-lead": "{{player}} a l'avantage !"
     }
@@ -68,11 +69,13 @@
     "opponent-rematch": "{{player}} veut rejouer !",
     "round": {
       "tie": "Égalité ! Personne n'a gagné cette manche !",
-      "win": "{{player}} a gagné cette manche avec {{points}} points !"
+      "you-win": "Vous avez gagné cette manche avec {{points}} points !",
+      "opponent-win": "{{player}} a gagné cette manche avec {{points}} points !"
     },
     "game": {
       "tie": "Égalité ! Personne n'a gagné !",
-      "win": "{{player}} a gagné la partie avec {{points}} points !"
+      "you-win": "Vous avez gagné la partie avec {{points}} points !",
+      "opponent-win": "{{player}} a gagné la partie avec {{points}} points !"
     }
   },
   "loading": "En attente du début de la partie"
