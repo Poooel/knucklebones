@@ -12,7 +12,6 @@ extends:
 plugins:
   - react
   - react-hooks
-  - prettier
   - import
 overrides: []
 parserOptions:
@@ -26,7 +25,6 @@ settings:
   import/resolver:
     typescript: true
 rules:
-  prettier/prettier: error
   space-before-function-paren: off
   react/no-unescaped-entities: off
   import/order:
