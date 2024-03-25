@@ -31,6 +31,7 @@ export function getPlayerFromId(
 
 export interface AugmentedPlayer extends IPlayer {
   inGameName: string
+  isPlayerOne: boolean
 }
 
 export function augmentPlayer(
@@ -39,6 +40,7 @@ export function augmentPlayer(
 ): AugmentedPlayer {
   return {
     ...player,
+    isPlayerOne,
     inGameName: isPlayerOne ? i18next.t('game.you') : getName(player)
   }
 }
