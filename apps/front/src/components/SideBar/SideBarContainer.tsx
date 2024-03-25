@@ -60,7 +60,7 @@ export function SideBarContainer({
     <div className='z-10 h-0 md:h-auto'>
       <div
         className={clsx(
-          'pointer-events-none fixed inset-0 bg-slate-900/10 bg-opacity-75 transition-opacity duration-300 ease-in-out dark:bg-slate-50/10 lg:hidden',
+          'pointer-events-none fixed inset-0 bg-slate-900/10 bg-opacity-75 transition-opacity duration-300 ease-in-out lg:hidden dark:bg-slate-50/10',
           {
             'opacity-0': !showToolbar,
             'opacity-100': showToolbar
@@ -77,7 +77,7 @@ export function SideBarContainer({
         )}
       >
         <div className='flex flex-row items-center gap-2'>
-          <div className='flex h-screen w-64 flex-col gap-12 border-r border-slate-300 bg-slate-50 p-2 pl-4 pt-4 shadow-lg transition-colors duration-150 ease-in-out dark:border-slate-600 dark:bg-slate-900 lg:border-0 lg:shadow-none'>
+          <div className='flex h-screen w-64 flex-col gap-12 border-r border-slate-300 bg-slate-50 p-2 pl-4 pt-4 shadow-lg transition-colors duration-150 ease-in-out lg:border-0 lg:shadow-none dark:border-slate-600 dark:bg-slate-900'>
             <Link
               to='/'
               className='flex flex-row items-center gap-2 underline decoration-transparent decoration-4 underline-offset-2 transition-all duration-100 ease-in-out hover:decoration-slate-900'
