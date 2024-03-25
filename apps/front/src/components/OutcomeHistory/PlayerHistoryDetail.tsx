@@ -1,5 +1,5 @@
-import clsx from 'clsx'
 import { type PlayerOutcomeWithWins } from '@knucklebones/common'
+import { clsx } from 'clsx'
 import { Text } from '../Text'
 
 interface PlayerHistoryDetailProps extends PlayerOutcomeWithWins {

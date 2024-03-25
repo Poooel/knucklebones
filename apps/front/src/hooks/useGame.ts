@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { useLocation } from 'react-router-dom'
+import useWebSocket, { ReadyState } from 'react-use-websocket'
 import {
   GameState,
   type IGameState,
@@ -13,14 +14,13 @@ import {
   play,
   voteRematch
 } from '../utils/api'
-import useWebSocket, { ReadyState } from 'react-use-websocket'
-import { useRoomKey } from './useRoomKey'
 import {
   type PlayerSide,
   augmentPlayer,
   getPlayerFromId,
   getPlayerSide
 } from '../utils/player'
+import { useRoomKey } from './useRoomKey'
 
 export type GameContext = NonNullable<ReturnType<typeof useGame>>
 

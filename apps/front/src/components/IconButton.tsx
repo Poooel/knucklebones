@@ -1,5 +1,5 @@
 import type * as React from 'react'
-import clsx from 'clsx'
+import { clsx } from 'clsx'
 import { IconWrapper } from './IconWrapper'
 
 interface IconButtonProps<E extends React.ElementType> {

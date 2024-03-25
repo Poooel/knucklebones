@@ -1,6 +1,6 @@
 import * as RadixToggleGroup from '@radix-ui/react-toggle-group'
+import { clsx } from 'clsx'
 import { Button, type ButtonProps } from './Button'
-import clsx from 'clsx'
 
 export interface Option<V = string> {
   label: string

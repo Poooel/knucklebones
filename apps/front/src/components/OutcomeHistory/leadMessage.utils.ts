@@ -1,5 +1,5 @@
-import i18next from 'i18next'
 import { type GameOutcome } from '@knucklebones/common'
+import { t } from 'i18next'
 import { type GameContext } from '../../hooks/useGame'
 import { getPlayerFromId } from '../../utils/player'
 
@@ -16,9 +16,9 @@ export function getLeadMessage({
 
   if (playerOne.wins === playerTwo.wins) {
     if (playerOne.wins === 0) {
-      return i18next.t('menu.history.empty-round')
+      return t('menu.history.empty-round')
     }
-    return i18next.t('menu.history.tie')
+    return t('menu.history.tie')
   }
 
   const { id } = playerOne.wins > playerTwo.wins ? playerOne : playerTwo
@@ -32,7 +32,7 @@ export function getLeadMessage({
       : 'lead'
   const playerWin = leadingPlayer.isPlayerOne ? 'you' : 'opponent'
 
-  return i18next.t(`menu.history.${playerWin}-${gameScope}` as const, {
+  return t(`menu.history.${playerWin}-${gameScope}` as const, {
     player: leadingPlayer.inGameName
   })
 }

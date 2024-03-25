@@ -1,7 +1,7 @@
-import { type PlayerType } from '@knucklebones/common'
 import * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
+import { type PlayerType } from '@knucklebones/common'
 import KnucklebonesLogo from '../svgs/logo.svg'
 import { Button } from './Button'
 import { Footer } from './Footer'

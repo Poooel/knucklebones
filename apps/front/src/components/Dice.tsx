@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { clsx } from 'clsx'
 import { Transition } from '@headlessui/react'
+import { clsx } from 'clsx'
 
 type DiceVariant = 'base' | 'small'
 interface DiceProps {

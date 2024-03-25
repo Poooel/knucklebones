@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { GlobeAltIcon } from '@heroicons/react/24/outline'
-import { Button } from './Button'
 import { getPathWithoutLanguage, supportedLanguages } from '../translations'
+import { Button } from './Button'
 
 function getNextLanguagePath(currentLanguage: string) {
   const currentIndex = supportedLanguages.findIndex(({ value }) =>

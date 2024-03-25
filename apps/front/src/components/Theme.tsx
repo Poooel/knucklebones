@@ -1,10 +1,10 @@
 import * as React from 'react'
-import i18next from 'i18next'
 import {
   SunIcon,
   MoonIcon,
   ComputerDesktopIcon
 } from '@heroicons/react/24/outline'
+import { t } from 'i18next'
 import { Button } from './Button'
 
 type Themes = 'dark' | 'light' | 'default'
@@ -25,12 +25,12 @@ function ThemeIcon({ theme }: ThemeProps) {
 
 function getThemeLabel({ theme }: ThemeProps) {
   if (theme === 'dark') {
-    return i18next.t('menu.style.dark')
+    return t('menu.style.dark')
   }
   if (theme === 'light') {
-    return i18next.t('menu.style.light')
+    return t('menu.style.light')
   }
-  return i18next.t('menu.style.system')
+  return t('menu.style.system')
 }
 
 function setDarkMode(darkMode: boolean) {

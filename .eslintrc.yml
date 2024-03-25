@@ -5,8 +5,15 @@ extends:
   - plugin:react/recommended
   - plugin:react/jsx-runtime
   - plugin:react-hooks/recommended
+  - plugin:import/recommended
+  - plugin:import/typescript
   - standard-with-typescript
   - prettier
+plugins:
+  - react
+  - react-hooks
+  - prettier
+  - import
 overrides: []
 parserOptions:
   ecmaVersion: latest
@@ -15,13 +22,28 @@ parserOptions:
     - apps/front/tsconfig.json
     - apps/worker/tsconfig.json
     - packages/common/tsconfig.json
-plugins:
-  - react
-  - react-hooks
-  - prettier
+settings:
+  import/resolver:
+    typescript: true
 rules:
   prettier/prettier: error
   space-before-function-paren: off
+  react/no-unescaped-entities: off
+  import/order:
+    - 'error'
+    -
+      alphabetize:
+        order: 'asc'
+      pathGroups:
+        -
+          pattern: 'react*'
+          group: 'external'
+          position: 'before'
+        -
+          pattern: '@*'
+          group: 'external'
+          position: 'after'
+      pathGroupsExcludedImportTypes: []
   '@typescript-eslint/space-before-function-paren':
     - error
     - asyncArrow: always
@@ -33,4 +55,3 @@ rules:
     - method
   '@typescript-eslint/no-non-null-assertion': off
   '@typescript-eslint/restrict-template-expressions': off
-  'react/no-unescaped-entities': off

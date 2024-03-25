@@ -1,5 +1,5 @@
-import { createDurable } from 'itty-durable'
 import { type IGameState, type ILobby, Lobby } from '@knucklebones/common'
+import { createDurable } from 'itty-durable'
 import { type CloudflareEnvironment } from '../types/cloudflareEnvironment'
 import { type IttyDurableObjectNamespace } from '../types/itty'
 

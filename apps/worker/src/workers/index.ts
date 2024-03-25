@@ -1,5 +1,6 @@
-import { Router, error, withParams, createCors } from 'itty-router'
 import { withDurables } from 'itty-durable'
+import { Router, error, withParams, createCors } from 'itty-router'
+import { Toucan } from 'toucan-js'
 import {
   deleteDisplayName,
   displayName,
@@ -9,7 +10,6 @@ import {
   webSocket
 } from '../endpoints'
 import { type CloudflareEnvironment } from '../types/cloudflareEnvironment'
-import { Toucan } from 'toucan-js'
 
 export { GameStateDurableObject } from '../durable-objects/GameStateDurableObject'
 export { WebSocketDurableObject } from '../durable-objects/WebSocketDurableObject'

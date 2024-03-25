@@ -1,5 +1,5 @@
 import type * as React from 'react'
-import clsx from 'clsx'
+import { clsx } from 'clsx'
 
 interface TextProps<E extends React.ElementType> {
   as?: E

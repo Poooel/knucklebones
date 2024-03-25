@@ -1,13 +1,13 @@
 import { useTranslation } from 'react-i18next'
 import { RectangleStackIcon } from '@heroicons/react/24/outline'
+import { getWinHistory } from '@knucklebones/common'
 import { type GameContext } from '../../hooks/useGame'
 import { Modal } from '../Modal'
-import { Text } from '../Text'
 import { ShortcutModal } from '../ShortcutModal'
-import { getLeadMessage } from './leadMessage.utils'
+import { Text } from '../Text'
 import { HistoryDetail } from './HistoryDetail'
 import { ScoreDisplay } from './ScoreDisplay'
-import { getWinHistory } from '@knucklebones/common'
+import { getLeadMessage } from './leadMessage.utils'
 
 interface OutcomeHistoryProps
   extends Pick<

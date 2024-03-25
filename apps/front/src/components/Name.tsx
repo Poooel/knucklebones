@@ -5,9 +5,9 @@ import {
   CheckIcon,
   XMarkIcon
 } from '@heroicons/react/24/outline'
-import { IconButton } from './IconButton'
 import { isEmptyOrBlank } from '@knucklebones/common'
 import { MAX_NAME_LENGTH, type PlayerNameProps, getName } from '../utils/name'
+import { IconButton } from './IconButton'
 
 interface NameProps extends PlayerNameProps {
   isPlayerOne: boolean

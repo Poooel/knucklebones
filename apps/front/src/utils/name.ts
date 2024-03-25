@@ -3,7 +3,7 @@ import {
   type IPlayer,
   type Difficulty
 } from '@knucklebones/common'
-import i18next from 'i18next'
+import { t } from 'i18next'
 import {
   uniqueNamesGenerator,
   adjectives,
@@ -29,9 +29,7 @@ export function randomName() {
 }
 
 function getAiName(difficulty: Difficulty) {
-  return `${i18next.t('game.ai')} (${i18next.t(
-    `game-settings.difficulty.${difficulty}`
-  )})`
+  return `${t('game.ai')} (${t(`game-settings.difficulty.${difficulty}`)})`
 }
 
 export interface PlayerNameProps
