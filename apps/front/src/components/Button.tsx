@@ -1,4 +1,4 @@
-import * as React from 'react'
+import type * as React from 'react'
 import clsx from 'clsx'
 
 export interface ButtonProps<E extends React.ElementType> {
@@ -34,7 +34,7 @@ export function Button<E extends React.ElementType = typeof defaultElement>({
         {
           'justify-center': center,
           'justify-start': !center,
-          'py-1 px-2 text-base md:p-2': size === 'default',
+          'px-2 py-1 text-base md:p-2': size === 'default',
           'p-2 text-lg tracking-tight md:p-3 md:text-xl': size === 'medium',
           'p-2 text-2xl tracking-tight md:p-4 md:text-4xl': size === 'large',
           'bg-slate-200 hover:bg-slate-200/70 disabled:hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-700/70 disabled:dark:hover:bg-slate-700':

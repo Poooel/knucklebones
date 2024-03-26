@@ -3,6 +3,7 @@ env:
   es2021: true
 extends:
   - plugin:react/recommended
+  - plugin:react/jsx-runtime
   - plugin:react-hooks/recommended
   - standard-with-typescript
   - prettier
@@ -21,15 +22,15 @@ plugins:
 rules:
   prettier/prettier: error
   space-before-function-paren: off
-  "@typescript-eslint/space-before-function-paren":
+  '@typescript-eslint/space-before-function-paren':
     - error
     - asyncArrow: always
       named: never
       anonymous: always
-  "@typescript-eslint/explicit-function-return-type": off
-  "@typescript-eslint/method-signature-style":
+  '@typescript-eslint/explicit-function-return-type': off
+  '@typescript-eslint/method-signature-style':
     - error
     - method
-  "@typescript-eslint/no-non-null-assertion": off
-  "@typescript-eslint/restrict-template-expressions": off
-  "react/no-unescaped-entities": off
+  '@typescript-eslint/no-non-null-assertion': off
+  '@typescript-eslint/restrict-template-expressions': off
+  'react/no-unescaped-entities': off

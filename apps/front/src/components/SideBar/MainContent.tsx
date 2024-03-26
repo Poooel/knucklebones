@@ -10,7 +10,7 @@ export const MainContent = React.forwardRef<
   React.PropsWithChildren<MainContentProps>
 >(({ children, className }, ref) => {
   return (
-    <div ref={ref} className={clsx('h-svh grid grid-cols-1', className)}>
+    <div ref={ref} className={clsx('grid h-svh grid-cols-1', className)}>
       {children}
     </div>
   )

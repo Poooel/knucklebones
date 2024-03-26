@@ -131,7 +131,7 @@ function DiceSix() {
 function DiceUndefined() {
   return (
     <DiceContainer>
-      <p className='col-start-2 row-start-2 text-xl md:text-2xl font-semibold'>
+      <p className='col-start-2 row-start-2 text-xl font-semibold md:text-2xl'>
         ?
       </p>
     </DiceContainer>

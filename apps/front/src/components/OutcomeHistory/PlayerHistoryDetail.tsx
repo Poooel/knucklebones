@@ -1,4 +1,3 @@
-import * as React from 'react'
 import clsx from 'clsx'
 import { type PlayerOutcomeWithWins } from '@knucklebones/common'
 import { Text } from '../Text'
