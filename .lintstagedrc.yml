@@ -1,0 +1,3 @@
+{
+  "*.ts?(x)": ["prettier --check", "eslint"]
+}
