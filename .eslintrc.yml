@@ -29,16 +29,13 @@ rules:
   react/no-unescaped-entities: off
   import/order:
     - 'error'
-    -
-      alphabetize:
+    - alphabetize:
         order: 'asc'
       pathGroups:
-        -
-          pattern: 'react*'
+        - pattern: 'react*'
           group: 'external'
           position: 'before'
-        -
-          pattern: '@*'
+        - pattern: '@*'
           group: 'external'
           position: 'after'
       pathGroupsExcludedImportTypes: []
