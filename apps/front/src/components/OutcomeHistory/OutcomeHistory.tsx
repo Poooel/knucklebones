@@ -1,27 +1,15 @@
 import { useTranslation } from 'react-i18next'
 import { RectangleStackIcon } from '@heroicons/react/24/outline'
-import { getWinHistory } from '@knucklebones/common'
-import { type GameContext } from '../../hooks/useGame'
 import { Modal } from '../Modal'
 import { ShortcutModal } from '../ShortcutModal'
 import { Text } from '../Text'
 import { HistoryDetail } from './HistoryDetail'
 import { ScoreDisplay } from './ScoreDisplay'
-import { getLeadMessage } from './leadMessage.utils'
+import { getWinHistory } from '@knucklebones/common'
+import { useGame } from '../GameContext'
 
-interface OutcomeHistoryProps
-  extends Pick<
-    GameContext,
-    'outcomeHistory' | 'playerOne' | 'playerTwo' | 'playerSide' | 'boType'
-  > {}
-
-export function OutcomeHistory({
-  boType,
-  outcomeHistory,
-  playerSide,
-  playerOne,
-  playerTwo
-}: OutcomeHistoryProps) {
+export function OutcomeHistory() {
+  const { boType, outcomeHistory, playerSide, playerOne, playerTwo } = useGame()
   const { t } = useTranslation()
   const detailedHistory = getWinHistory(outcomeHistory)
   const lastGameOutcome = detailedHistory.at(-1) ?? {

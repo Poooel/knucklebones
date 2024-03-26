@@ -1,10 +1,10 @@
 import { t } from 'i18next'
 import { type GameOutcome } from '@knucklebones/common'
-import { type GameContext } from '../../hooks/useGame'
 import { getPlayerFromId } from '../../utils/player'
+import { type InGameContext } from '../GameContext'
 
 interface GetLeadMessageArgs
-  extends Pick<GameContext, 'playerOne' | 'playerTwo' | 'boType'> {
+  extends Pick<InGameContext, 'playerOne' | 'playerTwo' | 'boType'> {
   gameOutcome: GameOutcome
 }
 export function getLeadMessage({

@@ -1,9 +1,8 @@
 import type * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import { QuestionMarkCircleIcon } from '@heroicons/react/24/outline'
-import { clsx } from 'clsx'
-import { Board } from './Board'
-import { ColumnScore } from './ColumnScore'
+import { Board } from './PlayerBoard/Board'
+import { ColumnScore } from './PlayerBoard/ColumnScore'
 import { ShortcutModal } from './ShortcutModal'
 
 const SCORE_EXAMPLE_COLUMNS = [[3], [3, 3], [3, 3, 3]]

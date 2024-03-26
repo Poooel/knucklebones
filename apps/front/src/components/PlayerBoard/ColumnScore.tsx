@@ -7,7 +7,7 @@ import {
   useDismiss
 } from '@floating-ui/react'
 import { countDiceInColumn } from '@knucklebones/common'
-import { Dice } from './Dice'
+import { Dice } from '../Dice'
 
 interface CountedDiceProps {
   value: number
