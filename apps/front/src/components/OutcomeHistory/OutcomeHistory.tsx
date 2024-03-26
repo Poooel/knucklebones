@@ -1,4 +1,3 @@
-import * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import { RectangleStackIcon } from '@heroicons/react/24/outline'
 import { Modal } from '../Modal'

@@ -1,11 +1,10 @@
-import * as React from 'react'
 import { Trans } from 'react-i18next'
 import { CodeBracketIcon, EnvelopeIcon } from '@heroicons/react/24/outline'
 
 export function Footer() {
   return (
     <>
-      <div className='text-center text-xs whitespace-pre-line'>
+      <div className='whitespace-pre-line text-center text-xs'>
         <Trans i18nKey='home.footer'>
           <a
             href='https://www.cultofthelamb.com/'

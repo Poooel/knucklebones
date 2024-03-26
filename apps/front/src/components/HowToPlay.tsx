@@ -1,4 +1,4 @@
-import * as React from 'react'
+import type * as React from 'react'
 import clsx from 'clsx'
 import { useTranslation } from 'react-i18next'
 import { QuestionMarkCircleIcon } from '@heroicons/react/24/outline'
@@ -12,7 +12,7 @@ const PLAYER_TWO_REMOVE_EXAMPLE_COLUMNS = [[], [], [6, 6]]
 
 function ExplanationText({ children }: React.PropsWithChildren) {
   return (
-    <p className='text-center text-lg font-medium leading-tight whitespace-pre-line'>
+    <p className='whitespace-pre-line text-center text-lg font-medium leading-tight'>
       {children}
     </p>
   )
@@ -98,7 +98,7 @@ function HowToPlay() {
 
 export function HowToPlayPage() {
   return (
-    <div className='container mx-auto py-8 px-4 md:px-0'>
+    <div className='container mx-auto px-4 py-8 md:px-0'>
       <HowToPlay />
     </div>
   )

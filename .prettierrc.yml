@@ -3,3 +3,5 @@ jsxSingleQuote: true
 singleQuote: true
 trailingComma: none
 endOfLine: auto
+plugins:
+  - prettier-plugin-tailwindcss

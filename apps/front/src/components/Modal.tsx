@@ -1,4 +1,4 @@
-import * as React from 'react'
+import type * as React from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { IconButton } from './IconButton'
@@ -52,7 +52,7 @@ export function Modal({
                 <IconButton
                   onClick={onClose}
                   icon={<XMarkIcon />}
-                  className='absolute top-0 right-0 p-2'
+                  className='absolute right-0 top-0 p-2'
                 />
                 {children}
               </Dialog.Panel>
