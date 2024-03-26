@@ -35,7 +35,7 @@ rules:
         - pattern: 'react*'
           group: 'external'
           position: 'before'
-        - pattern: '@*'
+        - pattern: '@**/*'
           group: 'external'
           position: 'after'
       pathGroupsExcludedImportTypes: []

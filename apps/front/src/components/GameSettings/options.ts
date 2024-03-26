@@ -1,5 +1,5 @@
-import { type BoType, type Difficulty } from '@knucklebones/common'
 import { t } from 'i18next'
+import { type BoType, type Difficulty } from '@knucklebones/common'
 import { type Option } from '../ToggleGroup'
 
 export function getDifficultyOptions(): Array<Option<Difficulty>> {

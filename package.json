@@ -8,6 +8,7 @@
     "dev": "turbo run dev",
     "build": "NODE_ENV=production turbo run build",
     "lint": "prettier \"{apps,packages}/**/*.ts?(x)\" --check && eslint \"{apps,packages}/**/*.ts?(x)\"",
+    "lint:fix": "prettier \"{apps,packages}/**/*.ts?(x)\" --write && eslint \"{apps,packages}/**/*.ts?(x)\" --fix",
     "prepare": "husky"
   },
   "devDependencies": {

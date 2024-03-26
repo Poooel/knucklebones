@@ -1,9 +1,9 @@
+import { clsx } from 'clsx'
 import {
   type IPlayer,
   countDiceInColumn,
   type Outcome
 } from '@knucklebones/common'
-import { clsx } from 'clsx'
 import { Cell } from './Cell'
 import { Column } from './Column'
 import { ColumnScoreTooltip } from './ColumnScore'

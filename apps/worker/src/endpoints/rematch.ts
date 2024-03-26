@@ -1,5 +1,5 @@
-import { type GameSettings, GameState, Player } from '@knucklebones/common'
 import { error, status } from 'itty-router'
+import { type GameSettings, GameState, Player } from '@knucklebones/common'
 import { type CloudflareEnvironment } from '../types/cloudflareEnvironment'
 import { type BaseRequestWithProps } from '../types/itty'
 import { makeAiPlay } from '../utils/ai'

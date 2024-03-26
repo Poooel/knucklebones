@@ -1,8 +1,3 @@
-import {
-  isEmptyOrBlank,
-  type IPlayer,
-  type Difficulty
-} from '@knucklebones/common'
 import { t } from 'i18next'
 import {
   uniqueNamesGenerator,
@@ -10,6 +5,11 @@ import {
   colors,
   animals
 } from 'unique-names-generator'
+import {
+  isEmptyOrBlank,
+  type IPlayer,
+  type Difficulty
+} from '@knucklebones/common'
 
 // At most, we get a 21 character long name
 const MAX_WORD_LENGTH = 7

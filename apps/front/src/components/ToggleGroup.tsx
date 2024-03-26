@@ -1,5 +1,5 @@
-import * as RadixToggleGroup from '@radix-ui/react-toggle-group'
 import { clsx } from 'clsx'
+import * as RadixToggleGroup from '@radix-ui/react-toggle-group'
 import { Button, type ButtonProps } from './Button'
 
 export interface Option<V = string> {

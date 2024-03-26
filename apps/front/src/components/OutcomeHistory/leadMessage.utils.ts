@@ -1,5 +1,5 @@
-import { type GameOutcome } from '@knucklebones/common'
 import { t } from 'i18next'
+import { type GameOutcome } from '@knucklebones/common'
 import { type GameContext } from '../../hooks/useGame'
 import { getPlayerFromId } from '../../utils/player'
 

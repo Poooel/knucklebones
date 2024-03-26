@@ -1,5 +1,5 @@
-import { type IGameState, type IPlayer } from '@knucklebones/common'
 import { t } from 'i18next'
+import { type IGameState, type IPlayer } from '@knucklebones/common'
 import { getName } from './name'
 
 export type PlayerSide = 'player-one' | 'player-two' | 'spectator'
