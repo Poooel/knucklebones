@@ -7,6 +7,7 @@ import {
   isEmptyOrBlank,
   type GameSettings
 } from '@knucklebones/common'
+import { useRoomKey } from '../../hooks/useRoomKey'
 import {
   deleteDisplayName,
   updateDisplayName,
@@ -14,8 +15,6 @@ import {
   play,
   voteRematch
 } from '../../utils/api'
-import useWebSocket, { ReadyState } from 'react-use-websocket'
-import { useRoomKey } from '../../hooks/useRoomKey'
 import { getPlayerFromId, getPlayerSide } from '../../utils/player'
 import { getWebSocketUrl, preparePlayers } from './utils'
 

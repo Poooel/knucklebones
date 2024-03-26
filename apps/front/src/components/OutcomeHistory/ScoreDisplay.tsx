@@ -1,10 +1,9 @@
 import { useTranslation } from 'react-i18next'
 import { clsx } from 'clsx'
 import { type GameOutcome } from '@knucklebones/common'
-import { type GameContext } from '../../hooks/useGame'
 import { type PlayerSide } from '../../utils/player'
-import { Text } from '../Text'
 import { type InGameContext } from '../GameContext'
+import { Text } from '../Text'
 
 interface ScoreDisplayProps extends GameOutcome, Pick<InGameContext, 'boType'> {
   playerSide: PlayerSide

@@ -24,12 +24,24 @@ parserOptions:
 settings:
   import/resolver:
     typescript: true
+  import/external-module-folders:
+    - 'node_modules'
+    - 'apps/front/node_modules'
+    - 'apps/worker/node_modules'
+  import/internal-regex: ^@knucklebones/
 rules:
   space-before-function-paren: off
   react/no-unescaped-entities: off
   import/order:
     - 'error'
-    - alphabetize:
+    - groups:
+        - 'builtin'
+        - 'external'
+        - 'internal'
+        - 'parent'
+        - 'sibling'
+        - 'index'
+      alphabetize:
         order: 'asc'
       pathGroups:
         - pattern: 'react*'

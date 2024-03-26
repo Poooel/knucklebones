@@ -1,8 +1,10 @@
 import { useTranslation } from 'react-i18next'
 import { PlayIcon } from '@heroicons/react/24/outline'
-import { ShortcutModal } from './ShortcutModal'
+import { t } from 'i18next'
 import { useIsOnDesktop } from '../hooks/detectDevice'
+import { Button } from './Button'
 import { useGame, type InGameContext } from './GameContext'
+import { ShortcutModal } from './ShortcutModal'
 
 interface GetWinMessageArgs extends Pick<InGameContext, 'outcome' | 'winner'> {}
 

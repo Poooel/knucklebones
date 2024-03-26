@@ -5,11 +5,9 @@ import {
   type Outcome
 } from '@knucklebones/common'
 import { Dice } from '../Dice'
-import { Column } from './Column'
 import { Cell } from './Cell'
 import { Column } from './Column'
 import { ColumnScoreTooltip } from './ColumnScore'
-import { Dice } from './Dice'
 import { Name } from './Name'
 
 interface BoardProps {

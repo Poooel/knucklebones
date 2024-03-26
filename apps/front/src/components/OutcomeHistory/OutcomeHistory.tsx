@@ -1,12 +1,13 @@
 import { useTranslation } from 'react-i18next'
 import { RectangleStackIcon } from '@heroicons/react/24/outline'
+import { getWinHistory } from '@knucklebones/common'
+import { useGame } from '../GameContext'
 import { Modal } from '../Modal'
 import { ShortcutModal } from '../ShortcutModal'
 import { Text } from '../Text'
 import { HistoryDetail } from './HistoryDetail'
 import { ScoreDisplay } from './ScoreDisplay'
-import { getWinHistory } from '@knucklebones/common'
-import { useGame } from '../GameContext'
+import { getLeadMessage } from './leadMessage.utils'
 
 export function OutcomeHistory() {
   const { boType, outcomeHistory, playerSide, playerOne, playerTwo } = useGame()

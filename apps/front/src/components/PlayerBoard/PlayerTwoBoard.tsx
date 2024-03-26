@@ -1,6 +1,5 @@
-import * as React from 'react'
-import { PlayerBoard } from './Board'
 import { useGame } from '../GameContext'
+import { PlayerBoard } from './Board'
 
 export function PlayerTwoBoard() {
   const { outcome, nextPlayer, playerTwo, isLoading, playerSide } = useGame()

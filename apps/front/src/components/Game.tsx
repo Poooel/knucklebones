@@ -1,14 +1,14 @@
 import * as React from 'react'
+import { useIsOnMobile } from '../hooks/detectDevice'
+import { useNoIndex } from '../hooks/useNoIndex'
+import { useGameWhileLoading } from './GameContext'
 import { GameOutcome } from './GameOutcome'
 import { HowToPlayModal } from './HowToPlay'
 import { Loading } from './Loading'
 import { OutcomeHistory } from './OutcomeHistory'
-import { useIsOnMobile } from '../hooks/detectDevice'
-import { useNoIndex } from '../hooks/useNoIndex'
-import { useGameWhileLoading } from './GameContext'
 import { PlayerOneBoard, PlayerTwoBoard } from './PlayerBoard'
-import { SideBarActions } from './SideBar'
 import { QRCodeModal } from './QRCode'
+import { SideBarActions } from './SideBar'
 import { WarningToast } from './WarningToast'
 
 export function Game() {
