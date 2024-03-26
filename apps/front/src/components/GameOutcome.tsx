@@ -3,10 +3,10 @@ import { useTranslation } from 'react-i18next'
 import { Button } from './Button'
 import { PlayIcon } from '@heroicons/react/24/outline'
 import { ShortcutModal } from './ShortcutModal'
-import { type GameContext } from '../hooks/useGame'
 import { useIsOnDesktop } from '../hooks/detectDevice'
+import { useGame, type InGameContext } from './GameContext'
 
-interface GetWinMessageArgs extends Pick<GameContext, 'outcome' | 'winner'> {}
+interface GetWinMessageArgs extends Pick<InGameContext, 'outcome' | 'winner'> {}
 
 function getWinMessage({ outcome, winner }: GetWinMessageArgs) {
   if (outcome !== 'ongoing') {
@@ -25,7 +25,7 @@ function getWinMessage({ outcome, winner }: GetWinMessageArgs) {
   return ''
 }
 
-interface VoteButtonProps extends Pick<GameContext, 'boType' | 'outcome'> {
+interface VoteButtonProps extends Pick<InGameContext, 'boType' | 'outcome'> {
   hasVoted: boolean
   onRematch(): void
   onContinue(): void
@@ -69,26 +69,19 @@ function VoteButtons({
   )
 }
 
-interface OutcomeProps
-  extends GetWinMessageArgs,
-    Omit<VoteButtonProps, 'hasVoted'>,
-    Pick<
-      GameContext,
-      'rematchVote' | 'playerOne' | 'playerTwo' | 'playerSide'
-    > {}
-
-export function GameOutcome({
-  outcome,
-  winner,
-  playerSide,
-  playerOne,
-  playerTwo,
-  rematchVote,
-  boType,
-  onContinue,
-  onContinueIndefinitely,
-  onRematch
-}: OutcomeProps) {
+export function GameOutcome() {
+  const {
+    outcome,
+    winner,
+    playerSide,
+    playerOne,
+    playerTwo,
+    rematchVote,
+    boType,
+    voteRematch,
+    voteContinueBo,
+    voteContinueIndefinitely
+  } = useGame()
   const isSpectator = playerSide === 'spectator'
   const hasVoted = rematchVote === playerOne.id
   const isOnDesktop = useIsOnDesktop()
@@ -109,9 +102,15 @@ export function GameOutcome({
           boType={boType}
           hasVoted={hasVoted}
           outcome={outcome}
-          onContinue={onContinue}
-          onContinueIndefinitely={onContinueIndefinitely}
-          onRematch={onRematch}
+          onContinue={() => {
+            void voteContinueBo()
+          }}
+          onContinueIndefinitely={() => {
+            void voteContinueIndefinitely()
+          }}
+          onRematch={() => {
+            void voteRematch()
+          }}
         />
       )}
 

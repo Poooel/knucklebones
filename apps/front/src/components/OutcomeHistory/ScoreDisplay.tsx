@@ -3,9 +3,9 @@ import clsx from 'clsx'
 import { type GameOutcome } from '@knucklebones/common'
 import { type PlayerSide } from '../../utils/player'
 import { Text } from '../Text'
-import { type GameContext } from '../../hooks/useGame'
+import { type InGameContext } from '../GameContext'
 
-interface ScoreDisplayProps extends GameOutcome, Pick<GameContext, 'boType'> {
+interface ScoreDisplayProps extends GameOutcome, Pick<InGameContext, 'boType'> {
   playerSide: PlayerSide
 }
 
