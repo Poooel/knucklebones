@@ -1,7 +1,7 @@
 import type * as React from 'react'
-import clsx from 'clsx'
 import { useTranslation } from 'react-i18next'
 import { QuestionMarkCircleIcon } from '@heroicons/react/24/outline'
+import { clsx } from 'clsx'
 import { Board } from './PlayerBoard/Board'
 import { ColumnScore } from './PlayerBoard/ColumnScore'
 import { ShortcutModal } from './ShortcutModal'

@@ -1,15 +1,15 @@
-import {
-  isEmptyOrBlank,
-  type IPlayer,
-  type Difficulty
-} from '@knucklebones/common'
-import i18next from 'i18next'
+import { t } from 'i18next'
 import {
   uniqueNamesGenerator,
   adjectives,
   colors,
   animals
 } from 'unique-names-generator'
+import {
+  isEmptyOrBlank,
+  type IPlayer,
+  type Difficulty
+} from '@knucklebones/common'
 
 // At most, we get a 21 character long name
 const MAX_WORD_LENGTH = 7
@@ -29,9 +29,7 @@ export function randomName() {
 }
 
 function getAiName(difficulty: Difficulty) {
-  return `${i18next.t('game.ai')} (${i18next.t(
-    `game-settings.difficulty.${difficulty}`
-  )})`
+  return `${t('game.ai')} (${t(`game-settings.difficulty.${difficulty}`)})`
 }
 
 export interface PlayerNameProps

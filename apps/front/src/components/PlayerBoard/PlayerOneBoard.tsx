@@ -1,4 +1,3 @@
-import * as React from 'react'
 import { useGame } from '../GameContext'
 import { PlayerBoard } from './Board'
 

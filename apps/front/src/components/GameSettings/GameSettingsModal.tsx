@@ -1,15 +1,15 @@
 import * as React from 'react'
-import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'
 import {
   type GameSettings,
   type Difficulty,
   type PlayerType
 } from '@knucklebones/common'
+import { Button } from '../Button'
 import { Modal, type ModalProps } from '../Modal'
 import { type Option, ToggleGroup } from '../ToggleGroup'
-import { Button } from '../Button'
 import {
   getBoTypeOptions,
   getDifficultyOptions,

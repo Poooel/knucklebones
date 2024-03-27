@@ -1,11 +1,11 @@
-import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
-import { DEFAULT_LANGUAGE, resources } from './resources'
+import { use } from 'i18next'
 import { getPathLanguage } from './language'
+import { DEFAULT_LANGUAGE, resources } from './resources'
 
 // https://developers.google.com/search/docs/specialty/international/managing-multi-regional-sites
 export function setupI18n() {
-  void i18n.use(initReactI18next).init({
+  void use(initReactI18next).init({
     resources,
     lng: getPathLanguage(),
     fallbackLng: DEFAULT_LANGUAGE,

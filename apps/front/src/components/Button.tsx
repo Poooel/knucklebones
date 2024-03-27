@@ -1,5 +1,5 @@
 import type * as React from 'react'
-import clsx from 'clsx'
+import { clsx } from 'clsx'
 
 export interface ButtonProps<E extends React.ElementType> {
   // Not a fan of having this prop

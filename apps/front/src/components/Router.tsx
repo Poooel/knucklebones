@@ -1,8 +1,8 @@
 import { Routes, Route } from 'react-router-dom'
 import { Game } from './Game'
+import { GameProvider } from './GameContext'
 import { HomePage } from './HomePage'
 import { HowToPlayPage } from './HowToPlay'
-import { GameProvider } from './GameContext/GameContext'
 
 export function Router() {
   return (

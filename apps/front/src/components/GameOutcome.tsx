@@ -1,10 +1,10 @@
-import i18next from 'i18next'
 import { useTranslation } from 'react-i18next'
-import { Button } from './Button'
 import { PlayIcon } from '@heroicons/react/24/outline'
-import { ShortcutModal } from './ShortcutModal'
+import { t } from 'i18next'
 import { useIsOnDesktop } from '../hooks/detectDevice'
+import { Button } from './Button'
 import { useGame, type InGameContext } from './GameContext'
+import { ShortcutModal } from './ShortcutModal'
 
 interface GetWinMessageArgs extends Pick<InGameContext, 'outcome' | 'winner'> {}
 
@@ -13,14 +13,12 @@ function getWinMessage({ outcome, winner }: GetWinMessageArgs) {
     if (winner !== undefined) {
       const gameScope = outcome === 'round-ended' ? 'round' : 'game'
       const playerWin = winner.isPlayerOne ? 'you-win' : 'opponent-win'
-      return i18next.t(`game.${gameScope}.${playerWin}` as const, {
+      return t(`game.${gameScope}.${playerWin}` as const, {
         player: winner.inGameName,
         points: winner.score
       })
     }
-    return i18next.t(
-      outcome === 'round-ended' ? 'game.round.tie' : 'game.game.tie'
-    )
+    return t(outcome === 'round-ended' ? 'game.round.tie' : 'game.game.tie')
   }
   return ''
 }

@@ -1,4 +1,4 @@
-import i18next from 'i18next'
+import { t } from 'i18next'
 import { type IGameState, type IPlayer } from '@knucklebones/common'
 import { getName } from './name'
 
@@ -41,6 +41,6 @@ export function augmentPlayer(
   return {
     ...player,
     isPlayerOne,
-    inGameName: isPlayerOne ? i18next.t('game.you') : getName(player)
+    inGameName: isPlayerOne ? t('game.you') : getName(player)
   }
 }

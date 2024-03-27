@@ -1,10 +1,10 @@
 import type * as React from 'react'
 import { useTranslation } from 'react-i18next'
+import { QrCodeIcon, LinkIcon } from '@heroicons/react/24/outline'
 import { QRCodeSVG } from 'qrcode.react'
 import { useClipboard } from 'use-clipboard-copy'
-import { QrCodeIcon, LinkIcon } from '@heroicons/react/24/outline'
-import { Modal } from './Modal'
 import { Button } from './Button'
+import { Modal } from './Modal'
 import { ShortcutModal } from './ShortcutModal'
 
 interface QRCodeBaseProps {

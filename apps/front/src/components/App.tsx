@@ -1,11 +1,11 @@
 import * as React from 'react'
 import { BrowserRouter } from 'react-router-dom'
-import { randomName } from '../utils/name'
-import { Router } from './Router'
 import { getPathLanguage } from '../translations'
+import { randomName } from '../utils/name'
+import { Language } from './Language'
+import { Router } from './Router'
 import { MainContent, SideBarContainer, SideBarLayout } from './SideBar'
 import { Theme } from './Theme'
-import { Language } from './Language'
 
 export function App() {
   const mainContentRef = React.useRef<React.ElementRef<'div'>>(null)

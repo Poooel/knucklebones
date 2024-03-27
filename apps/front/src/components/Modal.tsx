@@ -1,6 +1,6 @@
 import type * as React from 'react'
-import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
+import { Dialog, Transition } from '@headlessui/react'
 import { IconButton } from './IconButton'
 
 export interface ModalProps {

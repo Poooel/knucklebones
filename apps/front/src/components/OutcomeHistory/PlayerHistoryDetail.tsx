@@ -1,4 +1,4 @@
-import clsx from 'clsx'
+import { clsx } from 'clsx'
 import { type PlayerOutcomeWithWins } from '@knucklebones/common'
 import { Text } from '../Text'
 

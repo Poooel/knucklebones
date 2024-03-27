@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { type DetailedHistory } from '@knucklebones/common'
-import { Text } from '../Text'
-import { PlayerHistoryDetail } from './PlayerHistoryDetail'
 import { getPlayerFromId } from '../../utils/player'
 import { type InGameContext } from '../GameContext'
+import { Text } from '../Text'
+import { PlayerHistoryDetail } from './PlayerHistoryDetail'
 
 interface HistoryDetailProps
   extends Pick<InGameContext, 'playerOne' | 'playerTwo'> {
