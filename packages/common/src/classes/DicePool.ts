@@ -27,7 +27,6 @@ export class DicePool implements IDicePool {
     }
   }
 
-  // Could be in `random.ts`?
   private generateDicePool(occurrencesPerValue: number) {
     const pool: number[] = []
     for (let die = 1; die <= 6; die++) {

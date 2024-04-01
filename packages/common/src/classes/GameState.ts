@@ -4,7 +4,8 @@ import {
   type Play,
   type OutcomeHistory,
   type PlayerOutcome,
-  type BoType
+  type BoType,
+  type GameMode
 } from '../types'
 import { coinflip, getRandomDice, getWinHistory } from '../utils'
 import { DicePool } from './DicePool'
@@ -36,7 +37,7 @@ export class GameState implements IGameState {
   outcome!: Outcome
   outcomeHistory: OutcomeHistory
   rematchVote?: string
-  gameMode: 'normal' | 'dice-pool'
+  gameMode: GameMode
   dicePool?: DicePool
 
   constructor({
@@ -46,7 +47,7 @@ export class GameState implements IGameState {
     outcome,
     rematchVote,
     winnerId,
-    gameMode = 'dice-pool',
+    gameMode = 'classic',
     dicePool,
     boType = 'indefinite',
     logs = [],
@@ -78,10 +79,10 @@ export class GameState implements IGameState {
   initialize(previousGameState?: IGameState) {
     this.outcome = 'ongoing'
 
-    // Ideally we would use a discriminated union to enforce having `dicePool`
-    // when `gameMode` is `dice-pool`, but it doesn't seem to be possible with
-    // classes. Also, if we move this to a function, we lose the type guard
-    // ability.
+    // Idéalement, on devrait utiliser une discriminated union pour s'assurer
+    // que `dicePool` est forcément accessible quand le `gameMode` est `dice-pool`.
+    // Aussi on peut pas déplacer la vérification dans une condition, sinon le
+    // type guard est pas effectif.
     if (this.gameMode === 'dice-pool') {
       this.dicePool = new DicePool()
     }
