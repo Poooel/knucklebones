@@ -21,6 +21,7 @@ parserOptions:
     - apps/front/tsconfig.json
     - apps/worker/tsconfig.json
     - packages/common/tsconfig.json
+    - tsconfig.base.json
 settings:
   import/resolver:
     typescript: true
