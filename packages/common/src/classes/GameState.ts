@@ -7,17 +7,22 @@ import {
   type BoType
 } from '../types'
 import { coinflip, getRandomDice, getWinHistory } from '../utils'
+import { DicePool } from './DicePool'
 import { Log } from './Log'
 import { Player } from './Player'
 
 interface GameStateConstructorArg
   extends Partial<
-    Omit<IGameState, 'playerOne' | 'playerTwo' | 'logs' | 'nextPlayer'>
+    Omit<
+      IGameState,
+      'playerOne' | 'playerTwo' | 'logs' | 'nextPlayer' | 'dicePool'
+    >
   > {
   playerOne: Player
   playerTwo: Player
   nextPlayer?: Player
   logs?: Log[]
+  dicePool?: DicePool
 }
 
 export class GameState implements IGameState {
@@ -31,6 +36,8 @@ export class GameState implements IGameState {
   outcome!: Outcome
   outcomeHistory: OutcomeHistory
   rematchVote?: string
+  gameMode: 'normal' | 'dice-pool'
+  dicePool?: DicePool
 
   constructor({
     playerOne,
@@ -39,6 +46,8 @@ export class GameState implements IGameState {
     outcome,
     rematchVote,
     winnerId,
+    gameMode = 'dice-pool',
+    dicePool,
     boType = 'indefinite',
     logs = [],
     spectators = [],
@@ -52,6 +61,8 @@ export class GameState implements IGameState {
     this.outcomeHistory = outcomeHistory
     this.boType = boType
     this.winnerId = winnerId
+    this.gameMode = gameMode
+    this.dicePool = dicePool
 
     // Only assign these if we have one
     // otherwise they will be assigned in the initialize() method
@@ -67,14 +78,22 @@ export class GameState implements IGameState {
   initialize(previousGameState?: IGameState) {
     this.outcome = 'ongoing'
 
+    // Ideally we would use a discriminated union to enforce having `dicePool`
+    // when `gameMode` is `dice-pool`, but it doesn't seem to be possible with
+    // classes. Also, if we move this to a function, we lose the type guard
+    // ability.
+    if (this.gameMode === 'dice-pool') {
+      this.dicePool = new DicePool()
+    }
+
     const isPlayerOneStarting = coinflip()
 
     if (isPlayerOneStarting) {
       this.nextPlayer = this.playerOne
-      this.playerOne.dice = getRandomDice()
+      this.playerOne.dice = this.getRandomDice()
     } else {
       this.nextPlayer = this.playerTwo
-      this.playerTwo.dice = getRandomDice()
+      this.playerTwo.dice = this.getRandomDice()
     }
 
     if (previousGameState !== undefined) {
@@ -104,11 +123,14 @@ export class GameState implements IGameState {
       )} column.`
     )
 
-    playerTwo.removeDice(play.dice, play.column)
+    const removedDice = playerTwo.removeDice(play.dice, play.column)
 
     if (playerOne.areColumnsFilled()) {
       this.whoWins()
     } else {
+      if (this.gameMode === 'dice-pool' && this.dicePool !== undefined) {
+        this.dicePool.putDieBackInPool(play.dice, removedDice)
+      }
       this.nextTurn(play.author, giveNextDice)
     }
   }
@@ -124,6 +146,13 @@ export class GameState implements IGameState {
     }
 
     return false
+  }
+
+  private getRandomDice() {
+    if (this.gameMode === 'dice-pool' && this.dicePool !== undefined) {
+      return this.dicePool.getAndRemoveDieFromPool()
+    }
+    return getRandomDice()
   }
 
   private getColumnName(column: number) {
@@ -154,7 +183,7 @@ export class GameState implements IGameState {
     playerOne.dice = undefined
 
     if (giveNextDice) {
-      playerTwo.dice = getRandomDice()
+      playerTwo.dice = this.getRandomDice()
     }
 
     this.nextPlayer = playerTwo
@@ -217,6 +246,7 @@ export class GameState implements IGameState {
     playerTwo,
     nextPlayer,
     logs,
+    dicePool,
     ...rest
   }: IGameState) {
     return new GameState({
@@ -224,7 +254,8 @@ export class GameState implements IGameState {
       playerOne: Player.fromJson(playerOne),
       playerTwo: Player.fromJson(playerTwo),
       nextPlayer: Player.fromJson(nextPlayer),
-      logs: logs.map((iLog) => Log.fromJson(iLog))
+      logs: logs.map((iLog) => Log.fromJson(iLog)),
+      dicePool: dicePool !== undefined ? new DicePool(dicePool.pool) : dicePool
     })
   }
 
@@ -233,6 +264,8 @@ export class GameState implements IGameState {
       playerOne: this.playerOne.toJson(),
       playerTwo: this.playerTwo.toJson(),
       logs: this.logs.map((log) => log.toJson()),
+      gameMode: this.gameMode,
+      dicePool: this.dicePool?.toJson(),
       outcome: this.outcome,
       nextPlayer: this.nextPlayer.toJson(),
       rematchVote: this.rematchVote,
